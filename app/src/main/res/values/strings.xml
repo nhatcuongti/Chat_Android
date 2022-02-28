@@ -2,4 +2,10 @@
     <string name="app_name">MeZa</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="welcome_to_meza">Welcome to MeZa</string>
+    <string name="login_to_continue">Login to continue</string>
+    <string name="phone">Phone</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign In</string>
+    <string name="create_new_account">Create New Account</string>
 </resources>
