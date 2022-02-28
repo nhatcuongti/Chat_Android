@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/asite"
-        ></de.hdodenhof.circleimageview.CircleImageView>
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Bao Trung"
-        android:textColor="@color/black"
-        android:textSize="10sp"
-        android:layout_marginTop="3dp"
-        android:textAlignment="center"></TextView>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_marginRight="15dp">>
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/item_active_thumnail"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:src="@drawable/asite"
+            app:civ_border_color="@color/black"
+            app:civ_border_width="0.1dp"
+            />
+        <TextView
+            android:id="@+id/item_active_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bao Trung"
+            android:textColor="@color/black"
+            android:textSize="10sp"
+            android:layout_marginTop="3dp"
+            android:textAlignment="center"/>
 </LinearLayout>
