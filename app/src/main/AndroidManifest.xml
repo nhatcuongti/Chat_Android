@@ -10,6 +10,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MeZa">
         <activity
+            android:name=".activities.SignUpActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".activities.SignInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
