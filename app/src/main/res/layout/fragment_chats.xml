@@ -1,32 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".ChatsFragment"
-    android:padding="15dp">
+<!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent">-->
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".ChatsFragment"
+        android:padding="15dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout android:layout_height="match_parent"
-            android:layout_width="match_parent"
-        android:orientation="vertical">
-            <SearchView
+        <!-- TODO: Update blank fragment layout -->
+        <LinearLayout android:layout_height="match_parent"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:background="@drawable/bg_white_rounded"
-                android:tooltipText="Search">
+            android:orientation="vertical">
+                <SearchView
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:background="@drawable/bg_white_rounded"
+                    android:tooltipText="Search">
 
-            </SearchView>
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycle_list_active_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
+                </SearchView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycle_list_active_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-        </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+            </androidx.recyclerview.widget.RecyclerView>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycle_list_recent_conversation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
 
-</FrameLayout>
+            </androidx.recyclerview.widget.RecyclerView>
+        </LinearLayout>
+    </FrameLayout>
+<!--</ScrollView>-->

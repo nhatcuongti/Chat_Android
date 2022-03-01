@@ -1,10 +1,7 @@
 package com.example.meza;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -13,13 +10,14 @@ import java.util.ArrayList;
 
 public class HomePageActivity extends FragmentActivity {
     ChatsFragment chatsFragment;
-    ArrayList<String> listUser;
+    ArrayList<String> listActiveUser;
+    ArrayList<String> listRecentConversation;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
         intData();
-        chatsFragment = new ChatsFragment(listUser);
+        chatsFragment = new ChatsFragment(listActiveUser, listRecentConversation);
         replaceFragment(chatsFragment);
     }
     public void replaceFragment (ChatsFragment fragment){
@@ -29,19 +27,32 @@ public class HomePageActivity extends FragmentActivity {
         fragmentTransaction.commit();
     }
     public void intData(){
-        listUser = new ArrayList<>();
-        listUser.add("Bảo Trung");
-        listUser.add("Hoàng Nhật");
-        listUser.add("Hữu Toàn");
-        listUser.add("Việt Hùng");
-        listUser.add("Bảo Trung");
-        listUser.add("Hoàng Nhật");
-        listUser.add("Hữu Toàn");
-        listUser.add("Việt Hùng");
-        listUser.add("Việt Hùng");
-        listUser.add("Bảo Trung");
-        listUser.add("Hoàng Nhật");
-        listUser.add("Hữu Toàn");
-        listUser.add("Việt Hùng");
+        listActiveUser = new ArrayList<>();
+        listActiveUser.add("Linh Giang");
+        listActiveUser.add("Thu Nga");
+        listActiveUser.add("Quỳnh Hương");
+        listActiveUser.add("Hữu Long");
+        listActiveUser.add("Ngọc Luân");
+        listActiveUser.add("Nhật Anh");
+        listActiveUser.add("Bảo Trung");
+        listActiveUser.add("Hoàng Nhật");
+        listActiveUser.add("Hữu Toàn");
+        listActiveUser.add("Việt Hùng");
+        listActiveUser.add("Bảo Long");
+        listActiveUser.add("Công Lượng");
+
+        listRecentConversation = new ArrayList<>();
+        listRecentConversation.add("Linh Giang");
+        listRecentConversation.add("Thu Nga");
+        listRecentConversation.add("Quỳnh Hương");
+        listRecentConversation.add("Hữu Long");
+        listRecentConversation.add("Ngọc Luân");
+        listRecentConversation.add("Nhật Anh");
+        listRecentConversation.add("Bảo Trung");
+        listRecentConversation.add("Hoàng Nhật");
+        listRecentConversation.add("Hữu Toàn");
+        listRecentConversation.add("Việt Hùng");
+        listRecentConversation.add("Bảo Long");
+        listRecentConversation.add("Công Lượng");
     }
 }
