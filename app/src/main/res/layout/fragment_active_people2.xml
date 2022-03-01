@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
- <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
     <FrameLayout
@@ -12,26 +12,10 @@
 
         <!-- TODO: Update blank fragment layout -->
         <LinearLayout android:layout_height="match_parent"
-                android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:orientation="vertical">
-                <SearchView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:background="@drawable/bg_white_rounded"
-                    android:tooltipText="Search">
-
-                </SearchView>
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycle_list_active_user"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="16dp"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager">
-
-            </androidx.recyclerview.widget.RecyclerView>
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycle_list_recent_conversation"
+                android:id="@+id/recycle_list_active_people"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

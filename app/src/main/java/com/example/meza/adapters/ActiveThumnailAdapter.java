@@ -1,19 +1,13 @@
 package com.example.meza.adapters;
 
-import android.app.Activity;
-import android.content.Context;
-import android.graphics.Point;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meza.HomePageActivity;
 import com.example.meza.R;
 
 import java.util.ArrayList;
@@ -42,7 +36,7 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String activeUser = listActiveUser.get(position);
-        holder.thumnail.setImageResource(R.drawable.asite);
+        holder.thumnail.setImageResource(R.drawable.muitreo);
         holder.name.setText(activeUser);
     }
 

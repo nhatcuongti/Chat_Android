@@ -17,17 +17,17 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by reiko-lhnhat on 2/25/2022.
  */
-public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConversationAdapter.ViewHolder> {
-    ArrayList<String> listRecentConversation;
+public class ActiveUserAdapter extends RecyclerView.Adapter<ActiveUserAdapter.ViewHolder> {
+    ArrayList<String> listActiveUser;
 
-    public NameOfConversationAdapter(ArrayList<String> listRecentConversation) {
-        this.listRecentConversation = listRecentConversation;
+    public ActiveUserAdapter(ArrayList<String> listActiveUser) {
+        this.listActiveUser = listActiveUser;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_nameconversation_in_chats__vertical, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_in_activepeople__vertical, parent, false);
         return new ViewHolder(view);
     }
 
@@ -35,14 +35,14 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String conversation = listRecentConversation.get(position);
+        String activeUser = listActiveUser.get(position);
         holder.thumnail.setImageResource(R.drawable.muitreo);
-        holder.name.setText(conversation);
+        holder.name.setText(activeUser);
     }
 
     @Override
     public int getItemCount() {
-        return listRecentConversation.size();
+        return listActiveUser.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -51,8 +51,8 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            thumnail =itemView.findViewById(R.id.item_conversation_thumnail);
-            name = itemView.findViewById(R.id.item_name_in_chats);
+            thumnail =itemView.findViewById(R.id.item_thumnail_in_active_people);
+            name = itemView.findViewById(R.id.item_name_in_active_people);
         }
     }
 }
