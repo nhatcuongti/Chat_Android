@@ -2,14 +2,14 @@
     <string name="app_name">MeZa</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="welcome_to_meza">Welcome to MeZa</string>
-    <string name="login_to_continue">Login to continue</string>
-    <string name="phone">Phone</string>
-    <string name="password">Password</string>
-    <string name="sign_in">Sign In</string>
-    <string name="create_new_account">Create New Account</string>
-    <string name="username">Username</string>
-    <string name="confirm_password">Confirm Password</string>
-    <string name="add_image">Add image</string>
-    <string name="sign_up">Sign Up</string>
+    <string name="welcome_to_meza">Chào mừng đến với MeZa</string>
+    <string name="login_to_continue">Đăng nhập để tiếp tục</string>
+    <string name="phone">Số điện thoại</string>
+    <string name="password">Mật khẩu</string>
+    <string name="sign_in">Đăng Nhập</string>
+    <string name="create_new_account">Tạo tài khoản</string>
+    <string name="username">Tên người dùng</string>
+    <string name="confirm_password">Nhập lại mật khẩu</string>
+    <string name="add_image">Thêm ảnh</string>
+    <string name="sign_up">Đăng ký</string>
 </resources>
