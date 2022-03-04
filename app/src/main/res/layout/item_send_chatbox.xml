@@ -4,7 +4,7 @@
     android:layout_height="wrap_content"
     android:paddingLeft="50dp"
     android:paddingVertical="20dp"
-    android:paddingRight="10dp">
+    android:paddingRight="20dp">
 
 
     <TextView

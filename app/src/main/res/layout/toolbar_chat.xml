@@ -19,7 +19,7 @@
             android:id="@+id/userImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/backwardBtn"
             android:src="@drawable/ic_baseline_account_circle_24" />
 
@@ -30,9 +30,10 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/userImage"
-            android:text="Nhật Lê"
+            android:text="Nhật"
             android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"/>
 
         <ImageButton
             android:id="@+id/inforBtn"
@@ -50,13 +51,13 @@
             android:background="@drawable/ic_baseline_videocam_24"
             android:backgroundTint="@color/black"
             android:layout_toLeftOf="@id/inforBtn"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="15dp"/>
 
         <ImageButton
             android:id="@+id/audioCallBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
+            android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/videoCallBtn"
             android:background="@drawable/ic_baseline_phone_24"
             android:backgroundTint="@color/black" />
