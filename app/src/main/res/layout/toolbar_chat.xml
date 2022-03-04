@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_topbar">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageButton
+            android:id="@+id/backwardBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_keyboard_backspace_24"
+            android:backgroundTint="@color/black"/>
+
+        <ImageView
+            android:id="@+id/userImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@id/backwardBtn"
+            android:src="@drawable/ic_baseline_account_circle_24" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/userImage"
+            android:text="Nhật Lê"
+            android:textColor="@color/black"
+            android:textSize="15sp" />
+
+        <ImageButton
+            android:id="@+id/inforBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_info_24"
+            android:backgroundTint="@color/black"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"/>
+
+        <ImageButton
+            android:id="@+id/videoCallBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_videocam_24"
+            android:backgroundTint="@color/black"
+            android:layout_toLeftOf="@id/inforBtn"
+            android:layout_marginRight="10dp"/>
+
+        <ImageButton
+            android:id="@+id/audioCallBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/videoCallBtn"
+            android:background="@drawable/ic_baseline_phone_24"
+            android:backgroundTint="@color/black" />
+
+    </RelativeLayout>
+
+</androidx.appcompat.widget.Toolbar>
