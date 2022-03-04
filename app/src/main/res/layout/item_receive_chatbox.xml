@@ -3,24 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="10dp"
-    android:paddingVertical="20dp"
-    android:paddingRight="50dp">
+    android:paddingRight="70dp">
+
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/userImage"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_alignBottom="@id/message"
-        android:src="@drawable/ic_baseline_account_circle_24"/>
+        android:src="@drawable/hieule" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/userActive"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:src="@drawable/dot_green"
+
+        android:layout_alignBottom="@id/userImage"
+        android:layout_alignRight="@id/userImage"/>
 
     <TextView
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/userImage"
         android:background="@drawable/background_receive_chatbox"
         android:text="ALO"
         android:textColor="@color/black"
-        android:textSize="20sp"
-        android:layout_marginLeft="10dp"/>
+        android:textSize="20sp" />
 </RelativeLayout>

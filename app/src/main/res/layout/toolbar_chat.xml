@@ -2,7 +2,8 @@
 <androidx.appcompat.widget.Toolbar xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_topbar">
+    android:background="@drawable/background_topbar"
+    android:paddingVertical="10dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -13,15 +14,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_keyboard_backspace_24"
-            android:backgroundTint="@color/black"/>
+            android:backgroundTint="@color/black"
+            android:layout_centerVertical="true"/>
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/backwardBtn"
-            android:src="@drawable/ic_baseline_account_circle_24" />
+            android:src="@drawable/hieule" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userActive"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/dot_green"
+            android:layout_alignBottom="@id/userImage"
+            android:layout_alignRight="@id/userImage"/>
 
         <TextView
             android:id="@+id/userName"
@@ -30,10 +40,11 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/userImage"
-            android:text="Nhật"
+            android:text="Hiếu"
             android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
+
 
         <ImageButton
             android:id="@+id/inforBtn"
@@ -42,7 +53,8 @@
             android:background="@drawable/ic_baseline_info_24"
             android:backgroundTint="@color/black"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true"/>
 
         <ImageButton
             android:id="@+id/videoCallBtn"
@@ -51,7 +63,8 @@
             android:background="@drawable/ic_baseline_videocam_24"
             android:backgroundTint="@color/black"
             android:layout_toLeftOf="@id/inforBtn"
-            android:layout_marginRight="15dp"/>
+            android:layout_marginRight="15dp"
+            android:layout_centerVertical="true" />
 
         <ImageButton
             android:id="@+id/audioCallBtn"
@@ -60,7 +73,8 @@
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/videoCallBtn"
             android:background="@drawable/ic_baseline_phone_24"
-            android:backgroundTint="@color/black" />
+            android:backgroundTint="@color/black"
+            android:layout_centerVertical="true"/>
 
     </RelativeLayout>
 

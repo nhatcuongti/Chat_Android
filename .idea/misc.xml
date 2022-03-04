@@ -50,6 +50,15 @@
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/fragment_chats.xml" value="0.3374094202898551" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_active_thumnail_horizontal.xml" value="0.3374094202898551" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_dotgreen.xml" value="0.2725" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2725" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.241" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.241" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/activity_chat.xml" value="0.33" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/bottombar_chat.xml" value="0.33" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_receive_chatbox.xml" value="0.5" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_send_chatbox.xml" value="0.36666666666666664" />
+        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/toolbar_chat.xml" value="0.5" />
       </map>
     </option>
   </component>
