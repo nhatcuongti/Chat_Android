@@ -10,6 +10,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MeZa">
         <activity
+            android:name=".activities.VerifyOtpActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".activities.SignUpActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
@@ -23,27 +28,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-<!--        <activity-->
-<!--            android:name=".HomePageActivity"-->
-<!--            android:exported="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
-
-<!--        <activity-->
-<!--            android:name=".activities.ChatActivity"-->
-<!--            android:exported="true"-->
-<!--            android:windowSoftInputMode="adjustResize">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
-<!--        </activity>-->
     </application>
 
 </manifest>

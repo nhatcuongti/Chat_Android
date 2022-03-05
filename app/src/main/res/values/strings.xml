@@ -13,4 +13,9 @@
     <string name="add_image">Thêm ảnh</string>
     <string name="sign_up">Đăng ký</string>
     <string name="_84">(+84)-</string>
+    <string name="otp_verification">Xác thực OTP</string>
+    <string name="otp_message">Nhập mã OTP được gửi đến</string>
+    <string name="otp_fail_message">Không nhận được mã OTP?</string>
+    <string name="resend_otp">Gửi lại mã OTP</string>
+    <string name="verify">Xác thực</string>
 </resources>

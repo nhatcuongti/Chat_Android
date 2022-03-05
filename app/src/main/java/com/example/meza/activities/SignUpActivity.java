@@ -2,6 +2,7 @@ package com.example.meza.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
@@ -36,6 +37,7 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp() {
         loading(true);
         showToast("Signing you up");
+        startActivity(new Intent(getApplicationContext(), VerifyOtpActivity.class));
     }
 
     private void loading(Boolean isLoading) {
