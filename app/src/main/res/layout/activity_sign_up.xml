@@ -65,20 +65,34 @@
             android:textColor="@color/primary_text"
             android:textSize="@dimen/_13ssp" />
 
-        <EditText
-            android:id="@+id/inputPhone"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_45sdp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_20sdp"
             android:background="@drawable/background_input"
-            android:hint="@string/phone"
-            android:imeOptions="actionNext"
-            android:importantForAutofill="no"
-            android:inputType="phone"
+            android:orientation="horizontal"
             android:paddingStart="@dimen/_16sdp"
-            android:paddingEnd="@dimen/_16sdp"
-            android:textColor="@color/primary_text"
-            android:textSize="@dimen/_13ssp" />
+            android:paddingEnd="@dimen/_16sdp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/_84"
+                android:textSize="@dimen/_13ssp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/inputPhone"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_45sdp"
+                android:background="@android:color/transparent"
+                android:hint="@string/phone"
+                android:imeOptions="actionNext"
+                android:importantForAutofill="no"
+                android:inputType="phone"
+                android:textColor="@color/primary_text"
+                android:textSize="@dimen/_13ssp" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/inputPassword"

@@ -7,9 +7,10 @@
     <string name="phone">Số điện thoại</string>
     <string name="password">Mật khẩu</string>
     <string name="sign_in">Đăng Nhập</string>
-    <string name="create_new_account">Tạo tài khoản</string>
+    <string name="create_new_account">Tạo tài khoản MeZa</string>
     <string name="username">Tên người dùng</string>
     <string name="confirm_password">Nhập lại mật khẩu</string>
     <string name="add_image">Thêm ảnh</string>
     <string name="sign_up">Đăng ký</string>
+    <string name="_84">(+84)-</string>
 </resources>

@@ -16,28 +16,6 @@
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_nameconversation_in_chats__vertical.xml" value="0.3621495327102804" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_user_in_activepeople__vertical.xml" value="0.11895625479662318" />
         <entry key="..\:/Chat_Android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1045" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_bottombar.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_image.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_reactangle_oval.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_receive_chatbox.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_rectangle_with_border.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_topbar.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/bg_white_rounded.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_insert_emoticon_24.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_keyboard_backspace_24.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_phone_24.xml" value="0.2985" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/activity_chat.xml" value="0.358695652173913" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/activity_homepage.xml" value="0.33" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/activity_sign_in.xml" value="0.25" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/bottombar_chat.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/fragment_chats.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_active_thumnail_horizontal.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_receive_chatbox.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_receiver_chat.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_send_chatbox.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_sender_chat.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/toolbar_chat.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.205" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/background_input.xml" value="0.205" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/bg_white_rounded.xml" value="0.205" />
@@ -50,15 +28,8 @@
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_sign_up.xml" value="0.33" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/fragment_chats.xml" value="0.3374094202898551" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_active_thumnail_horizontal.xml" value="0.3374094202898551" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_dotgreen.xml" value="0.2725" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_account_circle_24.xml" value="0.2725" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.241" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/ic_baseline_send_24.xml" value="0.241" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/activity_chat.xml" value="0.33" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/bottombar_chat.xml" value="0.33" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_receive_chatbox.xml" value="0.5" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_send_chatbox.xml" value="0.36666666666666664" />
-        <entry key="..\:/Users/ti/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/toolbar_chat.xml" value="0.5" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_receive_chatbox.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_send_chatbox.xml" value="0.36730072463768115" />
       </map>
     </option>
   </component>
