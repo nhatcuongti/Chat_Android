@@ -1,18 +1,31 @@
 package com.example.meza.activities;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.meza.databinding.ActivitySignUpBinding;
+import com.example.meza.model.User;
+
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 public class SignUpActivity extends AppCompatActivity {
 
-    ActivitySignUpBinding binding;
+    private ActivitySignUpBinding binding;
+    private String encodedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,8 +38,13 @@ public class SignUpActivity extends AppCompatActivity {
     private void setListeners() {
         binding.textSignIn.setOnClickListener(v -> onBackPressed());
         binding.buttonSignUp.setOnClickListener(v -> {
-            if(isValidSignUpDetails())
+            if (isValidSignUpDetails())
                 signUp();
+        });
+        binding.layoutImage.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            pickImage.launch(intent);
         });
     }
 
@@ -36,8 +54,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void signUp() {
         loading(true);
-        showToast("Signing you up");
-        startActivity(new Intent(getApplicationContext(), VerifyOtpActivity.class));
+        showToast("Đang thực hiện...");
+        Intent intent = new Intent(getApplicationContext(), VerifyOtpActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     private void loading(Boolean isLoading) {
@@ -50,8 +70,42 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
+    private String encodeImage(Bitmap bitmap) {
+        int previewWidth = 150;
+        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
+        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
+        byte[] bytes = baos.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+    }
+
+    // Pick and set profile image activity
+    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        try {
+                            InputStream is = getContentResolver().openInputStream(imageUri);
+                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+                            binding.imageProfile.setImageBitmap(bitmap);
+                            binding.textAddImage.setVisibility(View.GONE);
+                            encodedImage = encodeImage(bitmap);
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+    );
+
     private Boolean isValidSignUpDetails() {
-        if (binding.inputUsername.getText().toString().trim().isEmpty()) {
+        if (encodedImage == null) {
+            showToast("Chọn hình ảnh đại điện");
+            return false;
+        } else if (binding.inputUsername.getText().toString().trim().isEmpty()) {
             showToast("Nhập tên người dùng");
             return false;
         } else if (binding.inputPhone.getText().toString().trim().isEmpty()) {
