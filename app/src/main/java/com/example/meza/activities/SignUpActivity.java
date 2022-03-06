@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.meza.databinding.ActivitySignUpBinding;
 import com.example.meza.model.User;
+import com.example.meza.utilities.Constants;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -55,8 +56,14 @@ public class SignUpActivity extends AppCompatActivity {
     private void signUp() {
         loading(true);
         showToast("Đang thực hiện...");
+        User user = new User();
+        user.image = encodedImage;
+        user.username = binding.inputUsername.getText().toString();
+        user.phone = binding.inputPhone.getText().toString();
+        user.password = binding.inputPassword.getText().toString();
         Intent intent = new Intent(getApplicationContext(), VerifyOtpActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
     }
 
