@@ -18,8 +18,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
 import com.example.meza.adapters.ConversationAdapter;
+import com.example.meza.adapters.ConversationFixAdapter;
 import com.example.meza.model.ConversationModel;
 
+import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.ArrayList;
 
 
@@ -41,7 +44,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         initData();
         ConversationModel conversation = new ConversationModel("Hiếu Lê",  R.drawable.hieule, true, msgList);
         //Tạo Adapter và set Adapter cho conversationRV
-        conversationRv.setAdapter(new ConversationAdapter(this, conversation));
+        conversationRv.setAdapter(new ConversationFixAdapter(this, conversation));
         // Set LayoutManager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         conversationRv.setLayoutManager(linearLayoutManager);
@@ -95,17 +98,53 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         // - partnerID(Đối phương) (Từ đây sẽ biết được Name, Image và tình trạng hoạt động)
         // - ArrayList<Messenger> (Messenger gồm : ISend = true nếu mình gửi, false nếu đối tác gửi và đoạn tin nhắn, thể loại)
 
-        msgList.add(new ConversationModel.Message(true, "Hello"));
-        msgList.add(new ConversationModel.Message(false, "Hi ! What's Your Name ?"));
-        msgList.add(new ConversationModel.Message(false, "Hi ! bla bla bla bla ?"));
-        msgList.add(new ConversationModel.Message(true, "My Name's Hao , How about you ?"));
-        msgList.add(new ConversationModel.Message(false, "Hieu. What's your favorite ?"));
-        msgList.add(new ConversationModel.Message(true, "My Favorite is Football, I like watching EPL especially match having Man city, Do you know Man City"));
-        msgList.add(new ConversationModel.Message(true, "Giờ đang phân vân 3 hãng HP, Lenovo với Thinkpad luôn mà éo biết lấy thằng nào"));
-        msgList.add(new ConversationModel.Message(false, "bla bla bla \n bla bla bla \n bla bla"));
-        msgList.add(new ConversationModel.Message(false, "Are you ok With that"));
-        msgList.add(new ConversationModel.Message(false, "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s"));
+        msgList.add(new ConversationModel.Message(true,
+                "Hello",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 45, 30)));
 
+        msgList.add(new ConversationModel.Message(false,
+                "Hi ! What's Your Name ?",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 45, 40)));
+
+        msgList.add(new ConversationModel.Message(false,
+                "Hi ! bla bla bla bla ?",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 46, 40)));
+
+        msgList.add(new ConversationModel.Message(true,
+                "My Name's Hao , How about you ?",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 48, 40)));
+
+        msgList.add(new ConversationModel.Message(false,
+                "Hieu. What's your favorite ?",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 49, 40)));
+
+        msgList.add(new ConversationModel.Message(true,
+                "My Favorite is Football, I like watching EPL especially match having Man city, Do you know Man City",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 50, 40)));
+
+        msgList.add(new ConversationModel.Message(true,
+                "Giờ đang phân vân 3 hãng HP, Lenovo với Thinkpad luôn mà éo biết lấy thằng nào",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 50, 52)));
+
+        msgList.add(new ConversationModel.Message(false,
+                "bla bla bla \n bla bla bla \n bla bla",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 51, 40)));
+
+        msgList.add(new ConversationModel.Message(false,
+                "Are you ok With that",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 14, 53, 40)));
+
+        msgList.add(new ConversationModel.Message(false,
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
+                LocalDateTime.of(2022, Month.FEBRUARY, 20, 15, 55, 40)));
+
+        msgList.add(new ConversationModel.Message(true,
+                "Hello man",
+                LocalDateTime.now()));
+
+        msgList.add(new ConversationModel.Message(true,
+                "Alo A Hieu",
+                LocalDateTime.now()));
     }
 
     public void handleEvent(){
