@@ -2,11 +2,11 @@ package com.example.meza.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.meza.R;
@@ -49,87 +49,20 @@ public class VerifyOtpActivity extends AppCompatActivity {
     }
 
     private void setOtpInputs() {
-        binding.inputCode1.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
+        binding.inputCode1.addTextChangedListener(new GenericTextWatcher(binding.inputCode1));
+        binding.inputCode2.addTextChangedListener(new GenericTextWatcher(binding.inputCode2));
+        binding.inputCode3.addTextChangedListener(new GenericTextWatcher(binding.inputCode3));
+        binding.inputCode4.addTextChangedListener(new GenericTextWatcher(binding.inputCode4));
+        binding.inputCode5.addTextChangedListener(new GenericTextWatcher(binding.inputCode5));
+    }
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    binding.inputCode2.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        binding.inputCode2.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    binding.inputCode3.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        binding.inputCode3.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    binding.inputCode4.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        binding.inputCode4.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    binding.inputCode5.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-        binding.inputCode5.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (!charSequence.toString().trim().isEmpty()) {
-                    binding.inputCode6.requestFocus();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
-
+    private String getOtpInputs() {
+        return binding.inputCode1.getText().toString() +
+                binding.inputCode2.getText().toString() +
+                binding.inputCode3.getText().toString() +
+                binding.inputCode4.getText().toString() +
+                binding.inputCode5.getText().toString() +
+                binding.inputCode6.getText().toString();
     }
 
     private void showToast(String message) {
@@ -160,4 +93,50 @@ public class VerifyOtpActivity extends AppCompatActivity {
         }
     }
 
+    class GenericTextWatcher implements TextWatcher {
+
+        private final View view;
+
+        private GenericTextWatcher(View view) {
+            this.view = view;
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+        }
+
+        @SuppressLint("NonConstantResourceId")
+        @Override
+        public void afterTextChanged(Editable editable) {
+            String text = editable.toString();
+            switch (view.getId()) {
+                case R.id.inputCode1:
+                    if (!text.isEmpty())
+                        binding.inputCode2.requestFocus();
+                    break;
+                case R.id.inputCode2:
+                    if (!text.isEmpty())
+                        binding.inputCode3.requestFocus();
+                    break;
+                case R.id.inputCode3:
+                    if (!text.isEmpty())
+                        binding.inputCode4.requestFocus();
+                    break;
+                case R.id.inputCode4:
+                    if (!text.isEmpty())
+                        binding.inputCode5.requestFocus();
+                    break;
+                case R.id.inputCode5:
+                    if (!text.isEmpty())
+                        binding.inputCode6.requestFocus();
+                    break;
+            }
+        }
+    }
 }

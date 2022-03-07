@@ -36,6 +36,12 @@ public class SignUpActivity extends AppCompatActivity {
         setListeners();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loading(false);
+    }
+
     private void setListeners() {
         binding.textSignIn.setOnClickListener(v -> onBackPressed());
         binding.buttonSignUp.setOnClickListener(v -> {
@@ -62,7 +68,6 @@ public class SignUpActivity extends AppCompatActivity {
         user.phone = binding.inputPhone.getText().toString();
         user.password = binding.inputPassword.getText().toString();
         Intent intent = new Intent(getApplicationContext(), VerifyOtpActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         intent.putExtra(Constants.KEY_USER, user);
         startActivity(intent);
     }
