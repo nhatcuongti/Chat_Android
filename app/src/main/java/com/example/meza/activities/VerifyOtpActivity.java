@@ -1,11 +1,14 @@
 package com.example.meza.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,11 +17,22 @@ import com.example.meza.databinding.ActivityVerifyOtpBinding;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.PhoneAuthCredential;
+import com.google.firebase.auth.PhoneAuthOptions;
+import com.google.firebase.auth.PhoneAuthProvider;
+
+import java.util.concurrent.TimeUnit;
 
 public class VerifyOtpActivity extends AppCompatActivity {
 
     private ActivityVerifyOtpBinding binding;
     private User user;
+    private String verificationId;
     private PreferenceManager preferenceManager;
 
     @Override
@@ -37,15 +51,68 @@ public class VerifyOtpActivity extends AppCompatActivity {
         binding.textPhoneNumber.setText(String.format(
                 "(+84)-%s", user.phone
         ));
+        verificationId = getIntent().getStringExtra(Constants.KEY_VERIFICATION_ID);
     }
 
     private void setListeners() {
         binding.buttonVerify.setOnClickListener(v -> {
             if (isValidOtpCode()) {
-                loading(true);
-                showToast("Đang xử lý...");
+                verifyOtpAndLogin();
             }
         });
+        binding.textResendOtp.setOnClickListener(v -> resendOtp());
+    }
+
+    private void resendOtp() {
+        PhoneAuthOptions options =
+                PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
+                        .setPhoneNumber("+84" + user.phone)
+                        .setTimeout(60L, TimeUnit.SECONDS)
+                        .setActivity(this)
+                        .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                            @Override
+                            public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                                Log.d("OTP", "onVerificationCompleted" + phoneAuthCredential);
+                            }
+
+                            @Override
+                            public void onVerificationFailed(@NonNull FirebaseException e) {
+                                showToast(e.getMessage());
+                            }
+
+                            @Override
+                            public void onCodeSent(@NonNull String newVerificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+                                super.onCodeSent(newVerificationId, forceResendingToken);
+                                verificationId = newVerificationId;
+                                showToast("Mã OTP mới sẽ được gửi sau 60s kể từ mã cũ");
+                            }
+                        })
+                        .build();
+        PhoneAuthProvider.verifyPhoneNumber(options);
+    }
+
+    private void verifyOtpAndLogin() {
+        String inputCode = getOtpInputs();
+        if (verificationId != null) {
+            loading(true);
+            PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
+            FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
+                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            } else {
+                                loading(false);
+                                showToast("Mã OTP không hợp lệ");
+                            }
+                        }
+                    });
+        } else {
+            showToast("Hệ thống xảy ra lỗi");
+        }
     }
 
     private void setOtpInputs() {

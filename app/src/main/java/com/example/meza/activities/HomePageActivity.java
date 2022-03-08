@@ -1,4 +1,4 @@
-package com.example.meza;
+package com.example.meza.activities;
 
 import android.media.Image;
 import android.os.Bundle;
@@ -6,6 +6,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.example.meza.ActivePeopleFragment;
+import com.example.meza.ChatsFragment;
+import com.example.meza.R;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
