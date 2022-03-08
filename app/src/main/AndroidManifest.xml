@@ -9,11 +9,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MeZa">
+<<<<<<< Updated upstream
         <activity
             android:name=".activities.VerifyOtpActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" />
+=======
+>>>>>>> Stashed changes
         <activity
             android:name=".activities.SignUpActivity"
             android:exported="false"
