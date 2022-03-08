@@ -9,11 +9,15 @@
     <color name="icon_background">#20FFFFFF</color>
     <color name="error">#B00020</color>
     <color name="black">#FF000000</color>
+<<<<<<< Updated upstream
     <color name="topbarColor">#1CADEC</color>
     <color name="bottombarColor">#F8F1F1</color>
     <color name="sendChatboxColor">#0084ff</color>
     <color name="receiveChatboxColor">#e4e6eb</color>
 
+=======
+    <color name="active_state">#03FF0D</color>
+>>>>>>> Stashed changes
 </resources><!--    <color name="purple_200">#FFBB86FC</color>-->
     <!--    <color name="purple_500">#FF6200EE</color>-->
     <!--    <color name="purple_700">#FF3700B3</color>-->
