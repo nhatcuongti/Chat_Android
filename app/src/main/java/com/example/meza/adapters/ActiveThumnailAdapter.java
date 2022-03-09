@@ -1,14 +1,19 @@
 package com.example.meza.adapters;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
+import com.google.android.material.badge.BadgeDrawable;
+import com.google.android.material.badge.BadgeUtils;
 
 import java.util.ArrayList;
 
@@ -33,11 +38,14 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
 
 
 
+    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String activeUser = listActiveUser.get(position);
         holder.thumnail.setImageResource(R.drawable.muitreo);
         holder.name.setText(activeUser);
+
+
     }
 
     @Override
@@ -48,11 +56,13 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView thumnail;
         TextView name;
-
+        FrameLayout container;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+
             thumnail =itemView.findViewById(R.id.item_active_thumnail);
             name = itemView.findViewById(R.id.item_active_name);
+            container = itemView.findViewById(R.id.framelayout_thumnail);
         }
     }
 }
