@@ -17,15 +17,14 @@ import com.example.meza.databinding.ActivityVerifyOtpBinding;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 
 public class VerifyOtpActivity extends AppCompatActivity {
@@ -34,6 +33,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
     private User user;
     private String verificationId;
     private PreferenceManager preferenceManager;
+    private final String Tag = "VerifyOtpActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +60,10 @@ public class VerifyOtpActivity extends AppCompatActivity {
                 verifyOtpAndLogin();
             }
         });
-        binding.textResendOtp.setOnClickListener(v -> resendOtp());
+        binding.textResendOtp.setOnClickListener(v -> {
+            showToast("Mã OTP mới sẽ được gửi sau 60s kể từ mã cũ");
+            resendOtp();
+        });
     }
 
     private void resendOtp() {
@@ -68,11 +71,11 @@ public class VerifyOtpActivity extends AppCompatActivity {
                 PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
                         .setPhoneNumber("+84" + user.phone)
                         .setTimeout(60L, TimeUnit.SECONDS)
-                        .setActivity(this)
+                        .setActivity(VerifyOtpActivity.this)
                         .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
                             @Override
                             public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                                Log.d("OTP", "onVerificationCompleted" + phoneAuthCredential);
+                                Log.d(Tag, "onVerificationCompleted - " + phoneAuthCredential); // For debugging
                             }
 
                             @Override
@@ -83,35 +86,51 @@ public class VerifyOtpActivity extends AppCompatActivity {
                             @Override
                             public void onCodeSent(@NonNull String newVerificationId, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
                                 super.onCodeSent(newVerificationId, forceResendingToken);
+                                Log.d(Tag, "onCodeSent - " + newVerificationId); // For debugging
                                 verificationId = newVerificationId;
-                                showToast("Mã OTP mới sẽ được gửi sau 60s kể từ mã cũ");
                             }
                         })
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+        Log.d(Tag, "Verification Code: " + verificationId); // For debugging
     }
 
     private void verifyOtpAndLogin() {
         String inputCode = getOtpInputs();
         if (verificationId != null) {
+            Log.d(Tag, "Verification Code: " + verificationId); // For debugging
             loading(true);
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            HashMap<String, Object> newUser = new HashMap<>();
+            newUser.put(Constants.KEY_USERNAME, user.username);
+            newUser.put(Constants.KEY_PHONE, user.phone);
+            newUser.put(Constants.KEY_PASSWORD, user.password);
+            newUser.put(Constants.KEY_IMAGE, user.image);
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
             FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
-                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (task.isSuccessful() && task.getResult() != null) {
-                                Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                            } else {
-                                loading(false);
-                                showToast("Mã OTP không hợp lệ");
-                            }
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            database.collection(Constants.KEY_COLLECTION_USERS)
+                                    .add(newUser)
+                                    .addOnSuccessListener(documentReference -> {
+                                        loading(false);
+                                        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                                        preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                                        preferenceManager.putString(Constants.KEY_USERNAME, user.username);
+                                        preferenceManager.putString(Constants.KEY_IMAGE, user.image);
+                                        Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    })
+                                    .addOnFailureListener(exception -> {
+                                        loading(false);
+                                        showToast(exception.getMessage());
+                                    });
+                        } else {
+                            loading(false);
+                            showToast("Mã OTP không hợp lệ");
                         }
                     });
-        } else {
-            showToast("Hệ thống xảy ra lỗi");
         }
     }
 
