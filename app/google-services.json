@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "107985300645-clbmep6hk1rst0se7d9kf3vhshohks2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meza",
+            "certificate_hash": "a0c33522d17bcdaf3e85ae8b656d5b1442acf85f"
+          }
+        },
+        {
           "client_id": "107985300645-ar0gjv0lgavnn88auegamk4o619brn5r.apps.googleusercontent.com",
           "client_type": 3
         }
