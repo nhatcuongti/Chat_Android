@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/settingToolbar"
+            layout="@layout/toolbar_setting"/>
+        <FrameLayout
+            android:id="@+id/layoutImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_gravity="center">
+
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/imageProfile"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_80sdp"
+                android:background="@drawable/background_image"
+                android:scaleType="centerCrop"
+                app:riv_oval="true" />
+
+            <TextView
+                android:id="@+id/textAddImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/add_image"
+                android:textColor="@color/secondary_text"
+                android:textSize="@dimen/_10ssp" />
+
+        </FrameLayout>
+        <TextView android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hiếu Lê"
+            android:textColor="@color/primary"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:textSize="30dp"
+            android:layout_marginBottom="50dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thông báo"
+            android:textStyle="bold"
+            android:textColor="@color/sendChatboxColor"
+            android:layout_gravity="left"
+            android:textSize="20dp"
+            android:layout_marginLeft="30dp"/>
+
+        <Button android:id="@+id/btnNotificationApp"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="left|center_vertical"
+            android:text="Tắt thông báo"
+            android:backgroundTint="@color/receiveChatboxColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+        <Button android:id="@+id/btnVibrate"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="left|center_vertical"
+            android:text="Tắt rung"
+            android:backgroundTint="@color/receiveChatboxColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tài khoản"
+            android:textStyle="bold"
+            android:textColor="@color/sendChatboxColor"
+            android:layout_gravity="left"
+            android:textSize="20dp"
+            android:layout_marginLeft="30dp"/>
+        <Button android:id="@+id/btnChangePhone"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="left|center_vertical"
+            android:text="Đổi số điện thoại"
+            android:backgroundTint="@color/receiveChatboxColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+        <Button android:id="@+id/btnChangePassword"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="left|center_vertical"
+            android:text="Đổi mật khẩu"
+            android:backgroundTint="@color/receiveChatboxColor"
+            android:textColor="@color/black"
+            android:textStyle="bold"/>
+        <Button android:id="@+id/btnDeleteAccount"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="left|center_vertical"
+            android:text="Xóa tài khoản"
+            android:backgroundTint="@color/receiveChatboxColor"
+            android:textColor="@color/error"
+            android:textStyle="bold"/>
+        <Button android:id="@+id/btnLogout"
+            android:layout_width="350dp"
+            android:layout_height="60dp"
+            android:layout_marginLeft="30dp"
+            android:gravity="left|center_vertical"
+            android:text="Đăng xuất"
+            android:backgroundTint="@color/receiveChatboxColor"
+            android:textColor="@color/error"
+            android:textStyle="bold"/>
+
+
+
+    </LinearLayout>
+</ScrollView>
