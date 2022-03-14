@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "107985300645",
+    "project_id": "meza-app",
+    "storage_bucket": "meza-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107985300645:android:348c9c31379fa1e7cbf14c",
+        "android_client_info": {
+          "package_name": "com.example.meza"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107985300645-b97eg555om243049jc47v75t36leupj2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meza",
+            "certificate_hash": "f823e8f47de1184f8fbf825dad0700d5b81fda16"
+          }
+        },
+        {
+          "client_id": "107985300645-clbmep6hk1rst0se7d9kf3vhshohks2e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meza",
+            "certificate_hash": "a0c33522d17bcdaf3e85ae8b656d5b1442acf85f"
+          }
+        },
+        {
+          "client_id": "107985300645-ar0gjv0lgavnn88auegamk4o619brn5r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy57GByDsAndoqDJNcW8z5B4iorw6QlZY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107985300645-ar0gjv0lgavnn88auegamk4o619brn5r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,7 +4,15 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="20dp"
+    android:layout_marginTop="15dp"
     android:background="@drawable/background_bottombar">
+
+        <ImageButton
+            android:id="@+id/rightArrowBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_keyboard_arrow_right_24"
+            android:visibility="gone"/>
 
         <ImageButton
             android:id="@+id/imageSendBtn"
@@ -12,7 +20,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_image_24"
             android:backgroundTint="@color/black"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
 
         <ImageButton
             android:id="@+id/voiceSendBtn"
@@ -34,7 +42,7 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:layout_weight="1"
             android:layout_marginLeft="10dp">
                 <EditText
@@ -64,6 +72,15 @@
                     android:layout_marginRight="10dp"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+        <ImageButton
+            android:id="@+id/sendBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_baseline_send_24"
+            android:backgroundTint="@color/black"
+            android:layout_marginLeft="20dp"
+            android:layout_gravity="center"
+            android:visibility="gone"/>
 
 
 

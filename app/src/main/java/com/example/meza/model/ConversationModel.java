@@ -1,5 +1,6 @@
 package com.example.meza.model;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ConversationModel {
@@ -23,17 +24,27 @@ public class ConversationModel {
     public static class Message {
         boolean iSend ;
         String message;
+        LocalDateTime startTime;
 //        String typeMessage;
 
 
-        public  Message(boolean iSend, String message) {
+        public  Message(boolean iSend, String message, LocalDateTime startTime) {
             this.iSend = iSend;
             this.message = message;
+            this.startTime = startTime;
         }
 
         public Message(Message copyMsg){
             this.iSend = copyMsg.iSend;
             this.message = copyMsg.message;
+        }
+
+        public LocalDateTime getStartTime() {
+            return startTime;
+        }
+
+        public void setStartTime(LocalDateTime startTime) {
+            this.startTime = startTime;
         }
 
         public boolean isiSend() {

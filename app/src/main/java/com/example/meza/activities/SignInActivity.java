@@ -9,16 +9,27 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.meza.databinding.ActivitySignInBinding;
+import com.example.meza.utilities.Constants;
+import com.example.meza.utilities.PreferenceManager;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class SignInActivity extends AppCompatActivity {
 
-    ActivitySignInBinding binding;
+    private ActivitySignInBinding binding;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        preferenceManager = new PreferenceManager(getApplicationContext());
+        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
+            Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+            startActivity(intent);
+            finish();
+        }
         setListeners();
     }
 
@@ -27,13 +38,33 @@ public class SignInActivity extends AppCompatActivity {
                 startActivity(new Intent(getApplicationContext(), SignUpActivity.class)));
         binding.buttonSignIn.setOnClickListener(v -> {
             if (isValidSignInDetails())
-                signUp();
+                signIn();
         });
     }
 
-    private void signUp() {
+    private void signIn() {
         loading(true);
-        showToast("Fetching to login in");
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        database.collection(Constants.KEY_COLLECTION_USERS)
+                .whereEqualTo(Constants.KEY_PHONE, binding.inputPhone.getText().toString())
+                .whereEqualTo(Constants.KEY_PASSWORD, binding.inputPassword.getText().toString())
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null
+                            && task.getResult().getDocuments().size() > 0) {
+                        DocumentSnapshot ds = task.getResult().getDocuments().get(0);
+                        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                        preferenceManager.putString(Constants.KEY_USER_ID, ds.getId());
+                        preferenceManager.putString(Constants.KEY_USERNAME, ds.getString(Constants.KEY_USERNAME));
+                        preferenceManager.putString(Constants.KEY_IMAGE, ds.getString(Constants.KEY_IMAGE));
+                        Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                    } else {
+                        loading(false);
+                        showToast("Nhập sai số điện thoại hoặc mật khẩu");
+                    }
+                });
     }
 
     private void loading(Boolean isLoading) {
