@@ -5,12 +5,10 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
 import com.example.meza.adapters.ConversationAdapter;
-import com.example.meza.adapters.ConversationFixAdapter;
 import com.example.meza.model.ConversationModel;
+import com.example.meza.model.User;
 
 import java.time.LocalDateTime;
 import java.time.Month;
@@ -30,6 +28,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     RecyclerView conversationRv;
     ArrayList<ConversationModel.Message> msgList = new ArrayList<>();
+    ArrayList<User> participantList = new ArrayList<>();
+    User user1, user2, currentUser;
     EditText chatBox ;
     ImageButton rightArrowBtn, imageSendBtn, takePhotoBtn, voiceSendBtn, sendBtn, videoCallBtn, audioCallBtn, inforBtn;
 
@@ -42,9 +42,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         conversationRv = findViewById(R.id.conversationListRv);
         //Lấy dữ liệu thô
         initData();
-        ConversationModel conversation = new ConversationModel("Hiếu Lê",  R.drawable.hieule, true, msgList);
+        ConversationModel conversation = new ConversationModel("Conv1",
+                 participantList,
+                 msgList,
+                 user1);
+
         //Tạo Adapter và set Adapter cho conversationRV
-        conversationRv.setAdapter(new ConversationFixAdapter(this, conversation));
+        conversationRv.setAdapter(new ConversationAdapter(this, conversation, currentUser));
         // Set LayoutManager
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         conversationRv.setLayoutManager(linearLayoutManager);
@@ -98,51 +102,71 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         // - partnerID(Đối phương) (Từ đây sẽ biết được Name, Image và tình trạng hoạt động)
         // - ArrayList<Messenger> (Messenger gồm : ISend = true nếu mình gửi, false nếu đối tác gửi và đoạn tin nhắn, thể loại)
 
-        msgList.add(new ConversationModel.Message(true,
+        user1 = new User("Hào", "12345", "0987783897", "123456", "US01",true);
+        user2 = new User("Hiếu", "2345", "0987783891", "123454", "US02",true);
+        currentUser = new User("Hào", "12345", "0987783897", "123456", "US01",true);
+
+        participantList.add(user1);
+        participantList.add(user2);
+
+        //        public Message(String id, User sender, String text, LocalDateTime startTime)
+        msgList.add(new ConversationModel.Message("msg01",
+                user1,
                 "Hello",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 45, 30)));
 
-        msgList.add(new ConversationModel.Message(false,
+        msgList.add(new ConversationModel.Message("msg02",
+                user2,
                 "Hi ! What's Your Name ?",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 45, 40)));
 
-        msgList.add(new ConversationModel.Message(false,
+        msgList.add(new ConversationModel.Message("msg03",
+                user2,
                 "Hi ! bla bla bla bla ?",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 46, 40)));
 
-        msgList.add(new ConversationModel.Message(true,
+        msgList.add(new ConversationModel.Message("msg04",
+                user1,
                 "My Name's Hao , How about you ?",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 48, 40)));
 
-        msgList.add(new ConversationModel.Message(false,
+        msgList.add(new ConversationModel.Message("msg05",
+                user2,
                 "Hieu. What's your favorite ?",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 49, 40)));
 
-        msgList.add(new ConversationModel.Message(true,
+        msgList.add(new ConversationModel.Message("msg06",
+                user1,
                 "My Favorite is Football, I like watching EPL especially match having Man city, Do you know Man City",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 50, 40)));
 
-        msgList.add(new ConversationModel.Message(true,
+        msgList.add(new ConversationModel.Message("msg07",
+                user1,
                 "Giờ đang phân vân 3 hãng HP, Lenovo với Thinkpad luôn mà éo biết lấy thằng nào",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 50, 52)));
 
-        msgList.add(new ConversationModel.Message(false,
+        msgList.add(new ConversationModel.Message("msg08",
+                user1,
                 "bla bla bla \n bla bla bla \n bla bla",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 13, 51, 40)));
 
-        msgList.add(new ConversationModel.Message(false,
+        msgList.add(new ConversationModel.Message("msg09",
+                user2,
                 "Are you ok With that",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 14, 53, 40)));
 
-        msgList.add(new ConversationModel.Message(false,
+        msgList.add(new ConversationModel.Message("msg10",
+                user2,
                 "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s",
                 LocalDateTime.of(2022, Month.FEBRUARY, 20, 15, 55, 40)));
 
-        msgList.add(new ConversationModel.Message(true,
+        msgList.add(new ConversationModel.Message("msg11",
+                user1,
                 "Hello man",
                 LocalDateTime.now()));
 
-        msgList.add(new ConversationModel.Message(true,
+        msgList.add(new ConversationModel.Message("msg12",
+                user1,
                 "Alo A Hieu",
                 LocalDateTime.now()));
     }

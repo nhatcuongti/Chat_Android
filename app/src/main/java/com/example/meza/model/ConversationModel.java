@@ -4,39 +4,61 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class ConversationModel {
-    //Dữ liệu cần phải có : (Giả sử chat với người A)
-    // - Danh sách tất cả đoạn chat của mình với người A
-    // - Danh sách tất cả đoạn chat của người A với Mình
-    // => Cùng một loại dữ liệu, đặt tên là conversation
 
-    //Conversation gồm có :
-    // - UserID (Mình)
-    // - partnerID(Đối phương) (Từ đây sẽ biết được Name, Image và tình trạng hoạt động)
-    // - ArrayList<Messenger> (Messenger gồm : ISend = true nếu mình gửi, false nếu đối tác gửi và đoạn tin nhắn, thể loại)
 
-//    private String userID;
-//    private String partnerID;
-    private String partnerName;
-    private Integer partnerImage;
-    private boolean isPartnerActive;
+    //----New Data--//
+    private String ID;
+    private ArrayList<User> participantList;
     private ArrayList<Message> listMessage;
+    private User creator;
+
 
     public static class Message {
-        boolean iSend ;
-        String message;
+
+        //---New Data--//
+        private String id;
+        private User sender;
+        private String text;
         LocalDateTime startTime;
-//        String typeMessage;
 
 
-        public  Message(boolean iSend, String message, LocalDateTime startTime) {
-            this.iSend = iSend;
-            this.message = message;
+        //--- New Method ---//
+        public Message(String id, User sender, String text, LocalDateTime startTime) {
+            this.id = id;
+            this.sender = sender;
+            this.text = text;
             this.startTime = startTime;
         }
 
         public Message(Message copyMsg){
-            this.iSend = copyMsg.iSend;
-            this.message = copyMsg.message;
+            this.id = copyMsg.id;
+            this.sender = copyMsg.sender;
+            this.text = copyMsg.text;
+            this.startTime = copyMsg.startTime;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public User getSender() {
+            return sender;
+        }
+
+        public void setSender(User sender) {
+            this.sender = sender;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
         }
 
         public LocalDateTime getStartTime() {
@@ -46,54 +68,30 @@ public class ConversationModel {
         public void setStartTime(LocalDateTime startTime) {
             this.startTime = startTime;
         }
-
-        public boolean isiSend() {
-            return iSend;
-        }
-
-        public void setiSend(boolean iSend) {
-            this.iSend = iSend;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
     }
 
-    public ConversationModel(String partnerName, Integer partnerImage, boolean isPartnerActive, ArrayList<Message> listMessage) {
-        this.partnerName = partnerName;
-        this.partnerImage = partnerImage;
-        this.isPartnerActive = isPartnerActive;
+    //--- New Method ---//
+    public ConversationModel(String ID, ArrayList<User> participantList, ArrayList<Message> listMessage, User creator) {
+        this.ID = ID;
+        this.participantList = participantList;
         this.listMessage = listMessage;
+        this.creator = creator;
     }
 
-
-    public String getPartnerName() {
-        return partnerName;
+    public String getID() {
+        return ID;
     }
 
-    public void setPartnerName(String partnerName) {
-        this.partnerName = partnerName;
+    public void setID(String ID) {
+        this.ID = ID;
     }
 
-    public Integer getPartnerImage() {
-        return partnerImage;
+    public ArrayList<User> getParticipantList() {
+        return participantList;
     }
 
-    public void setPartnerImage(Integer partnerImage) {
-        this.partnerImage = partnerImage;
-    }
-
-    public boolean isPartnerActive() {
-        return isPartnerActive;
-    }
-
-    public void setPartnerActive(boolean partnerActive) {
-        isPartnerActive = partnerActive;
+    public void setParticipantList(ArrayList<User> participantList) {
+        this.participantList = participantList;
     }
 
     public ArrayList<Message> getListMessage() {
@@ -102,5 +100,13 @@ public class ConversationModel {
 
     public void setListMessage(ArrayList<Message> listMessage) {
         this.listMessage = listMessage;
+    }
+
+    public User getCreator() {
+        return creator;
+    }
+
+    public void setCreator(User creator) {
+        this.creator = creator;
     }
 }

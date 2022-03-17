@@ -18,16 +18,17 @@
         android:id="@+id/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_receive_chatbox"
-        android:backgroundTint="@color/sendChatboxColor"
-        android:paddingHorizontal="20dp"
-        android:text="ALO"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:layout_toLeftOf="@id/userImage"
+        android:layout_below="@id/startTime"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:layout_below="@id/startTime" />
+        android:layout_toLeftOf="@id/userImage"
+        android:background="@drawable/background_receive_chatbox"
+        android:backgroundTint="@color/sendChatboxColor"
+        android:paddingLeft="20dp"
+        android:paddingRight="10dp"
+        android:text="ALO"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/userImage"
