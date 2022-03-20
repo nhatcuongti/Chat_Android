@@ -12,19 +12,28 @@ import android.view.ViewGroup;
 import com.example.meza.adapters.ActiveThumnailAdapter;
 import com.example.meza.adapters.ActiveUserAdapter;
 import com.example.meza.adapters.NameOfConversationAdapter;
+import com.example.meza.model.User2;
 
 import java.util.ArrayList;
 
 
 public class ActivePeopleFragment extends Fragment {
 
-    private ArrayList<String> listActiveUser;
+    private ArrayList<User2> listActiveUser;
     View view;
     RecyclerView listActiveUserView;
     ActiveUserAdapter activeUserAdapter;
 
-    public ActivePeopleFragment(ArrayList<String> listActiveUser) {
+    public ActivePeopleFragment(ArrayList<User2> listActiveUser) {
         this.listActiveUser = listActiveUser;
+    }
+
+    public ActiveUserAdapter getActiveUserAdapter() {
+        return activeUserAdapter;
+    }
+
+    public void setActiveUserAdapter(ActiveUserAdapter activeUserAdapter) {
+        this.activeUserAdapter = activeUserAdapter;
     }
 
     @Override

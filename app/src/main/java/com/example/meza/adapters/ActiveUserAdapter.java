@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
+import com.example.meza.model.User2;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by reiko-lhnhat on 2/25/2022.
  */
 public class ActiveUserAdapter extends RecyclerView.Adapter<ActiveUserAdapter.ViewHolder> {
-    ArrayList<String> listActiveUser;
+    ArrayList<User2> listActiveUser;
 
-    public ActiveUserAdapter(ArrayList<String> listActiveUser) {
+    public ActiveUserAdapter(ArrayList<User2> listActiveUser) {
         this.listActiveUser = listActiveUser;
     }
 
@@ -35,9 +36,9 @@ public class ActiveUserAdapter extends RecyclerView.Adapter<ActiveUserAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String activeUser = listActiveUser.get(position);
+        User2 activeUser = listActiveUser.get(position);
         holder.thumnail.setImageResource(R.drawable.muitreo);
-        holder.name.setText(activeUser);
+        holder.name.setText(activeUser.getFullname());
     }
 
     @Override
