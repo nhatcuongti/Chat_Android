@@ -1,16 +1,23 @@
 package com.example.meza.activities;
 
-import android.media.Image;
+import android.content.ContentValues;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.meza.ActivePeopleFragment;
 import com.example.meza.ChatsFragment;
 import com.example.meza.R;
+import com.example.meza.model.User2;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -19,12 +26,19 @@ import androidx.fragment.app.FragmentTransaction;
 import java.util.ArrayList;
 
 public class HomePageActivity extends FragmentActivity {
-    ChatsFragment chatsFragment;
     TextView fragmentName;
-    ActivePeopleFragment activePeopleFragment;
-    ArrayList<String> listActiveUser;
-    ArrayList<String> listRecentConversation;
+
     ImageButton chatsBtn, activePeopleBtn;
+
+    ChatsFragment chatsFragment;
+    ActivePeopleFragment activePeopleFragment;
+
+    ArrayList<User2> listActiveUser;
+    ArrayList<String> listFriend;
+    ArrayList<String> listRecentConversation;
+
+    private DatabaseReference mDatabase;
+    private String userID = "0931231231"; // use for static data testing
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,20 +73,60 @@ public class HomePageActivity extends FragmentActivity {
         fragmentTransaction.commit();
     }
     public void intData(){
+        listFriend = new ArrayList<>();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference listFriendRef = mDatabase.child("users").child(userID).child("list_friend");
+        listFriendRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listFriend.clear();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    String friendID = (String) ds.getValue(String.class);
+                    Log.i(ContentValues.TAG, "loadPost:" + friendID);
+                    listFriend.add(friendID);
+                }
+                chatsFragment.getActiveThumnailAdapter().notifyDataSetChanged();
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+            }
+        });
         listActiveUser = new ArrayList<>();
-        listActiveUser.add("Linh Giang");
-        listActiveUser.add("Thu Nga");
-        listActiveUser.add("Quỳnh Hương");
-        listActiveUser.add("Hữu Long");
-        listActiveUser.add("Ngọc Luân");
-        listActiveUser.add("Nhật Anh");
-        listActiveUser.add("Bảo Trung");
-        listActiveUser.add("Hoàng Nhật");
-        listActiveUser.add("Hữu Toàn");
-        listActiveUser.add("Việt Hùng");
-        listActiveUser.add("Bảo Long");
-        listActiveUser.add("Công Lượng");
+        DatabaseReference listActivUserRef = mDatabase.child("users");
+        listActivUserRef.addValueEventListener(new ValueEventListener() {
 
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                listActiveUser.clear();
+                for(DataSnapshot ds: snapshot.getChildren()){
+                    User2 user = ds.getValue(User2.class);
+                    String userKey = ds.getKey();
+                    if(user.getIs_active() == 1 && listFriend.contains(userKey)){
+                        listActiveUser.add(user);
+                    }
+                }
+                chatsFragment.getActiveThumnailAdapter().notifyDataSetChanged();
+                }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+//        listActiveUser = new ArrayList<>();
+//        listActiveUser.add("Linh Giang");
+//        listActiveUser.add("Thu Nga");
+//        listActiveUser.add("Quỳnh Hương");
+//        listActiveUser.add("Hữu Long");
+//        listActiveUser.add("Ngọc Luân");
+//        listActiveUser.add("Nhật Anh");
+//        listActiveUser.add("Bảo Trung");
+//        listActiveUser.add("Hoàng Nhật");
+//        listActiveUser.add("Hữu Toàn");
+//        listActiveUser.add("Việt Hùng");
+//        listActiveUser.add("Bảo Long");
+//        listActiveUser.add("Công Lượng");
+//
         listRecentConversation = new ArrayList<>();
         listRecentConversation.add("Linh Giang");
         listRecentConversation.add("Thu Nga");
