@@ -88,6 +88,7 @@
                 android:id="@+id/buttonSignIn"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50sdp"
+                android:backgroundTint="@color/primary"
                 android:text="@string/sign_in"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"

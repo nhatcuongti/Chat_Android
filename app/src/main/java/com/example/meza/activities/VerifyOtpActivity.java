@@ -22,7 +22,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -64,6 +65,15 @@ public class VerifyOtpActivity extends AppCompatActivity {
             showToast("Mã OTP mới sẽ được gửi sau 60s kể từ mã cũ");
             resendOtp();
         });
+        binding.textRefresh.setOnClickListener(v -> {
+            binding.inputCode1.setText("");
+            binding.inputCode2.setText("");
+            binding.inputCode3.setText("");
+            binding.inputCode4.setText("");
+            binding.inputCode5.setText("");
+            binding.inputCode6.setText("");
+            binding.inputCode1.requestFocus();
+        });
     }
 
     private void resendOtp() {
@@ -100,7 +110,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
         if (verificationId != null) {
             Log.d(Tag, "Verification Code: " + verificationId); // For debugging
             loading(true);
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
             HashMap<String, Object> newUser = new HashMap<>();
             newUser.put(Constants.KEY_USERNAME, user.username);
             newUser.put(Constants.KEY_PHONE, user.phone);
@@ -110,12 +120,13 @@ public class VerifyOtpActivity extends AppCompatActivity {
             FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            database.collection(Constants.KEY_COLLECTION_USERS)
-                                    .add(newUser)
-                                    .addOnSuccessListener(documentReference -> {
+                            DatabaseReference ref = database.getReference();
+                            ref.child(Constants.KEY_COLLECTION_USERS).child(user.phone)
+                                    .setValue(newUser)
+                                    .addOnSuccessListener(repository -> {
                                         loading(false);
                                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                                        preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                                        preferenceManager.putString(Constants.KEY_USER_ID, user.phone);
                                         preferenceManager.putString(Constants.KEY_USERNAME, user.username);
                                         preferenceManager.putString(Constants.KEY_IMAGE, user.image);
                                         Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
