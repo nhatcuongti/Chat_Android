@@ -113,10 +113,12 @@ public class VerifyOtpActivity extends AppCompatActivity {
             loading(true);
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             HashMap<String, Object> newUser = new HashMap<>();
-            newUser.put(Constants.KEY_USERNAME, user.username);
+            newUser.put(Constants.KEY_FULL_NAME, user.username);
             newUser.put(Constants.KEY_PHONE, user.phone);
             newUser.put(Constants.KEY_PASSWORD, hashPassword(user.password));
             newUser.put(Constants.KEY_IMAGE, user.image);
+            newUser.put(Constants.KEY_IS_ACTIVE, true);
+            newUser.put(Constants.KEY_LIST_FRIEND, "empty");
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
             FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
                     .addOnCompleteListener(task -> {
@@ -128,7 +130,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
                                         loading(false);
                                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                                         preferenceManager.putString(Constants.KEY_USER_ID, user.phone);
-                                        preferenceManager.putString(Constants.KEY_USERNAME, user.username);
+                                        preferenceManager.putString(Constants.KEY_FULL_NAME, user.username);
                                         preferenceManager.putString(Constants.KEY_IMAGE, user.image);
                                         Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

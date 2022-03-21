@@ -27,11 +27,11 @@ public class SignInActivity extends AppCompatActivity {
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
-//        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
-//            Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
-//            startActivity(intent);
-//            finish();
-//        }
+        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
+            Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+            startActivity(intent);
+            finish();
+        }
         setListeners();
     }
 
@@ -68,7 +68,7 @@ public class SignInActivity extends AppCompatActivity {
                         } else {
                             preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                             preferenceManager.putString(Constants.KEY_USER_ID, binding.inputPhone.getText().toString());
-                            preferenceManager.putString(Constants.KEY_USERNAME, (String) ds.child(Constants.KEY_USERNAME).getValue());
+                            preferenceManager.putString(Constants.KEY_FULL_NAME, (String) ds.child(Constants.KEY_FULL_NAME).getValue());
                             preferenceManager.putString(Constants.KEY_IMAGE, (String) ds.child(Constants.KEY_IMAGE).getValue());
                             Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
