@@ -54,4 +54,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.2'
     implementation 'com.google.firebase:firebase-firestore:24.0.2'
     implementation 'com.google.firebase:firebase-database:20.0.4'
+
+    // BCrypt
+    implementation group: 'at.favre.lib', name: 'bcrypt', version: '0.9.0'
 }

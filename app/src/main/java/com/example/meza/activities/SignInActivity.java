@@ -1,6 +1,7 @@
 package com.example.meza.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -26,11 +27,11 @@ public class SignInActivity extends AppCompatActivity {
         binding = ActivitySignInBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
-        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
-            Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
-            startActivity(intent);
-            finish();
-        }
+//        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
+//            Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+//            startActivity(intent);
+//            finish();
+//        }
         setListeners();
     }
 
@@ -52,10 +53,16 @@ public class SignInActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DataSnapshot ds = task.getResult();
+                        String password = binding.inputPassword.getText().toString(); // From user's input
+                        String hash = (String) ds.child(Constants.KEY_PASSWORD).getValue(); // From database
+                        BCrypt.Result result = null;
+                        if (hash != null) {
+                             result = BCrypt.verifyer().verify(password.toCharArray(), hash); // Comparison
+                        }
                         if (ds.getValue() == null) {
                             loading(false);
                             showToast("Không tìm thấy số điện thoại");
-                        } else if (!ds.child(Constants.KEY_PASSWORD).getValue().equals(binding.inputPassword.getText().toString())) {
+                        } else if (!result.verified) {
                             loading(false);
                             showToast("Mật khẩu không đúng");
                         } else {

@@ -2,6 +2,7 @@ package com.example.meza.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -114,7 +115,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
             HashMap<String, Object> newUser = new HashMap<>();
             newUser.put(Constants.KEY_USERNAME, user.username);
             newUser.put(Constants.KEY_PHONE, user.phone);
-            newUser.put(Constants.KEY_PASSWORD, user.password);
+            newUser.put(Constants.KEY_PASSWORD, hashPassword(user.password));
             newUser.put(Constants.KEY_IMAGE, user.image);
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
             FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
@@ -143,6 +144,10 @@ public class VerifyOtpActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private String hashPassword(String password) {
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
     private void setOtpInputs() {
