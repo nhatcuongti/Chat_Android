@@ -1,10 +1,12 @@
 package com.example.meza.activities;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.meza.ActivePeopleFragment;
@@ -25,10 +27,13 @@ import androidx.fragment.app.FragmentTransaction;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class HomePageActivity extends FragmentActivity {
     TextView fragmentName;
 
     ImageButton chatsBtn, activePeopleBtn;
+    CircleImageView circleImageView;
 
     ChatsFragment chatsFragment;
     ActivePeopleFragment activePeopleFragment;
@@ -48,9 +53,17 @@ public class HomePageActivity extends FragmentActivity {
         chatsFragment = new ChatsFragment(listActiveUser, listRecentConversation);
         activePeopleFragment = new ActivePeopleFragment(listActiveUser);
         replaceFragment(chatsFragment);
-        chatsBtn = findViewById(R.id.chats_Button);
-        activePeopleBtn = findViewById(R.id.active_people_Button);
-
+        chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
+        activePeopleBtn = (ImageButton) findViewById(R.id.active_people_Button);
+        circleImageView = findViewById(R.id.avatar);
+        circleImageView.setImageResource(R.drawable.hieule);
+        circleImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomePageActivity.this, SettingUserActivity.class);
+                startActivity(intent);
+            }
+        });
         chatsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +78,7 @@ public class HomePageActivity extends FragmentActivity {
                 fragmentName.setText("Active People");
             }
         });
+
     }
     public void replaceFragment (Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -113,21 +127,9 @@ public class HomePageActivity extends FragmentActivity {
 
             }
         });
-//        listActiveUser = new ArrayList<>();
-//        listActiveUser.add("Linh Giang");
-//        listActiveUser.add("Thu Nga");
-//        listActiveUser.add("Quỳnh Hương");
-//        listActiveUser.add("Hữu Long");
-//        listActiveUser.add("Ngọc Luân");
-//        listActiveUser.add("Nhật Anh");
-//        listActiveUser.add("Bảo Trung");
-//        listActiveUser.add("Hoàng Nhật");
-//        listActiveUser.add("Hữu Toàn");
-//        listActiveUser.add("Việt Hùng");
-//        listActiveUser.add("Bảo Long");
-//        listActiveUser.add("Công Lượng");
-//
+
         listRecentConversation = new ArrayList<>();
+//        DatabaseReference conversationRef = mDatabase.child("")
         listRecentConversation.add("Linh Giang");
         listRecentConversation.add("Thu Nga");
         listRecentConversation.add("Quỳnh Hương");
