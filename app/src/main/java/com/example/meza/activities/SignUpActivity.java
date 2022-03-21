@@ -73,8 +73,8 @@ public class SignUpActivity extends AppCompatActivity {
         showToast("Đang thực hiện...");
         User user = new User();
         user.image = encodedImage;
-        user.username = binding.inputUsername.getText().toString();
-        user.phone = binding.inputPhone.getText().toString();
+        user.fullname = binding.inputUsername.getText().toString();
+        user.phone_number = binding.inputPhone.getText().toString();
         user.password = binding.inputPassword.getText().toString();
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())

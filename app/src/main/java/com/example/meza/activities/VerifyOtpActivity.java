@@ -2,7 +2,6 @@ package com.example.meza.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -23,8 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -51,7 +49,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
     private void loadReceiverDetails() {
         user = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textPhoneNumber.setText(String.format(
-                "(+84)-%s", user.phone
+                "(+84)-%s", user.phone_number
         ));
         verificationId = getIntent().getStringExtra(Constants.KEY_VERIFICATION_ID);
     }
@@ -66,21 +64,12 @@ public class VerifyOtpActivity extends AppCompatActivity {
             showToast("Mã OTP mới sẽ được gửi sau 60s kể từ mã cũ");
             resendOtp();
         });
-        binding.textRefresh.setOnClickListener(v -> {
-            binding.inputCode1.setText("");
-            binding.inputCode2.setText("");
-            binding.inputCode3.setText("");
-            binding.inputCode4.setText("");
-            binding.inputCode5.setText("");
-            binding.inputCode6.setText("");
-            binding.inputCode1.requestFocus();
-        });
     }
 
     private void resendOtp() {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
-                        .setPhoneNumber("+84" + user.phone)
+                        .setPhoneNumber("+84" + user.phone_number)
                         .setTimeout(60L, TimeUnit.SECONDS)
                         .setActivity(VerifyOtpActivity.this)
                         .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -111,26 +100,23 @@ public class VerifyOtpActivity extends AppCompatActivity {
         if (verificationId != null) {
             Log.d(Tag, "Verification Code: " + verificationId); // For debugging
             loading(true);
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
             HashMap<String, Object> newUser = new HashMap<>();
-            newUser.put(Constants.KEY_FULL_NAME, user.username);
-            newUser.put(Constants.KEY_PHONE, user.phone);
-            newUser.put(Constants.KEY_PASSWORD, hashPassword(user.password));
+            newUser.put(Constants.KEY_FULL_NAME, user.fullname);
+            newUser.put(Constants.KEY_PHONE, user.phone_number);
+            newUser.put(Constants.KEY_PASSWORD, user.password);
             newUser.put(Constants.KEY_IMAGE, user.image);
-            newUser.put(Constants.KEY_IS_ACTIVE, true);
-            newUser.put(Constants.KEY_LIST_FRIEND, "empty");
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
             FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            DatabaseReference ref = database.getReference();
-                            ref.child(Constants.KEY_COLLECTION_USERS).child(user.phone)
-                                    .setValue(newUser)
-                                    .addOnSuccessListener(repository -> {
+                            database.collection(Constants.KEY_COLLECTION_USERS)
+                                    .add(newUser)
+                                    .addOnSuccessListener(documentReference -> {
                                         loading(false);
                                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                                        preferenceManager.putString(Constants.KEY_USER_ID, user.phone);
-                                        preferenceManager.putString(Constants.KEY_FULL_NAME, user.username);
+                                        preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                                        preferenceManager.putString(Constants.KEY_FULL_NAME, user.fullname);
                                         preferenceManager.putString(Constants.KEY_IMAGE, user.image);
                                         Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -146,10 +132,6 @@ public class VerifyOtpActivity extends AppCompatActivity {
                         }
                     });
         }
-    }
-
-    private String hashPassword(String password) {
-        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
     private void setOtpInputs() {

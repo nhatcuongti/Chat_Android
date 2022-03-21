@@ -24,8 +24,7 @@
         android:layout_toLeftOf="@id/userImage"
         android:background="@drawable/background_receive_chatbox"
         android:backgroundTint="@color/sendChatboxColor"
-        android:paddingLeft="20dp"
-        android:paddingRight="10dp"
+        android:paddingHorizontal="10dp"
         android:text="ALO"
         android:textColor="@color/white"
         android:textSize="20sp" />
