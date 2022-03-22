@@ -53,7 +53,7 @@ public class HomePageActivity extends FragmentActivity {
         setContentView(R.layout.activity_homepage);
         intData();
         fragmentName = findViewById(R.id.name_fragment);
-        chatsFragment = new ChatsFragment(listActiveUser, listRecentConversation);
+        chatsFragment = new ChatsFragment(this,listActiveUser, listRecentConversation);
         activePeopleFragment = new ActivePeopleFragment(listActiveUser);
         replaceFragment(chatsFragment);
         chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
@@ -186,5 +186,8 @@ public class HomePageActivity extends FragmentActivity {
 //        listRecentConversation.add("Việt Hùng");
 //        listRecentConversation.add("Bảo Long");
 //        listRecentConversation.add("Công Lượng");
+    }
+    public interface ItemClickListener {
+        void onClick(View view, int position,boolean isLongClick);
     }
 }

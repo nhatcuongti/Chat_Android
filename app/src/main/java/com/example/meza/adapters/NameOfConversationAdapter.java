@@ -1,14 +1,22 @@
 package com.example.meza.adapters;
 
+import android.content.Context;
+import android.content.Intent;
+import android.nfc.Tag;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
+import com.example.meza.activities.ChatActivity;
+import com.example.meza.activities.HomePageActivity;
 import com.example.meza.model.ConversationModel;
 
 import java.util.ArrayList;
@@ -20,8 +28,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConversationAdapter.ViewHolder> {
     ArrayList<ConversationModel> listRecentConversation;
+    Context context;
 
-    public NameOfConversationAdapter(ArrayList<ConversationModel> listRecentConversation) {
+    public NameOfConversationAdapter(Context c,ArrayList<ConversationModel> listRecentConversation) {
+        context = c;
         this.listRecentConversation = listRecentConversation;
     }
 
@@ -40,6 +50,18 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
         holder.thumnail.setImageResource(R.drawable.muitreo);
         holder.name.setText(conversation.getTittle());
         holder.lastMessage.setText(conversation.getLast_message());
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ChatActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("conversationID",listRecentConversation.get(holder.getAdapterPosition()).getID());
+                Log.i("debug", "onClick: " + listRecentConversation.get(holder.getAdapterPosition()).getID());
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -50,12 +72,16 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView thumnail;
         TextView name, lastMessage;
+        LinearLayout layout;
+
+        private HomePageActivity.ItemClickListener itemClickListener;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             thumnail =itemView.findViewById(R.id.item_conversation_thumnail);
             name = itemView.findViewById(R.id.item_name_in_chats);
             lastMessage = itemView.findViewById(R.id.item_last_message_in_chats);
+            layout = itemView.findViewById(R.id.item_conversation_name_layout);
         }
     }
 }

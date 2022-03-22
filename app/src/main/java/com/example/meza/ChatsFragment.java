@@ -1,5 +1,6 @@
 package com.example.meza;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.meza.activities.HomePageActivity;
 import com.example.meza.adapters.ActiveThumnailAdapter;
 import com.example.meza.adapters.NameOfConversationAdapter;
 import com.example.meza.model.ConversationModel;
@@ -25,13 +27,16 @@ public class ChatsFragment extends Fragment {
     RecyclerView listActiveUserView, listRecentConversationView;
     ActiveThumnailAdapter activeThumnailAdapter;
     NameOfConversationAdapter nameOfConversationAdapter;
+    Context mcontext;
 
-    public ChatsFragment(ArrayList<User2> listActiveUser) {
+    public ChatsFragment(Context c,ArrayList<User2> listActiveUser) {
+        mcontext = c;
         this.listActiveUser = listActiveUser;
     }
 
-    public ChatsFragment(ArrayList<User2> listActiveUser, ArrayList<ConversationModel> listRecentConversation) {
+    public ChatsFragment(Context c,ArrayList<User2> listActiveUser, ArrayList<ConversationModel> listRecentConversation) {
         this.listActiveUser = listActiveUser;
+        mcontext = c;
         this.listRecentConversation = listRecentConversation;
     }
 
@@ -55,7 +60,7 @@ public class ChatsFragment extends Fragment {
 
         //recent conversation
         listRecentConversationView = view.findViewById(R.id.recycle_list_recent_conversation);
-        nameOfConversationAdapter = new NameOfConversationAdapter(listRecentConversation);
+        nameOfConversationAdapter = new NameOfConversationAdapter(mcontext,listRecentConversation);
         listRecentConversationView.setAdapter(nameOfConversationAdapter);
 
         return view;
