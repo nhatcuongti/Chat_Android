@@ -139,6 +139,23 @@ public class ConversationModel {
         participantListArray = new ArrayList<>(participant_list.keySet());
     }
 
+    public static void updateConversation(String idConv, Map<String, Object> convMap){
+        String path = "conversation";
+        FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+        DatabaseReference databaseReference = firebaseDatabase.getReference(path);
+
+        databaseReference.child(idConv).updateChildren(convMap);
+    }
+
+    public Map<String, Object> toMap(){
+        Map<String, Object> convData = new HashMap<>();
+        convData.put("creator", creator);
+        convData.put("id", ID);
+        convData.put("last_message", last_message);
+        convData.put("last_time", last_time);
+        return convData;
+    }
+
     public static class Message {
 
         //---New Data--//
@@ -296,6 +313,8 @@ public class ConversationModel {
                 }
             });
         }
+
+
 
         @Override
         public String toString() {

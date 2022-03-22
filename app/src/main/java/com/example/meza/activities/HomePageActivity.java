@@ -13,7 +13,9 @@ import com.example.meza.ActivePeopleFragment;
 import com.example.meza.ChatsFragment;
 import com.example.meza.R;
 import com.example.meza.model.ConversationModel;
+import com.example.meza.model.User;
 import com.example.meza.model.User2;
+import com.example.meza.utilities.PreferenceManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -46,7 +48,9 @@ public class HomePageActivity extends FragmentActivity {
     ArrayList<ConversationModel> listRecentConversation;
 
     private DatabaseReference mDatabase;
-    private String userID = "0931231231"; // use for static data testing
+    private User currentUser;
+    private String userID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +94,8 @@ public class HomePageActivity extends FragmentActivity {
         fragmentTransaction.commit();
     }
     public void intData(){
+        currentUser = User.getCurrentUser(this);
+        userID = currentUser.getId();
         listFriend = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference listFriendRef = mDatabase.child("users").child(userID).child("list_friend");
@@ -138,10 +144,11 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 ConversationModel conversationModel = snapshot.getValue(ConversationModel.class);
-                if(conversationModel.getParticipant_list().get(userID)){
+                Log.d("abcxyz", "onChildAdded: " + conversationModel.toString());
+                if(conversationModel.getParticipant_list().get(userID) != null){
+
                     listRecentConversation.add(conversationModel);
                     chatsFragment.getNameOfConversationAdapter().notifyDataSetChanged();
-
                 }
 
             }

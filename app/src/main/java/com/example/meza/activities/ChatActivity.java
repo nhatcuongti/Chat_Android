@@ -11,12 +11,14 @@ import android.provider.ContactsContract;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +28,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.meza.R;
 import com.example.meza.adapters.ConversationAdapter;
 import com.example.meza.databinding.ActivityChatBinding;
+import com.example.meza.databinding.BottombarChatBinding;
+import com.example.meza.databinding.ToolbarChatBinding;
 import com.example.meza.interfaces.OnGetValueListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
@@ -50,17 +54,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     String idConversation;
     ProgressBar progressBar;
 
+    ActivityChatBinding chatBinding;
+    ToolbarChatBinding toolbarChatBinding;
+    BottombarChatBinding bottombarChatBinding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
-        conversationRv = findViewById(R.id.conversationListRv);
-        //Lấy dữ liệu thô
-
         progressBar = findViewById(R.id.progressBar);
-
+        conversationRv = findViewById(R.id.conversationListRv);
         loading(true);
         initData();
         initButton();
@@ -71,9 +76,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      * setDataOnConversation() là hàm dùng để set dữ liệu vào thanh topbar đầu tiên
      */
     public void setDataOnConversation(){
-
         // Set ảnh đối tác
         // Set tên nhóm / tên đối tác
+        TextView tittle = findViewById(R.id.tittleName);
+        tittle.setText(conversation.getTittle());
     }
 
     /**
@@ -83,22 +89,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     public void initData(){
         //**************************************************************************************
                                     //Lấy dữ liệu của user hiện tại//
-        currentUser = new User();
-        currentUser.setId("0931231231");
-        currentUser.setFullname("Hao Bui");
-        currentUser.setPhone_number("0931231231");
+        currentUser = User.getCurrentUser(this);
         //************************************End***********************************************
-
-
 
         //**************************************************************************************
                                     //Lấy dữ liệu của conversation hiện tại/
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-
-        idConversation = bundle.getString("conversationID"); // Vì chưa có dữ liệu chuẩn , nên để mặc định là id = 1
+        idConversation = bundle.getString("conversationID");
         //************************************End***********************************************
-
 
 
         //**************************************************************************************
@@ -108,6 +107,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             public void onSuccess(DataSnapshot snapshot) {
                 conversation = snapshot.getValue(ConversationModel.class);
                 conversation.formatParticipantList();
+                Log.d("abcdef", "onSuccess: " + conversation.getLast_time());
+                if (conversation.getLast_time() == -1) // Nếu như chưa có tin nhắn
+                    loading(false);
+                setDataOnConversation();
 
                 //**************************************************************************************
                                     //Tạo RecycleView và Adapter//
@@ -126,8 +129,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             conversationRv.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    conversationRv.smoothScrollToPosition(
-                                            conversationRv.getAdapter().getItemCount() - 1);
+                                    ArrayList<ConversationModel.Message> listMsg = conversation.getListMessage();
+                                    if (listMsg != null && !listMsg.isEmpty())
+                                        conversationRv.smoothScrollToPosition(
+                                                conversationRv.getAdapter().getItemCount() - 1);
                                 }
                             }, 100);
                         }
@@ -291,7 +296,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 //********************************************************************************//
                                         //Gửi đoạn tin nhắn lên database//
-                ConversationModel.Message.listenLastElement(idConversation, new OnGetValueListener() {
+                ConversationModel.Message.listenLastElement(idConversation, new OnGetValueListener() { // Cập nhật tin nhắn
                     @Override
                     public void onSuccess(DataSnapshot snapshot) {
                         //************************************************************************//
@@ -300,7 +305,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         for (DataSnapshot ds : snapshot.getChildren())
                             lastSnapshot = ds;
 
-                        String id = lastSnapshot.getKey();
+                        String id = (lastSnapshot == null) ? "0" : lastSnapshot.getKey();
                         Log.d("test", "onSuccess: " + id);
                         id = String.valueOf(Integer.valueOf(id) + 1);
                         //*********************************End************************************//
@@ -310,6 +315,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         chatBox.setText("");
                     }
                 });
+
+
+                // Cập nhật conversation
+                conversation.setLast_message(msg.getText());
+                conversation.setLast_time(msg.getTimestamp());
+                ConversationModel.updateConversation(idConversation, conversation.toMap());
                 break;
                 //*********************************End********************************************//
 
@@ -363,4 +374,5 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             progressBar.setVisibility(View.GONE);
         }
     }
+
 }
