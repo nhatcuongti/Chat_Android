@@ -12,6 +12,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
+import com.example.meza.model.User2;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 
@@ -23,9 +24,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by reiko-lhnhat on 2/25/2022.
  */
 public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAdapter.ViewHolder> {
-    ArrayList<String> listActiveUser;
+    ArrayList<User2> listActiveUser;
 
-    public ActiveThumnailAdapter(ArrayList<String> listActiveUser) {
+    public ActiveThumnailAdapter(ArrayList<User2> listActiveUser) {
         this.listActiveUser = listActiveUser;
     }
 
@@ -41,9 +42,9 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String activeUser = listActiveUser.get(position);
+        User2 activeUser = listActiveUser.get(position);
         holder.thumnail.setImageResource(R.drawable.muitreo);
-        holder.name.setText(activeUser);
+        holder.name.setText(activeUser.getFullname());
 
 
     }

@@ -49,7 +49,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
     private void loadReceiverDetails() {
         user = (User) getIntent().getSerializableExtra(Constants.KEY_USER);
         binding.textPhoneNumber.setText(String.format(
-                "(+84)-%s", user.phone
+                "(+84)-%s", user.phone_number
         ));
         verificationId = getIntent().getStringExtra(Constants.KEY_VERIFICATION_ID);
     }
@@ -69,7 +69,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
     private void resendOtp() {
         PhoneAuthOptions options =
                 PhoneAuthOptions.newBuilder(FirebaseAuth.getInstance())
-                        .setPhoneNumber("+84" + user.phone)
+                        .setPhoneNumber("+84" + user.phone_number)
                         .setTimeout(60L, TimeUnit.SECONDS)
                         .setActivity(VerifyOtpActivity.this)
                         .setCallbacks(new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -102,8 +102,8 @@ public class VerifyOtpActivity extends AppCompatActivity {
             loading(true);
             FirebaseFirestore database = FirebaseFirestore.getInstance();
             HashMap<String, Object> newUser = new HashMap<>();
-            newUser.put(Constants.KEY_USERNAME, user.username);
-            newUser.put(Constants.KEY_PHONE, user.phone);
+            newUser.put(Constants.KEY_FULL_NAME, user.fullname);
+            newUser.put(Constants.KEY_PHONE, user.phone_number);
             newUser.put(Constants.KEY_PASSWORD, user.password);
             newUser.put(Constants.KEY_IMAGE, user.image);
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
@@ -116,7 +116,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
                                         loading(false);
                                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                                         preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
-                                        preferenceManager.putString(Constants.KEY_USERNAME, user.username);
+                                        preferenceManager.putString(Constants.KEY_FULL_NAME, user.fullname);
                                         preferenceManager.putString(Constants.KEY_IMAGE, user.image);
                                         Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

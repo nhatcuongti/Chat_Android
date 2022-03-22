@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
+import com.example.meza.model.ConversationModel;
 
 import java.util.ArrayList;
 
@@ -18,9 +19,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by reiko-lhnhat on 2/25/2022.
  */
 public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConversationAdapter.ViewHolder> {
-    ArrayList<String> listRecentConversation;
+    ArrayList<ConversationModel> listRecentConversation;
 
-    public NameOfConversationAdapter(ArrayList<String> listRecentConversation) {
+    public NameOfConversationAdapter(ArrayList<ConversationModel> listRecentConversation) {
         this.listRecentConversation = listRecentConversation;
     }
 
@@ -35,9 +36,10 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        String conversation = listRecentConversation.get(position);
+        ConversationModel conversation = listRecentConversation.get(position);
         holder.thumnail.setImageResource(R.drawable.muitreo);
-        holder.name.setText(conversation);
+        holder.name.setText(conversation.getTittle());
+        holder.lastMessage.setText(conversation.getLast_message());
     }
 
     @Override
@@ -47,12 +49,13 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView thumnail;
-        TextView name;
+        TextView name, lastMessage;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             thumnail =itemView.findViewById(R.id.item_conversation_thumnail);
             name = itemView.findViewById(R.id.item_name_in_chats);
+            lastMessage = itemView.findViewById(R.id.item_last_message_in_chats);
         }
     }
 }

@@ -1,106 +1,311 @@
 package com.example.meza.model;
 
+import android.provider.ContactsContract;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.example.meza.interfaces.OnGetValueListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TimeZone;
 
 public class ConversationModel {
-    //Dữ liệu cần phải có : (Giả sử chat với người A)
-    // - Danh sách tất cả đoạn chat của mình với người A
-    // - Danh sách tất cả đoạn chat của người A với Mình
-    // => Cùng một loại dữ liệu, đặt tên là conversation
 
-    //Conversation gồm có :
-    // - UserID (Mình)
-    // - partnerID(Đối phương) (Từ đây sẽ biết được Name, Image và tình trạng hoạt động)
-    // - ArrayList<Messenger> (Messenger gồm : ISend = true nếu mình gửi, false nếu đối tác gửi và đoạn tin nhắn, thể loại)
 
-//    private String userID;
-//    private String partnerID;
-    private String partnerName;
-    private Integer partnerImage;
-    private boolean isPartnerActive;
-    private ArrayList<Message> listMessage;
+    //----New Data--//
+    private String ID;
+    private HashMap<String, Boolean> participant_list;
+    private ArrayList<String> participantListArray;
+    private ArrayList<ConversationModel.Message> message_list;
+    private String creator;
+
+    // ---- new data was added by nhat---
+    private String tittle;
+    private Long last_time; // thoi gian gui cua tin nhan cuoi cung
+    private String last_message; // tin nhan cuoi cung
+
+
+    public String getTittle() {
+        return tittle;
+    }
+
+    public void setTittle(String tittle) {
+        this.tittle = tittle;
+    }
+
+    public Long getLast_time() {
+        return last_time;
+    }
+
+    public void setLast_time(Long last_time) {
+        this.last_time = last_time;
+    }
+
+    public String getLast_message() {
+        return last_message;
+    }
+
+    public void setLast_message(String last_message) {
+        this.last_message = last_message;
+    }
+
+    public ConversationModel(){
+
+    }
+
+    public String getID() {
+        return ID;
+    }
+
+    public void setID(String ID) {
+        this.ID = ID;
+    }
+
+    public HashMap<String, Boolean> getParticipant_list() {
+        return participant_list;
+    }
+
+    public void setParticipant_list(HashMap<String, Boolean> participant_list) {
+        this.participant_list = participant_list;
+    }
+
+    public ArrayList<String> getParticipantListArray() {
+        return participantListArray;
+    }
+
+    public void setParticipantListArray(ArrayList<String> participantListArray) {
+        this.participantListArray = participantListArray;
+    }
+
+    public ArrayList<ConversationModel.Message> getListMessage() {
+        return message_list;
+    }
+
+    public void setListMessage(ArrayList<ConversationModel.Message> listMessage) {
+        this.message_list = listMessage;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+
+    public static void getFirstConversationWithID(String id,
+                                                  OnGetValueListener onGetValueListener){
+        String path = "/conversation/" + id;
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(path);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (onGetValueListener != null)
+                    onGetValueListener.onSuccess(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public String toString() {
+        return "ConversationModel{" +
+                "ID='" + ID + '\'' +
+                ", participant_list=" + participantListArray +
+                ", message_list=" + message_list +
+                ", creator='" + creator + '\'' +
+                '}';
+    }
+
+    public void formatParticipantList() {
+        participantListArray = new ArrayList<>(participant_list.keySet());
+    }
 
     public static class Message {
-        boolean iSend ;
-        String message;
+
+        //---New Data--//
+        private String id;
+        private String sender;
+        private String text;
         LocalDateTime startTime;
-//        String typeMessage;
+        private long timestamp;
 
+        public Message(){
 
-        public  Message(boolean iSend, String message, LocalDateTime startTime) {
-            this.iSend = iSend;
-            this.message = message;
+        }
+
+        //--- New Method ---//
+        public Message(String id, String sender, String text, LocalDateTime startTime) {
+            this.id = id;
+            this.sender = sender;
+            this.text = text;
             this.startTime = startTime;
         }
 
         public Message(Message copyMsg){
-            this.iSend = copyMsg.iSend;
-            this.message = copyMsg.message;
+            this.id = copyMsg.id;
+            this.sender = copyMsg.sender;
+            this.text = copyMsg.text;
+            this.startTime = copyMsg.startTime;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
+
+        public String getSender() {
+            return sender;
+        }
+
+        public void setSender(String sender) {
+            this.sender = sender;
+        }
+
+        public String getText() {
+            return text;
+        }
+
+        public void setText(String text) {
+            this.text = text;
         }
 
         public LocalDateTime getStartTime() {
             return startTime;
         }
 
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+        public void setTimestamp(long timestamp) {
+            this.timestamp = timestamp;
+        }
+
         public void setStartTime(LocalDateTime startTime) {
             this.startTime = startTime;
         }
 
-        public boolean isiSend() {
-            return iSend;
+        public void formatStartTime(){
+            startTime = LocalDateTime.ofInstant(Instant.ofEpochMilli(timestamp),
+                    TimeZone.getDefault().toZoneId());
         }
 
-        public void setiSend(boolean iSend) {
-            this.iSend = iSend;
+        private static ArrayList<ConversationModel.Message> list_message = new ArrayList<>();
+
+        public static void listenChange(String id, OnGetValueListener onGetValueListener){
+            String path = "/message/" + id;
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(path);
+
+            // Xử lý khi có thay đổi database
+            databaseReference.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    onGetValueListener.onSuccess(snapshot);
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    Message msg = snapshot.getValue(ConversationModel.Message.class);
+
+                    if (list_message == null || list_message.isEmpty())
+                        return;
+
+                    for (int i = 0; i < list_message.size(); i++)
+                        if (msg.getId().equals(list_message.get(i).getId())){
+                            list_message.remove(i);
+                            break;
+                        }
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         }
 
-        public String getMessage() {
-            return message;
+        public static ConversationModel.Message getMessageWithID(String id){
+            for (ConversationModel.Message msg : list_message)
+                if (msg.getId().equals(id))
+                    return msg;
+
+            return null;
         }
 
-        public void setMessage(String message) {
-            this.message = message;
+        public Map<String, Object> toMap(){
+            Map<String, Object> msgData = new HashMap<>();
+            msgData.put("sender", sender);
+            msgData.put("id", id);
+            msgData.put("text", text);
+            msgData.put("timestamp", timestamp);
+            return msgData;
         }
-    }
 
-    public ConversationModel(String partnerName, Integer partnerImage, boolean isPartnerActive, ArrayList<Message> listMessage) {
-        this.partnerName = partnerName;
-        this.partnerImage = partnerImage;
-        this.isPartnerActive = isPartnerActive;
-        this.listMessage = listMessage;
-    }
+        public static void insertNewMsgToDatabase(ConversationModel.Message msg, String id, String idConversation){
+            String path = "/message/" + idConversation ;
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(path);
+            databaseReference.child(id).setValue(msg.toMap());
+        }
 
+        public static void listenLastElement(String idConv, OnGetValueListener onGetValueListener){
+            String path = "/message/" + idConv;
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(path);
+            Query lastQuery = databaseReference.orderByKey().limitToLast(1);
 
-    public String getPartnerName() {
-        return partnerName;
-    }
+            lastQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    onGetValueListener.onSuccess(snapshot);
+                }
 
-    public void setPartnerName(String partnerName) {
-        this.partnerName = partnerName;
-    }
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
 
-    public Integer getPartnerImage() {
-        return partnerImage;
-    }
+                }
+            });
+        }
 
-    public void setPartnerImage(Integer partnerImage) {
-        this.partnerImage = partnerImage;
-    }
-
-    public boolean isPartnerActive() {
-        return isPartnerActive;
-    }
-
-    public void setPartnerActive(boolean partnerActive) {
-        isPartnerActive = partnerActive;
-    }
-
-    public ArrayList<Message> getListMessage() {
-        return listMessage;
-    }
-
-    public void setListMessage(ArrayList<Message> listMessage) {
-        this.listMessage = listMessage;
+        @Override
+        public String toString() {
+            return "Message{" +
+                    "id='" + id + '\'' +
+                    ", sender='" + sender + '\'' +
+                    ", text='" + text + '\'' +
+                    ", startTime=" + startTime +
+                    ", timestamp=" + timestamp +
+                    '}';
+        }
     }
 }

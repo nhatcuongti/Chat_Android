@@ -141,6 +141,14 @@
                 android:textSize="@dimen/_18ssp"
                 android:textStyle="bold" />
 
+            <TextView
+                android:id="@+id/textRefresh"
+                android:layout_width="@dimen/_30sdp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/ic_baseline_refresh_24"
+                android:gravity="center" />
+
         </LinearLayout>
 
         <LinearLayout
@@ -179,6 +187,7 @@
                 android:id="@+id/buttonVerify"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50sdp"
+                android:backgroundTint="@color/primary"
                 android:text="@string/verify"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"
