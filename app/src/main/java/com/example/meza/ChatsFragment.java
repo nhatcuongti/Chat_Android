@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.meza.adapters.ActiveThumnailAdapter;
 import com.example.meza.adapters.NameOfConversationAdapter;
+import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User2;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 
 public class ChatsFragment extends Fragment {
     private ArrayList<User2> listActiveUser;
-    private ArrayList<String> listRecentConversation;
+    private ArrayList<ConversationModel> listRecentConversation;
     View view;
     RecyclerView listActiveUserView, listRecentConversationView;
     ActiveThumnailAdapter activeThumnailAdapter;
@@ -29,13 +30,17 @@ public class ChatsFragment extends Fragment {
         this.listActiveUser = listActiveUser;
     }
 
-    public ChatsFragment(ArrayList<User2> listActiveUser, ArrayList<String> listRecentConversation) {
+    public ChatsFragment(ArrayList<User2> listActiveUser, ArrayList<ConversationModel> listRecentConversation) {
         this.listActiveUser = listActiveUser;
         this.listRecentConversation = listRecentConversation;
     }
 
     public ActiveThumnailAdapter getActiveThumnailAdapter() {
         return activeThumnailAdapter;
+    }
+
+    public NameOfConversationAdapter getNameOfConversationAdapter() {
+        return nameOfConversationAdapter;
     }
 
     @Override

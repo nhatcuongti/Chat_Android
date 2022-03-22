@@ -12,7 +12,9 @@ import android.widget.TextView;
 import com.example.meza.ActivePeopleFragment;
 import com.example.meza.ChatsFragment;
 import com.example.meza.R;
+import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User2;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -20,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -40,7 +43,7 @@ public class HomePageActivity extends FragmentActivity {
 
     ArrayList<User2> listActiveUser;
     ArrayList<String> listFriend;
-    ArrayList<String> listRecentConversation;
+    ArrayList<ConversationModel> listRecentConversation;
 
     private DatabaseReference mDatabase;
     private String userID = "0931231231"; // use for static data testing
@@ -130,29 +133,58 @@ public class HomePageActivity extends FragmentActivity {
 
         listRecentConversation = new ArrayList<>();
         DatabaseReference conversationRef = mDatabase.child("conversation");
-        conversationRef.addValueEventListener(new ValueEventListener() {
+        conversationRef.addChildEventListener(new ChildEventListener() {
+
             @Override
-            listR
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for(snapshot)
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                ConversationModel conversationModel = snapshot.getValue(ConversationModel.class);
+                if(conversationModel.getParticipant_list().get(userID)){
+                    listRecentConversation.add(conversationModel);
+                    chatsFragment.getNameOfConversationAdapter().notifyDataSetChanged();
+
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                ConversationModel conversationModel = snapshot.getValue(ConversationModel.class);
+                if(conversationModel.getParticipant_list().get(userID)){
+                    for(ConversationModel cv: listRecentConversation)
+                        if(cv.getID().equals(conversationModel.getID()))
+                            listRecentConversation.remove(conversationModel);
+
+                    chatsFragment.getNameOfConversationAdapter().notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        })
-        listRecentConversation.add("Linh Giang");
-        listRecentConversation.add("Thu Nga");
-        listRecentConversation.add("Quỳnh Hương");
-        listRecentConversation.add("Hữu Long");
-        listRecentConversation.add("Ngọc Luân");
-        listRecentConversation.add("Nhật Anh");
-        listRecentConversation.add("Bảo Trung");
-        listRecentConversation.add("Hoàng Nhật");
-        listRecentConversation.add("Hữu Toàn");
-        listRecentConversation.add("Việt Hùng");
-        listRecentConversation.add("Bảo Long");
-        listRecentConversation.add("Công Lượng");
+        });
+//        listRecentConversation.add("Linh Giang");
+//        listRecentConversation.add("Thu Nga");
+//        listRecentConversation.add("Quỳnh Hương");
+//        listRecentConversation.add("Hữu Long");
+//        listRecentConversation.add("Ngọc Luân");
+//        listRecentConversation.add("Nhật Anh");
+//        listRecentConversation.add("Bảo Trung");
+//        listRecentConversation.add("Hoàng Nhật");
+//        listRecentConversation.add("Hữu Toàn");
+//        listRecentConversation.add("Việt Hùng");
+//        listRecentConversation.add("Bảo Long");
+//        listRecentConversation.add("Công Lượng");
     }
 }

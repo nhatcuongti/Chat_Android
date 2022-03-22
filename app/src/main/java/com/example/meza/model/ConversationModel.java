@@ -31,7 +31,35 @@ public class ConversationModel {
     private ArrayList<ConversationModel.Message> message_list;
     private String creator;
 
+    // ---- new data was added by nhat---
+    private String tittle;
+    private Long last_time; // thoi gian gui cua tin nhan cuoi cung
+    private String last_message; // tin nhan cuoi cung
 
+
+    public String getTittle() {
+        return tittle;
+    }
+
+    public void setTittle(String tittle) {
+        this.tittle = tittle;
+    }
+
+    public Long getLast_time() {
+        return last_time;
+    }
+
+    public void setLast_time(Long last_time) {
+        this.last_time = last_time;
+    }
+
+    public String getLast_message() {
+        return last_message;
+    }
+
+    public void setLast_message(String last_message) {
+        this.last_message = last_message;
+    }
 
     public ConversationModel(){
 
