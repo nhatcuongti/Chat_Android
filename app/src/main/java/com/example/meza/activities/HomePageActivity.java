@@ -129,7 +129,19 @@ public class HomePageActivity extends FragmentActivity {
         });
 
         listRecentConversation = new ArrayList<>();
-//        DatabaseReference conversationRef = mDatabase.child("")
+        DatabaseReference conversationRef = mDatabase.child("conversation");
+        conversationRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            listR
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for(snapshot)
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        })
         listRecentConversation.add("Linh Giang");
         listRecentConversation.add("Thu Nga");
         listRecentConversation.add("Quỳnh Hương");
