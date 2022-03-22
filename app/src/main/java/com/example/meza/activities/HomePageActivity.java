@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.meza.ActivePeopleFragment;
@@ -14,8 +13,7 @@ import com.example.meza.ChatsFragment;
 import com.example.meza.R;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
-import com.example.meza.model.User2;
-import com.example.meza.utilities.PreferenceManager;
+import com.example.meza.utils.Utils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -43,7 +41,7 @@ public class HomePageActivity extends FragmentActivity {
     ChatsFragment chatsFragment;
     ActivePeopleFragment activePeopleFragment;
 
-    ArrayList<User2> listActiveUser;
+    ArrayList<User> listActiveUser;
     ArrayList<String> listFriend;
     ArrayList<ConversationModel> listRecentConversation;
 
@@ -55,19 +53,29 @@ public class HomePageActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
+
         intData();
+
         fragmentName = findViewById(R.id.name_fragment);
-        chatsFragment = new ChatsFragment(this,listActiveUser, listRecentConversation);
-        activePeopleFragment = new ActivePeopleFragment(listActiveUser);
-        replaceFragment(chatsFragment);
         chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
         activePeopleBtn = (ImageButton) findViewById(R.id.active_people_Button);
         circleImageView = findViewById(R.id.avatar);
-        circleImageView.setImageResource(R.drawable.hieule);
+
+        chatsFragment = new ChatsFragment(this,listActiveUser, listRecentConversation);
+        activePeopleFragment = new ActivePeopleFragment(listActiveUser);
+
+        replaceFragment(chatsFragment);
+
+
+        // decode base64 string to bitmap image and set image for imageview
+        circleImageView.setImageBitmap(Utils.encodeBase64StringToBitMapImage(currentUser.getImage()));
+
+        // chuyen sang man hinh setting, chua truyen du lieu
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomePageActivity.this, SettingUserActivity.class);
+                Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
+                intent.putExtra("currentUser", currentUser);
                 startActivity(intent);
             }
         });
@@ -122,7 +130,7 @@ public class HomePageActivity extends FragmentActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listActiveUser.clear();
                 for(DataSnapshot ds: snapshot.getChildren()){
-                    User2 user = ds.getValue(User2.class);
+                    User user = ds.getValue(User.class);
                     String userKey = ds.getKey();
                     if(user.getIs_active() == 1 && listFriend.contains(userKey)){
                         listActiveUser.add(user);

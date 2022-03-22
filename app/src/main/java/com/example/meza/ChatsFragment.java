@@ -15,13 +15,13 @@ import com.example.meza.activities.HomePageActivity;
 import com.example.meza.adapters.ActiveThumnailAdapter;
 import com.example.meza.adapters.NameOfConversationAdapter;
 import com.example.meza.model.ConversationModel;
-import com.example.meza.model.User2;
+import com.example.meza.model.User;
 
 import java.util.ArrayList;
 
 
 public class ChatsFragment extends Fragment {
-    private ArrayList<User2> listActiveUser;
+    private ArrayList<User> listActiveUser;
     private ArrayList<ConversationModel> listRecentConversation;
     View view;
     RecyclerView listActiveUserView, listRecentConversationView;
@@ -29,12 +29,12 @@ public class ChatsFragment extends Fragment {
     NameOfConversationAdapter nameOfConversationAdapter;
     Context mcontext;
 
-    public ChatsFragment(Context c,ArrayList<User2> listActiveUser) {
+    public ChatsFragment(Context c,ArrayList<User> listActiveUser) {
         mcontext = c;
         this.listActiveUser = listActiveUser;
     }
 
-    public ChatsFragment(Context c,ArrayList<User2> listActiveUser, ArrayList<ConversationModel> listRecentConversation) {
+    public ChatsFragment(Context c,ArrayList<User> listActiveUser, ArrayList<ConversationModel> listRecentConversation) {
         this.listActiveUser = listActiveUser;
         mcontext = c;
         this.listRecentConversation = listRecentConversation;

@@ -21,8 +21,11 @@ import java.util.ArrayList;
 
 public class User implements Serializable {
     public String fullname, image, phone_number, password, id;
-    public ArrayList<String> list_friend = new ArrayList<>();
-    public boolean isActive;
+    private ArrayList<String> list_friend;
+    private boolean isActive; // ???
+
+    private int is_active;
+
 
     public User() {
 
@@ -35,6 +38,8 @@ public class User implements Serializable {
         this.password = password;
         this.id = phone_number;
         this.isActive = isActive;
+
+
     }
 
     public String getFullname() {
@@ -150,6 +155,14 @@ public class User implements Serializable {
 
             }
         });
+    }
+
+    public int getIs_active() {
+        return is_active;
+    }
+
+    public void setIs_active(int is_active) {
+        this.is_active = is_active;
     }
 
     public static void getUserWithID(String id, OnGetValueListener onGetValueListener){

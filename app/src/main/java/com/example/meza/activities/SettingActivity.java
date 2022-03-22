@@ -1,31 +1,55 @@
 package com.example.meza.activities;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.meza.R;
+import com.example.meza.model.User;
+import com.example.meza.utils.Utils;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 public class SettingActivity extends Activity {
 
+    TextView username;
+    RoundedImageView userAvatar;
     Button Phone, Password, deleteAccount, Logout, Bell, Vibrate;
+    ImageButton backWardBtn;
+
+
+    User currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
 
+        //receive current user data from homepage activity
+        currentUser = (User) getIntent().getSerializableExtra("currentUser");
+
+        //inflate view
+        username = findViewById(R.id.tvUsername);
+        userAvatar = findViewById(R.id.imageProfile);
+
+        //set name and profile image (avatar)
+        username.setText(currentUser.getFullname());
+        userAvatar.setImageBitmap(Utils.encodeBase64StringToBitMapImage(currentUser.getImage()));
+
         actionButton();
     }
 
     private void actionButton() {
+        backWardBtn = findViewById(R.id.backwardBtn);
         Bell = (Button) findViewById(R.id.btnNotificationApp);
         Vibrate = (Button) findViewById(R.id.btnVibrate);
         Phone = (Button) findViewById(R.id.btnChangePhone);
@@ -84,6 +108,13 @@ public class SettingActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(SettingActivity.this, "Đăng xuất", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        backWardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

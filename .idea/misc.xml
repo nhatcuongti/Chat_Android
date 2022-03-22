@@ -13,6 +13,7 @@
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_main.xml" value="0.15" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_setting.xml" value="0.22447916666666667" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_sign_in.xml" value="0.22447916666666667" />
+        <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_sign_up.xml" value="0.22447916666666667" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_user_setting.xml" value="0.22447916666666667" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_active_people.xml" value="0.33" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_active_people2.xml" value="0.2" />
@@ -21,7 +22,7 @@
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_message_in_chats__vertical.xml" value="0.5" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_nameconversation_in_chats__vertical.xml" value="0.1" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_user_in_activepeople__vertical.xml" value="0.1" />
-        <entry key="..\:/Chat_Android/app/src/main/res/layout/toolbar_setting.xml" value="0.1" />
+        <entry key="..\:/Chat_Android/app/src/main/res/layout/toolbar_setting.xml" value="0.16" />
         <entry key="..\:/Chat_Android/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1045" />
         <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_bottombar.xml" value="0.2985" />
         <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/drawable/background_image.xml" value="0.2985" />

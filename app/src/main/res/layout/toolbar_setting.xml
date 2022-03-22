@@ -13,7 +13,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_keyboard_backspace_24"
-            android:backgroundTint="@color/black"/>
+            android:backgroundTint="@color/black" />
 
         <TextView
             android:id="@+id/textCaidat"
