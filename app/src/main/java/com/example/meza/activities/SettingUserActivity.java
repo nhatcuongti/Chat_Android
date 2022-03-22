@@ -1,6 +1,8 @@
 package com.example.meza.activities;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -49,8 +51,26 @@ public class SettingUserActivity extends Activity {
             public void onClick(View v) {
                 if(notification.getText().equals("Tắt thông báo"))
                 {
-                    Toast.makeText(SettingUserActivity.this, "Đã tắt thông báo cuộc trò chuyện", Toast.LENGTH_SHORT).show();
-                    notification.setText("Bật thông báo");
+                    AlertDialog.Builder alert = new AlertDialog.Builder(SettingUserActivity.this);
+                    alert.setTitle("Thông báo");
+                    alert.setMessage("Bạn sẽ tắt thông báo tin nhắn với người này?");
+
+                    alert.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Toast.makeText(SettingUserActivity.this, "Đã tắt thông báo cuộc trò chuyện", Toast.LENGTH_SHORT).show();
+                            notification.setText("Bật thông báo");
+                        }
+                    });
+
+                    alert.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //do nothing
+                        }
+                    });
+                    alert.show();
+
                 }
                 else {
                     Toast.makeText(SettingUserActivity.this, "Đã bật thông báo cuộc trò chuyện", Toast.LENGTH_SHORT).show();
@@ -64,14 +84,48 @@ public class SettingUserActivity extends Activity {
         deleteHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingUserActivity.this, "Đã xóa cuộc trò chuyện thành công", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder alert = new AlertDialog.Builder(SettingUserActivity.this);
+                alert.setTitle("Thông báo");
+                alert.setMessage("Bạn sẽ xóa hết lịch sử cuộc trò chuyện?");
+
+                alert.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(SettingUserActivity.this, "Đã xóa cuộc trò chuyện thành công", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                alert.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //do nothing
+                    }
+                });
+                alert.show();
             }
         });
 
         ban.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(SettingUserActivity.this, "Chặn thành công", Toast.LENGTH_SHORT).show();
+                AlertDialog.Builder alert = new AlertDialog.Builder(SettingUserActivity.this);
+                alert.setTitle("Thông báo");
+                alert.setMessage("Bạn sẽ chặn cuộc gọi và tin nhắn của người này?");
+
+                alert.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Toast.makeText(SettingUserActivity.this, "Chặn thành công", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                alert.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //do nothing
+                    }
+                });
+                alert.show();
             }
         });
     }

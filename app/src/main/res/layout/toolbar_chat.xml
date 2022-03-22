@@ -29,9 +29,9 @@
             android:id="@+id/userActive"
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:src="@drawable/dot_green"
+            android:layout_alignRight="@id/userImage"
             android:layout_alignBottom="@id/userImage"
-            android:layout_alignRight="@id/userImage"/>
+            android:src="@drawable/dot_green" />
 
         <TextView
             android:id="@+id/userName"
