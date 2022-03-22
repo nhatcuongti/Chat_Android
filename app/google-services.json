@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "107985300645",
+    "firebase_url": "https://meza-app-default-rtdb.firebaseio.com",
     "project_id": "meza-app",
     "storage_bucket": "meza-app.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "107985300645-9jq0biqqu637uf285ohglg23osislg8i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meza",
+            "certificate_hash": "f068c62bebb800965fc989e48d99b22452870139"
+          }
+        },
         {
           "client_id": "107985300645-b97eg555om243049jc47v75t36leupj2.apps.googleusercontent.com",
           "client_type": 1,
@@ -27,6 +36,14 @@
           "android_info": {
             "package_name": "com.example.meza",
             "certificate_hash": "a0c33522d17bcdaf3e85ae8b656d5b1442acf85f"
+          }
+        },
+        {
+          "client_id": "107985300645-hhokms0kss6psv7l5cudapiub026rqf9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meza",
+            "certificate_hash": "e06c80a03f4a670a61945b66bd375214f7e12f88"
           }
         },
         {

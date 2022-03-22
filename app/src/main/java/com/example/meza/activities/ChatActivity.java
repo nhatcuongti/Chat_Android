@@ -2,6 +2,7 @@ package com.example.meza.activities;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -92,8 +93,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         //**************************************************************************************
                                     //Lấy dữ liệu của conversation hiện tại/
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
 
-        idConversation = "1"; // Vì chưa có dữ liệu chuẩn , nên để mặc định là id = 1
+        idConversation = bundle.getString("conversationID"); // Vì chưa có dữ liệu chuẩn , nên để mặc định là id = 1
         //************************************End***********************************************
 
 

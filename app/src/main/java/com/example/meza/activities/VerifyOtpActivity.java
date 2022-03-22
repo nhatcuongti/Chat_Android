@@ -2,6 +2,7 @@ package com.example.meza.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -22,7 +23,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
@@ -64,6 +66,15 @@ public class VerifyOtpActivity extends AppCompatActivity {
             showToast("Mã OTP mới sẽ được gửi sau 60s kể từ mã cũ");
             resendOtp();
         });
+        binding.textRefresh.setOnClickListener(v -> {
+            binding.inputCode1.setText("");
+            binding.inputCode2.setText("");
+            binding.inputCode3.setText("");
+            binding.inputCode4.setText("");
+            binding.inputCode5.setText("");
+            binding.inputCode6.setText("");
+            binding.inputCode1.requestFocus();
+        });
     }
 
     private void resendOtp() {
@@ -100,22 +111,24 @@ public class VerifyOtpActivity extends AppCompatActivity {
         if (verificationId != null) {
             Log.d(Tag, "Verification Code: " + verificationId); // For debugging
             loading(true);
-            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
             HashMap<String, Object> newUser = new HashMap<>();
             newUser.put(Constants.KEY_FULL_NAME, user.fullname);
             newUser.put(Constants.KEY_PHONE, user.phone_number);
-            newUser.put(Constants.KEY_PASSWORD, user.password);
+            newUser.put(Constants.KEY_PASSWORD, hashPassword(user.password));
             newUser.put(Constants.KEY_IMAGE, user.image);
+            newUser.put(Constants.KEY_IS_ACTIVE, 1);
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
             FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
-                            database.collection(Constants.KEY_COLLECTION_USERS)
-                                    .add(newUser)
-                                    .addOnSuccessListener(documentReference -> {
+                            DatabaseReference ref = database.getReference();
+                            ref.child(Constants.KEY_COLLECTION_USERS).child(user.phone_number)
+                                    .setValue(newUser)
+                                    .addOnSuccessListener(repository -> {
                                         loading(false);
                                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                                        preferenceManager.putString(Constants.KEY_USER_ID, documentReference.getId());
+                                        preferenceManager.putString(Constants.KEY_USER_ID, user.phone_number);
                                         preferenceManager.putString(Constants.KEY_FULL_NAME, user.fullname);
                                         preferenceManager.putString(Constants.KEY_IMAGE, user.image);
                                         Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
@@ -132,6 +145,10 @@ public class VerifyOtpActivity extends AppCompatActivity {
                         }
                     });
         }
+    }
+
+    private String hashPassword(String password) {
+        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
     }
 
     private void setOtpInputs() {
