@@ -16,11 +16,13 @@ import androidx.annotation.Nullable;
 
 import com.example.meza.R;
 import com.example.meza.model.User;
+import com.example.meza.utilities.PreferenceManager;
 import com.example.meza.utils.Utils;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 public class SettingActivity extends Activity {
 
+    PreferenceManager preferenceManager;
     TextView username;
     RoundedImageView userAvatar;
     Button Phone, Password, deleteAccount, Logout, Bell, Vibrate;
@@ -33,7 +35,7 @@ public class SettingActivity extends Activity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
-
+        preferenceManager = new PreferenceManager(getApplicationContext());
         //receive current user data from homepage activity
         currentUser = (User) getIntent().getSerializableExtra("currentUser");
 
@@ -43,7 +45,11 @@ public class SettingActivity extends Activity {
 
         //set name and profile image (avatar)
         username.setText(currentUser.getFullname());
-        userAvatar.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
+        if (currentUser.getImage() != null) {
+            userAvatar.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
+        } else {
+            userAvatar.setImageResource(R.drawable.ic_baseline_person_24);
+        }
 
         actionButton();
     }
@@ -53,17 +59,17 @@ public class SettingActivity extends Activity {
         Bell = (Button) findViewById(R.id.btnNotificationApp);
         Vibrate = (Button) findViewById(R.id.btnVibrate);
         Phone = (Button) findViewById(R.id.btnChangePhone);
-        Password = (Button)findViewById(R.id.btnChangePassword);
-        deleteAccount = (Button)findViewById(R.id.btnDeleteAccount);
-        Logout = (Button)findViewById(R.id.btnLogout);
+        Password = (Button) findViewById(R.id.btnChangePassword);
+        deleteAccount = (Button) findViewById(R.id.btnDeleteAccount);
+        Logout = (Button) findViewById(R.id.btnLogout);
 
         Bell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Bell.getText().equals("Tắt thông báo")){
+                if (Bell.getText().equals("Tắt thông báo")) {
                     Toast.makeText(SettingActivity.this, "Đã tắt thông báo ứng dụng", Toast.LENGTH_SHORT).show();
                     Bell.setText("Bật thông báo");
-                }else {
+                } else {
                     Toast.makeText(SettingActivity.this, "Đã bật thông báo ứng dụng", Toast.LENGTH_SHORT).show();
                     Bell.setText("Tắt thông báo");
                 }
@@ -73,10 +79,10 @@ public class SettingActivity extends Activity {
         Vibrate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(Vibrate.getText().equals("Tắt rung")){
+                if (Vibrate.getText().equals("Tắt rung")) {
                     Toast.makeText(SettingActivity.this, "Đã tắt rung", Toast.LENGTH_SHORT).show();
                     Vibrate.setText("Bật rung");
-                }else {
+                } else {
                     Toast.makeText(SettingActivity.this, "Đã bật rung", Toast.LENGTH_SHORT).show();
                     Vibrate.setText("Tắt rung");
                 }
@@ -108,6 +114,11 @@ public class SettingActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(SettingActivity.this, "Đăng xuất", Toast.LENGTH_SHORT).show();
+                preferenceManager.clear();
+                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         });
 
