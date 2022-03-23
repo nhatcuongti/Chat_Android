@@ -23,7 +23,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="5dp"
-                android:src="@drawable/muitreo"/>
+                android:src="@drawable/ic_baseline_person_24"/>
             <TextView
                 android:id="@+id/name_fragment"
                 android:layout_width="wrap_content"

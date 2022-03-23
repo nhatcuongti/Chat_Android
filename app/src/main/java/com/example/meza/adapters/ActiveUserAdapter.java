@@ -40,7 +40,7 @@ public class ActiveUserAdapter extends RecyclerView.Adapter<ActiveUserAdapter.Vi
         User activeUser = listActiveUser.get(position);
 
         holder.thumnail.setImageBitmap(
-                Utils.encodeBase64StringToBitMapImage(
+                Utils.decodeImage(
                         listActiveUser.get(position).getImage()));
 
         holder.name.setText(activeUser.getFullname());

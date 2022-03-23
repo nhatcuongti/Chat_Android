@@ -43,7 +43,7 @@ public class SettingActivity extends Activity {
 
         //set name and profile image (avatar)
         username.setText(currentUser.getFullname());
-        userAvatar.setImageBitmap(Utils.encodeBase64StringToBitMapImage(currentUser.getImage()));
+        userAvatar.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
 
         actionButton();
     }

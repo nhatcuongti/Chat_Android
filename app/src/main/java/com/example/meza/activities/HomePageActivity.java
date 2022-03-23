@@ -61,14 +61,16 @@ public class HomePageActivity extends FragmentActivity {
         activePeopleBtn = (ImageButton) findViewById(R.id.active_people_Button);
         circleImageView = findViewById(R.id.avatar);
 
-        chatsFragment = new ChatsFragment(this,listActiveUser, listRecentConversation);
+        chatsFragment = new ChatsFragment(this, listActiveUser, listRecentConversation);
         activePeopleFragment = new ActivePeopleFragment(listActiveUser);
 
         replaceFragment(chatsFragment);
 
 
         // decode base64 string to bitmap image and set image for imageview
-        circleImageView.setImageBitmap(Utils.encodeBase64StringToBitMapImage(currentUser.getImage()));
+        if (currentUser.getImage() != null) {
+            circleImageView.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
+        }
 
         // chuyen sang man hinh setting, chua truyen du lieu
         circleImageView.setOnClickListener(new View.OnClickListener() {
@@ -95,13 +97,15 @@ public class HomePageActivity extends FragmentActivity {
         });
 
     }
-    public void replaceFragment (Fragment fragment){
+
+    public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.fragment_chats, fragment);
         fragmentTransaction.commit();
     }
-    public void intData(){
+
+    public void intData() {
         currentUser = User.getCurrentUser(this);
         userID = currentUser.getId();
         listFriend = new ArrayList<>();
@@ -111,13 +115,14 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listFriend.clear();
-                for (DataSnapshot ds: snapshot.getChildren()) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     String friendID = (String) ds.getValue(String.class);
                     Log.i(ContentValues.TAG, "loadPost:" + friendID);
                     listFriend.add(friendID);
                 }
                 chatsFragment.getActiveThumnailAdapter().notifyDataSetChanged();
             }
+
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
             }
@@ -129,15 +134,15 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listActiveUser.clear();
-                for(DataSnapshot ds: snapshot.getChildren()){
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     User user = ds.getValue(User.class);
                     String userKey = ds.getKey();
-                    if(user.getIs_active() == 1 && listFriend.contains(userKey)){
+                    if (user.getIs_active() == 1 && listFriend.contains(userKey)) {
                         listActiveUser.add(user);
                     }
                 }
                 chatsFragment.getActiveThumnailAdapter().notifyDataSetChanged();
-                }
+            }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -153,7 +158,7 @@ public class HomePageActivity extends FragmentActivity {
             public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                 ConversationModel conversationModel = snapshot.getValue(ConversationModel.class);
                 Log.d("abcxyz", "onChildAdded: " + conversationModel.toString());
-                if(conversationModel.getParticipant_list().get(userID) != null){
+                if (conversationModel.getParticipant_list().get(userID) != null) {
 
                     listRecentConversation.add(conversationModel);
                     chatsFragment.getNameOfConversationAdapter().notifyDataSetChanged();
@@ -169,9 +174,9 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onChildRemoved(@NonNull DataSnapshot snapshot) {
                 ConversationModel conversationModel = snapshot.getValue(ConversationModel.class);
-                if(conversationModel.getParticipant_list().get(userID)){
-                    for(ConversationModel cv: listRecentConversation)
-                        if(cv.getID().equals(conversationModel.getID()))
+                if (conversationModel.getParticipant_list().get(userID)) {
+                    for (ConversationModel cv : listRecentConversation)
+                        if (cv.getID().equals(conversationModel.getID()))
                             listRecentConversation.remove(conversationModel);
 
                     chatsFragment.getNameOfConversationAdapter().notifyDataSetChanged();
@@ -202,7 +207,8 @@ public class HomePageActivity extends FragmentActivity {
 //        listRecentConversation.add("Bảo Long");
 //        listRecentConversation.add("Công Lượng");
     }
+
     public interface ItemClickListener {
-        void onClick(View view, int position,boolean isLongClick);
+        void onClick(View view, int position, boolean isLongClick);
     }
 }

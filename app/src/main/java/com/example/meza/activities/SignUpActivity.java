@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.meza.databinding.ActivitySignUpBinding;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
+import com.example.meza.utils.Utils;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -34,7 +35,7 @@ import java.util.concurrent.TimeUnit;
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;
-    private String encodedImage;
+    private String encodedImage = null;
     private final String Tag = "SignUpActivity";
 
     @Override
@@ -118,17 +119,7 @@ public class SignUpActivity extends AppCompatActivity {
             binding.progressBar.setVisibility(View.INVISIBLE);
         }
     }
-
-    private String encodeImage(Bitmap bitmap) {
-        int previewWidth = 150;
-        int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
-        Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] bytes = baos.toByteArray();
-        return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
-
+    
     // Pick and set profile image activity
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -141,7 +132,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Bitmap bitmap = BitmapFactory.decodeStream(is);
                             binding.imageProfile.setImageBitmap(bitmap);
                             binding.textAddImage.setVisibility(View.GONE);
-                            encodedImage = encodeImage(bitmap);
+                            encodedImage = Utils.encodeImage(bitmap);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -151,10 +142,7 @@ public class SignUpActivity extends AppCompatActivity {
     );
 
     private Boolean isValidSignUpDetails() {
-        if (encodedImage == null) {
-            showToast("Chọn hình ảnh đại điện");
-            return false;
-        } else if (binding.inputUsername.getText().toString().trim().isEmpty()) {
+        if (binding.inputUsername.getText().toString().trim().isEmpty()) {
             showToast("Nhập tên người dùng");
             return false;
         } else if (binding.inputPhone.getText().toString().trim().isEmpty()) {

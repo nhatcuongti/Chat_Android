@@ -46,7 +46,7 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
         User activeUser = listActiveUser.get(position);
 
         holder.thumnail.setImageBitmap(
-                Utils.encodeBase64StringToBitMapImage(
+                Utils.decodeImage(
                         listActiveUser.get(position).getImage()));
 
         holder.name.setText(activeUser.getFullname());
