@@ -7,35 +7,13 @@
     tools:context=".activities.AddRealtimeDatabase"
     android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/idMsg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="id"/>
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:src="@drawable/king"
+        android:visibility="gone"/>
 
-    <EditText
-        android:id="@+id/sender"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Sender"/>
 
-    <EditText
-        android:id="@+id/text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="text"
-        android:layout_marginTop="10dp"/>
-
-    <Button
-        android:id="@+id/btnPush"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="push"/>
-
-    <TextView
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Content"/>
 
 </LinearLayout>

@@ -164,6 +164,7 @@ public class ConversationModel {
         private String text;
         LocalDateTime startTime;
         private long timestamp;
+        private String typeMessage;
 
         public Message(){
 
@@ -222,6 +223,14 @@ public class ConversationModel {
 
         public void setStartTime(LocalDateTime startTime) {
             this.startTime = startTime;
+        }
+
+        public String getTypeMessage() {
+            return typeMessage;
+        }
+
+        public void setTypeMessage(String typeMessage) {
+            this.typeMessage = typeMessage;
         }
 
         public void formatStartTime(){
@@ -287,6 +296,7 @@ public class ConversationModel {
             msgData.put("id", id);
             msgData.put("text", text);
             msgData.put("timestamp", timestamp);
+            msgData.put("typeMessage", typeMessage);
             return msgData;
         }
 

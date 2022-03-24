@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MeZa">
         <activity
+            android:name=".activities.FullImageScreenActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.VerifyOtpActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -45,7 +48,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

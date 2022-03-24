@@ -11,6 +11,7 @@ public class Constants {
     public static final String KEY_LIST_FRIEND = "list_friend";
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_IMAGE = "image";
+    public static final String KEY_TEXT = "text";
     public static final String KEY_USER = "user";
     public static final String KEY_VERIFICATION_ID = "verificationId";
 }

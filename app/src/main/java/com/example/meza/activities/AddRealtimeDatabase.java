@@ -4,6 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Layout;
 import android.util.Log;
@@ -41,45 +46,8 @@ public class AddRealtimeDatabase extends AppCompatActivity {
         binding = ActivityAddRealtimeDatabaseBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("/message/1");
-        Log.d("hello", "onCreate: "  + binding.btnPush.getText().toString());
-        Button btn = findViewById(R.id.btnPush);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                String formattedDateTime = LocalDateTime.now().format(formatter);
-
-                ConversationModel.Message msg = new ConversationModel.Message(binding.idMsg.getText().toString(),
-                        binding.sender.getText().toString(),
-                        binding.text.getText().toString(),
-                        LocalDateTime.now());
 
 
-
-                databaseReference.child(msg.getId()).setValue(msg, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(@Nullable DatabaseError error, @NonNull DatabaseReference ref) {
-                        Toast.makeText(AddRealtimeDatabase.this, "successful", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-
-        DatabaseReference databaseReference1 = FirebaseDatabase.getInstance().getReference("participant_list");
-        databaseReference1.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                test t = snapshot.getValue(test.class);
-                ArrayList<String> str = new ArrayList<>(t.getMap().keySet());
-                binding.content.setText(str.toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
     }
 }
 
