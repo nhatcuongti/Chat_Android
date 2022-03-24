@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 
@@ -11,6 +12,8 @@ import com.example.meza.R;
 import com.example.meza.databinding.ActivityFullImageScreenBinding;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utils;
+
+import java.io.File;
 
 public class FullImageScreenActivity extends AppCompatActivity {
 
@@ -23,9 +26,12 @@ public class FullImageScreenActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         Intent intent = getIntent();
-        Bitmap bm = intent.getParcelableExtra(Constants.KEY_IMAGE);
+        String path = intent.getStringExtra(Constants.KEY_IMAGE);
 
-        binding.fullImage.setImageBitmap(Utils.resizedBitmap(bm, 600));
+        File file = new File(path);
+        Bitmap bitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+        binding.fullImage.setImageBitmap(bitmap);
+
         binding.backwardBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

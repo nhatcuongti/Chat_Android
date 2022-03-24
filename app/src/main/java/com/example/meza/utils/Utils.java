@@ -1,11 +1,16 @@
 package com.example.meza.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.util.Base64;
+import android.util.Log;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
@@ -40,7 +45,7 @@ public class Utils {
         previewBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
         byte[] bytes = baos.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
-    }
+    } 
 
     // Hash password
     public static String hashPassword(String password) {
@@ -58,5 +63,24 @@ public class Utils {
         Bitmap newBitmap = Bitmap.createScaledBitmap(
                 bm, width, height, false);
         return newBitmap;
+    }
+
+    //Create temp file
+    public static String tempFileImage(Context context, Bitmap bitmap, String name) {
+
+        File outputDir = context.getCacheDir();
+        File imageFile = new File(outputDir, name + ".jpg");
+
+        OutputStream os;
+        try {
+            os = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            os.flush();
+            os.close();
+        } catch (Exception e) {
+            Log.e(context.getClass().getSimpleName(), "Error writing file", e);
+        }
+
+        return imageFile.getAbsolutePath();
     }
 }

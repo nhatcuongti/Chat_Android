@@ -262,6 +262,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.imageSendBtn:{ // Nếu người dùng bấm nút gửi ảnh từ thư viện ảnh
+                //Tạo một intent để có thể truy cập được tới gallery và chọn ảnh
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 1);
                 break;
@@ -338,10 +339,16 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * onActivityResult() là hàm dùng để xử lý sau sự kiện chọn ảnh trong gallery
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && data != null){
+        if (resultCode == RESULT_OK && data != null && requestCode == 1){
             Uri uri = data.getData();
 
             try {
@@ -407,6 +414,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         return false;
     }
 
+    /**
+     * dispatchTouchEvent() là hàm dùng để lắng nghe khi click ngoài thanh chat box thì ta sẽ clear
+     * focus của nó
+     * @param event
+     * @return
+     */
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -424,6 +437,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         return super.dispatchTouchEvent( event );
     }
 
+    /**
+     * loading() là hàm dùng để thay đổi vòng load Progress Bar
+     * @param isLoading
+     */
     private void loading(Boolean isLoading) {
         if (isLoading) {
             conversationRv.setVisibility(View.GONE);
@@ -434,10 +451,17 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    /**
+     * onGetImageClick() là hàm lắng nghe sự kiện click vào một image trong đoạn tin nhắn để
+     * xem ảnh ở trạng thái full screen
+     * @param encodeImage
+     */
     @Override
-    public void onGetImageClick(Bitmap bitmap) {
+    public void onGetImageClick(String encodeImage) {
         Intent intent = new Intent(ChatActivity.this, FullImageScreenActivity.class);
-        intent.putExtra(Constants.KEY_IMAGE, bitmap);
+        Bitmap bm = Utils.decodeImage(encodeImage);
+        String filePath = Utils.tempFileImage(ChatActivity.this, bm, Constants.KEY_IMAGE);
+        intent.putExtra(Constants.KEY_IMAGE, filePath);
         startActivity(intent);
     }
 }

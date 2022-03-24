@@ -30,6 +30,10 @@ public class ChatsFragment extends Fragment {
     NameOfConversationAdapter nameOfConversationAdapter;
     Context mcontext;
 
+    public ChatsFragment(){
+
+    }
+
     public ChatsFragment(Context c,ArrayList<User> listActiveUser) {
         mcontext = c;
         this.listActiveUser = listActiveUser;

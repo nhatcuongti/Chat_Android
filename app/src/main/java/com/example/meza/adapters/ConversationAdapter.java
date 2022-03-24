@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -217,7 +218,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return VIEW_RECEIVE;
     }
 
-    public static class ItemSendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ItemSendViewHolder extends RecyclerView.ViewHolder {
 
         ItemSendChatboxBinding binding;
         Context context;
@@ -229,23 +230,18 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         public void setData(String msg, String typeMsg, int partnerImage, int topMargin, LocalDateTime startTime){
-            Log.d("abcxyz", "setData: " + typeMsg);
-            if (typeMsg.equals(Constants.KEY_TEXT)){ //  Nếu tin nhắn là đoạn text
-                binding.message.setText(msg);
-                binding.message.setVisibility(View.VISIBLE);
-                binding.imgMessage.setVisibility(View.GONE);
-                Log.d("abcxyz", "setData: " + binding.message.getVisibility());
-            } else if (typeMsg.equals(Constants.KEY_IMAGE)){ // Nếu tin nhắn là hình ảnh
-                Bitmap bitmap = Utils.decodeImage(msg);
-                Bitmap resizeBitmap = Utils.resizedBitmap(bitmap, 400);
-                binding.imgMessage.setImageBitmap(resizeBitmap);
-                binding.imgMessage.setOnClickListener(this);
-                binding.imgMessage.setVisibility(View.VISIBLE);
-                binding.message.setVisibility(View.GONE);
-                Log.d("abcxyz", "setData: " + binding.message.getVisibility());
+            //**************************************************************************************
+                                    //Xử lý dữ liệu đoạn tin nhắn (Hỉnh ảnh, text, file, ...)/
+            ConversationAdapter.setMessage(binding.message,
+                    binding.imgMessage,
+                    msg,
+                    typeMsg,
+                    context);
+            //************************************End***********************************************
 
-            }
 
+            //**************************************************************************************
+                                        //Xử lý ảnh và thời gian
             if (partnerImage != -1){
                 binding.userImage.setImageResource(partnerImage);
                 binding.userImage.setVisibility(View.VISIBLE);
@@ -261,26 +257,25 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             }
             else
                 binding.startTime.setVisibility(View.GONE);
+            //************************************End***********************************************
 
+            //**************************************************************************************
+                                        //Set parameter của ViewGroup Relative Layout
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(0, topMargin, 0, 0);
 
             RelativeLayout viewParent = binding.getRoot();
             viewParent.setLayoutParams(lp);
+            //************************************End***********************************************
+
         }
 
-
-        @Override
-        public void onClick(View view) {
-            Bitmap bm=((BitmapDrawable)binding.imgMessage.getDrawable()).getBitmap();
-            ((ChatActivity) context).onGetImageClick(bm);
-        }
     }
 
     /**
      * ItemReceiveViewHolder là đoạn tin nhắn người khác gửi về cho currentUser
      */
-    public static class ItemReceiveViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public static class ItemReceiveViewHolder extends RecyclerView.ViewHolder {
 
         ItemReceiveChatboxBinding binding;
         Context context;
@@ -292,49 +287,90 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
         public void setData(String msg, String typeMsg, Integer partnerAvatar, int topMargin, LocalDateTime startTime){
-            if (typeMsg.equals(Constants.KEY_TEXT)){ //  Nếu tin nhắn là đoạn text
-                binding.message.setText(msg);
-                binding.message.setVisibility(View.VISIBLE);
-                binding.imgMessage.setVisibility(View.GONE);
-            } else if (typeMsg.equals(Constants.KEY_IMAGE)){ // Nếu tin nhắn là hình ảnh
-                Bitmap bitmap = Utils.decodeImage(msg);
-                binding.imgMessage.setImageBitmap(bitmap);
-                binding.imgMessage.setOnClickListener(this);
-                binding.imgMessage.setVisibility(View.VISIBLE);
-                binding.message.setVisibility(View.GONE);
-            }
+            //**************************************************************************************
+                                //Xử lý dữ liệu đoạn tin nhắn (Hỉnh ảnh, text, file, ...)
+            ConversationAdapter.setMessage(binding.message,
+                    binding.imgMessage,
+                    msg,
+                    typeMsg,
+                    context);
+            //************************************End***********************************************
 
-            if (partnerAvatar != -1){ // Nếu ở đoạn tin nhắn này không được để ảnh
-                binding.userImage.setImageResource(partnerAvatar);
-                binding.userImage.setVisibility(View.VISIBLE);
-                binding.userActive.setVisibility(View.VISIBLE);
-            }
-            else{ // Nếu đoạn tin nhắn này được để ảnh
-                binding.userImage.setVisibility(View.INVISIBLE);
-                binding.userActive.setVisibility(View.INVISIBLE);
-            }
 
-            if (startTime != null){ // Nếu ở trên đầu đoạn tin nhắn được để thời gian
-                binding.startTime.setVisibility(View.VISIBLE);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-                String formattedDateTime = startTime.format(formatter);
-                binding.startTime.setText(formattedDateTime);
-            }
-            else // Nếu ở trên đầu đoạn tin nhắn không được để thời gian
-                binding.startTime.setVisibility(View.GONE);
+            //**************************************************************************************
+                                        //Xử lý ảnh và thời gian
+            ConversationAdapter.setImageAndTime(binding.userImage,
+                    binding.userActive,
+                    binding.startTime,
+                    startTime,
+                    partnerAvatar);
+            //************************************End***********************************************
 
+
+            //**************************************************************************************
+                                    //Set parameter của ViewGroup Relative Layout
             RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
             lp.setMargins(0, topMargin, 0, 0);
 
             RelativeLayout viewParent = binding.getRoot();
             viewParent.setLayoutParams(lp);
+            //************************************End***********************************************
+
+        }
+    }
+
+    public static void setMessage(TextView messageTxt,
+                               ImageView imgMessage,
+                               String msg,
+                               String typeMsg,
+                               Context context) {
+        switch (typeMsg){
+            case Constants.KEY_TEXT:{
+                messageTxt.setText(msg);
+                messageTxt.setVisibility(View.VISIBLE);
+                imgMessage.setVisibility(View.GONE);
+                break;
+            }
+            case Constants.KEY_IMAGE:{
+                Bitmap bitmap = Utils.decodeImage(msg);
+                Bitmap resizeBitmap = Utils.resizedBitmap(bitmap, 400);
+                imgMessage.setImageBitmap(resizeBitmap);
+                imgMessage.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ((ChatActivity) context).onGetImageClick(msg);
+                    }
+                });
+                imgMessage.setVisibility(View.VISIBLE);
+                messageTxt.setVisibility(View.GONE);
+                break;
+            }
+        }
+    }
+
+    public static void setImageAndTime(CircleImageView userImage,
+                                       CircleImageView userActive,
+                                       TextView startTimeText,
+                                       LocalDateTime startTime,
+                                       Integer partnerAvatar){
+        if (partnerAvatar != -1){ // Nếu ở đoạn tin nhắn này không được để ảnh
+            userImage.setImageResource(partnerAvatar);
+            userImage.setVisibility(View.VISIBLE);
+            userActive.setVisibility(View.VISIBLE);
+        }
+        else{ // Nếu đoạn tin nhắn này được để ảnh
+            userImage.setVisibility(View.INVISIBLE);
+            userActive.setVisibility(View.INVISIBLE);
         }
 
-        @Override
-        public void onClick(View view) {
-            Bitmap bm=((BitmapDrawable)binding.imgMessage.getDrawable()).getBitmap();
-            ((ChatActivity) context).onGetImageClick(bm);
+        if (startTime != null){ // Nếu ở trên đầu đoạn tin nhắn được để thời gian
+            startTimeText.setVisibility(View.VISIBLE);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+            String formattedDateTime = startTime.format(formatter);
+            startTimeText.setText(formattedDateTime);
         }
+        else // Nếu ở trên đầu đoạn tin nhắn không được để thời gian
+            startTimeText.setVisibility(View.GONE);
     }
 
     public static boolean isAfter30Minutes(LocalDateTime StartTime, LocalDateTime AfterStartTime){
@@ -344,5 +380,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         return false;
     }
+
+
 
 }

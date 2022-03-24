@@ -1,6 +1,7 @@
 package com.example.meza.model;
 
 import android.provider.ContactsContract;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -323,6 +324,10 @@ public class ConversationModel {
                 }
             });
         }
+        
+
+
+
 
 
 

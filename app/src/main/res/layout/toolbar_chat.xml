@@ -11,8 +11,8 @@
 
         <ImageButton
             android:id="@+id/backwardBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:background="@drawable/ic_baseline_keyboard_backspace_24"
             android:backgroundTint="@color/purple" />
@@ -23,6 +23,7 @@
             android:layout_height="50dp"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/backwardBtn"
+            android:layout_centerVertical="true"
             android:src="@drawable/hieule" />
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -39,18 +40,22 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/audioCallBtn"
             android:layout_toRightOf="@id/userImage"
+            android:ellipsize="end"
             android:fontFamily="sans-serif-light"
+            android:maxLines="1"
             android:text="Hiếu"
             android:textColor="@color/black"
-            android:textSize="20sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
 
         <ImageButton
             android:id="@+id/inforBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
@@ -59,8 +64,8 @@
 
         <ImageButton
             android:id="@+id/videoCallBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/inforBtn"
@@ -69,8 +74,8 @@
 
         <ImageButton
             android:id="@+id/audioCallBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:layout_toLeftOf="@id/videoCallBtn"

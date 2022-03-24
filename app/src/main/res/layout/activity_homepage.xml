@@ -46,9 +46,9 @@
         android:id="@+id/fragment_chats"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/chats_toolbar_layout"
         android:layout_above="@id/bottombar_layout"
-        android:backgroundTint="@color/white"/>
+        android:layout_below="@id/chats_toolbar_layout"
+        android:backgroundTint="@color/white" />
 
         <LinearLayout
             android:id="@+id/bottombar_layout"
