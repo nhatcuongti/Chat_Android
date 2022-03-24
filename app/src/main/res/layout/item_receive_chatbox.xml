@@ -37,10 +37,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/startTime"
         android:layout_marginLeft="10dp"
-        android:paddingHorizontal="10dp"
         android:layout_toRightOf="@+id/userImage"
         android:background="@drawable/background_receive_chatbox"
+        android:fontFamily="sans-serif-medium"
+        android:paddingHorizontal="10dp"
         android:text="ALO"
         android:textColor="@color/black"
         android:textSize="20sp" />
+
+    <ImageView
+        android:id="@+id/imgMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/startTime"
+        android:layout_toRightOf="@+id/userImage"
+        android:layout_marginLeft="10dp"
+        android:visibility="gone"/>
+
 </RelativeLayout>

@@ -2,6 +2,9 @@ package com.example.meza.adapters;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +16,15 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
+import com.example.meza.activities.ChatActivity;
 import com.example.meza.databinding.ItemReceiveChatboxBinding;
 import com.example.meza.databinding.ItemSendChatboxBinding;
+import com.example.meza.interfaces.OnGetImageClickListener;
 import com.example.meza.interfaces.OnGetValueListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
+import com.example.meza.utilities.Constants;
+import com.example.meza.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 
 import java.time.Duration;
@@ -50,7 +57,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_SENT){
 
-            ItemSendViewHolder viewHolder = new ItemSendViewHolder(ItemSendChatboxBinding.inflate(
+            ItemSendViewHolder viewHolder = new ItemSendViewHolder(context, ItemSendChatboxBinding.inflate(
                     LayoutInflater.from(context),
                     parent,
                     false
@@ -59,7 +66,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return  viewHolder;
         } else {
 
-            ItemReceiveViewHolder viewHolder = new ItemReceiveViewHolder(ItemReceiveChatboxBinding.inflate(
+            ItemReceiveViewHolder viewHolder = new ItemReceiveViewHolder(context, ItemReceiveChatboxBinding.inflate(
                     LayoutInflater.from(context),
                     parent,
                     false
@@ -122,6 +129,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             ((ItemSendViewHolder) holder).setData(
                     currentMsg.getText(),
+                    currentMsg.getTypeMessage(),
                     partnerAvatar,
                     topMargin,
                     (setStartTime) ? currentMsg.getStartTime() : null);
@@ -179,6 +187,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             //************************************End***********************************************
 
             ((ItemReceiveViewHolder) holder).setData(currentMsg.getText(),
+                    currentMsg.getTypeMessage(),
                     partnerAvatar,
                     topMargin,
                     (setStartTime) ? currentMsg.getStartTime() : null);
@@ -208,17 +217,35 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             return VIEW_RECEIVE;
     }
 
-    public static class ItemSendViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemSendViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ItemSendChatboxBinding binding;
+        Context context;
 
-        public ItemSendViewHolder(ItemSendChatboxBinding itemSendChatboxBinding) {
+        public ItemSendViewHolder(Context context, ItemSendChatboxBinding itemSendChatboxBinding) {
             super(itemSendChatboxBinding.getRoot());
             binding = itemSendChatboxBinding;
+            this.context = context;
         }
 
-        public void setData(String msg, int partnerImage, int topMargin, LocalDateTime startTime){
-            binding.message.setText(msg);
+        public void setData(String msg, String typeMsg, int partnerImage, int topMargin, LocalDateTime startTime){
+            Log.d("abcxyz", "setData: " + typeMsg);
+            if (typeMsg.equals(Constants.KEY_TEXT)){ //  Nếu tin nhắn là đoạn text
+                binding.message.setText(msg);
+                binding.message.setVisibility(View.VISIBLE);
+                binding.imgMessage.setVisibility(View.GONE);
+                Log.d("abcxyz", "setData: " + binding.message.getVisibility());
+            } else if (typeMsg.equals(Constants.KEY_IMAGE)){ // Nếu tin nhắn là hình ảnh
+                Bitmap bitmap = Utils.decodeImage(msg);
+                Bitmap resizeBitmap = Utils.resizedBitmap(bitmap, 400);
+                binding.imgMessage.setImageBitmap(resizeBitmap);
+                binding.imgMessage.setOnClickListener(this);
+                binding.imgMessage.setVisibility(View.VISIBLE);
+                binding.message.setVisibility(View.GONE);
+                Log.d("abcxyz", "setData: " + binding.message.getVisibility());
+
+            }
+
             if (partnerImage != -1){
                 binding.userImage.setImageResource(partnerImage);
                 binding.userImage.setVisibility(View.VISIBLE);
@@ -243,22 +270,40 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         }
 
 
+        @Override
+        public void onClick(View view) {
+            Bitmap bm=((BitmapDrawable)binding.imgMessage.getDrawable()).getBitmap();
+            ((ChatActivity) context).onGetImageClick(bm);
+        }
     }
 
     /**
      * ItemReceiveViewHolder là đoạn tin nhắn người khác gửi về cho currentUser
      */
-    public static class ItemReceiveViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemReceiveViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         ItemReceiveChatboxBinding binding;
+        Context context;
 
-        public ItemReceiveViewHolder(ItemReceiveChatboxBinding itemReceiveChatboxBinding) {
+        public ItemReceiveViewHolder(Context context, ItemReceiveChatboxBinding itemReceiveChatboxBinding) {
             super(itemReceiveChatboxBinding.getRoot());
             binding = itemReceiveChatboxBinding;
+            this.context = context;
         }
 
-        public void setData(String msg, Integer partnerAvatar, int topMargin, LocalDateTime startTime){
-            binding.message.setText(msg);
+        public void setData(String msg, String typeMsg, Integer partnerAvatar, int topMargin, LocalDateTime startTime){
+            if (typeMsg.equals(Constants.KEY_TEXT)){ //  Nếu tin nhắn là đoạn text
+                binding.message.setText(msg);
+                binding.message.setVisibility(View.VISIBLE);
+                binding.imgMessage.setVisibility(View.GONE);
+            } else if (typeMsg.equals(Constants.KEY_IMAGE)){ // Nếu tin nhắn là hình ảnh
+                Bitmap bitmap = Utils.decodeImage(msg);
+                binding.imgMessage.setImageBitmap(bitmap);
+                binding.imgMessage.setOnClickListener(this);
+                binding.imgMessage.setVisibility(View.VISIBLE);
+                binding.message.setVisibility(View.GONE);
+            }
+
             if (partnerAvatar != -1){ // Nếu ở đoạn tin nhắn này không được để ảnh
                 binding.userImage.setImageResource(partnerAvatar);
                 binding.userImage.setVisibility(View.VISIBLE);
@@ -285,7 +330,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewParent.setLayoutParams(lp);
         }
 
-
+        @Override
+        public void onClick(View view) {
+            Bitmap bm=((BitmapDrawable)binding.imgMessage.getDrawable()).getBitmap();
+            ((ChatActivity) context).onGetImageClick(bm);
+        }
     }
 
     public static boolean isAfter30Minutes(LocalDateTime StartTime, LocalDateTime AfterStartTime){

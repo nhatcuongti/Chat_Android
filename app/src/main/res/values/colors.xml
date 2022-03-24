@@ -11,8 +11,11 @@
     <color name="black">#FF000000</color>
     <color name="topbarColor">#1CADEC</color>
     <color name="bottombarColor">#F8F1F1</color>
-    <color name="sendChatboxColor">#0084ff</color>
-    <color name="receiveChatboxColor">#e4e6eb</color>
+    <color name="sendChatboxColor">#2962ff</color>
+    <color name="receiveChatboxColor">#EEEEEE</color>
+    <color name="purple">#d500f9</color>
+    <color name="grey">#F2F3F4</color>
+
 
     <color name="active_state">#03FF0D</color>
 </resources><!--    <color name="purple_200">#FFBB86FC</color>-->

@@ -3,15 +3,16 @@ package com.example.meza.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.provider.ContactsContract;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -19,8 +20,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -30,19 +31,22 @@ import com.example.meza.adapters.ConversationAdapter;
 import com.example.meza.databinding.ActivityChatBinding;
 import com.example.meza.databinding.BottombarChatBinding;
 import com.example.meza.databinding.ToolbarChatBinding;
+import com.example.meza.interfaces.OnGetImageClickListener;
 import com.example.meza.interfaces.OnGetValueListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
+import com.example.meza.utilities.Constants;
+import com.example.meza.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.time.LocalDateTime;
-import java.time.Month;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 
-public class ChatActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener {
+public class ChatActivity extends AppCompatActivity implements View.OnClickListener,
+        View.OnTouchListener,
+        OnGetImageClickListener {
 
     RecyclerView conversationRv;
     ConversationAdapter conversationAdapter;
@@ -258,10 +262,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.imageSendBtn:{ // Nếu người dùng bấm nút gửi ảnh từ thư viện ảnh
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                startActivityForResult(intent, 1);
                 break;
             }
 
             case R.id.voiceSendBtn:{ // Nếu người dùng bấm nút gửi đoạn record
+
                 break;
             }
 
@@ -290,6 +297,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 msg.setTimestamp(System.currentTimeMillis());
                 msg.setSender(currentUser.getId());
                 msg.setText(text);
+                msg.setTypeMessage(Constants.KEY_TEXT);
                 //*********************************End********************************************//
 
 
@@ -326,6 +334,57 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             }
 
+
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && data != null){
+            Uri uri = data.getData();
+
+            try {
+                InputStream is = getContentResolver().openInputStream(uri);
+                Bitmap bitmap = BitmapFactory.decodeStream(is);
+                String encodeString = Utils.encodeImageForSend(bitmap);
+
+                //********************************************************************************//
+                            //Khởi tạo Message mà người dùng vừa gửi//
+                ConversationModel.Message msg = new ConversationModel.Message();
+                msg.setTimestamp(System.currentTimeMillis());
+                msg.setSender(currentUser.getId());
+                msg.setText(encodeString);
+                msg.setTypeMessage(Constants.KEY_IMAGE);
+                //*********************************End********************************************//
+
+                ConversationModel.Message.listenLastElement(idConversation, new OnGetValueListener() { // Cập nhật tin nhắn
+                    @Override
+                    public void onSuccess(DataSnapshot snapshot) {
+                        //************************************************************************//
+                        //Generate ra ID mới dựa trên ID lớn nhất//
+                        DataSnapshot lastSnapshot = null;
+                        for (DataSnapshot ds : snapshot.getChildren())
+                            lastSnapshot = ds;
+
+                        String id = (lastSnapshot == null) ? "0" : lastSnapshot.getKey();
+                        Log.d("test", "onSuccess: " + id);
+                        id = String.valueOf(Integer.valueOf(id) + 1);
+                        //*********************************End************************************//
+
+                        msg.setId(id);
+                        ConversationModel.Message.insertNewMsgToDatabase(msg, id, idConversation);
+                        chatBox.setText("");
+                    }
+                });
+
+                // Cập nhật conversation
+                conversation.setLast_message("Hình ảnh vừa được gửi");
+                conversation.setLast_time(msg.getTimestamp());
+                ConversationModel.updateConversation(idConversation, conversation.toMap());
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
 
         }
     }
@@ -375,4 +434,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    @Override
+    public void onGetImageClick(Bitmap bitmap) {
+        Intent intent = new Intent(ChatActivity.this, FullImageScreenActivity.class);
+        intent.putExtra(Constants.KEY_IMAGE, bitmap);
+        startActivity(intent);
+    }
 }
