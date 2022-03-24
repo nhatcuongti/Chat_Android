@@ -43,6 +43,7 @@ public class HomePageActivity extends FragmentActivity {
 
     ArrayList<User> listActiveUser;
     ArrayList<String> listFriend;
+    ArrayList<User> listObjectUserFriend;
     ArrayList<ConversationModel> listRecentConversation;
 
     private DatabaseReference mDatabase;
@@ -61,8 +62,8 @@ public class HomePageActivity extends FragmentActivity {
         activePeopleBtn = (ImageButton) findViewById(R.id.active_people_Button);
         circleImageView = findViewById(R.id.avatar);
 
-        chatsFragment = new ChatsFragment(this, listActiveUser, listRecentConversation);
-        activePeopleFragment = new ActivePeopleFragment(listActiveUser);
+        chatsFragment = new ChatsFragment(this, listActiveUser, listRecentConversation, listObjectUserFriend);
+        activePeopleFragment = new ActivePeopleFragment(this,listActiveUser, listRecentConversation);
 
         replaceFragment(chatsFragment);
 
@@ -128,15 +129,20 @@ public class HomePageActivity extends FragmentActivity {
             }
         });
         listActiveUser = new ArrayList<>();
+        listObjectUserFriend = new ArrayList<>();
         DatabaseReference listActivUserRef = mDatabase.child("users");
         listActivUserRef.addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 listActiveUser.clear();
+                listObjectUserFriend.clear();
+
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     User user = ds.getValue(User.class);
                     String userKey = ds.getKey();
+                    if(listFriend.contains(userKey))
+                        listObjectUserFriend.add(user);
                     if (user.getIs_active() == 1 && listFriend.contains(userKey)) {
                         listActiveUser.add(user);
                     }
