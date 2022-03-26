@@ -15,6 +15,7 @@ import com.example.meza.adapters.ActiveUserAdapter;
 import com.example.meza.adapters.NameOfConversationAdapter;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
+import com.sinch.android.rtc.SinchClient;
 
 
 import java.util.ArrayList;
