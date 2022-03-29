@@ -21,9 +21,9 @@
             android:id="@+id/userImage"
             android:layout_width="50dp"
             android:layout_height="50dp"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
             android:layout_toRightOf="@id/backwardBtn"
-            android:layout_centerVertical="true"
             android:src="@drawable/hieule" />
 
         <de.hdodenhof.circleimageview.CircleImageView

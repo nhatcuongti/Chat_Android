@@ -42,6 +42,10 @@ import com.google.firebase.database.DataSnapshot;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener,
@@ -50,10 +54,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
     RecyclerView conversationRv;
     ConversationAdapter conversationAdapter;
-    ArrayList<String> participantList = new ArrayList<>();
+    ArrayList<ConversationModel.Message> participantList = new ArrayList<>();
     User currentUser;
     EditText chatBox ;
-    ImageButton rightArrowBtn, imageSendBtn, takePhotoBtn, voiceSendBtn, sendBtn, videoCallBtn, audioCallBtn, inforBtn;
+    ImageButton backwardBtn, rightArrowBtn, imageSendBtn, takePhotoBtn, voiceSendBtn, sendBtn, videoCallBtn, audioCallBtn, inforBtn;
     ConversationModel conversation;
     String idConversation;
     ProgressBar progressBar;
@@ -84,6 +88,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         // Set tên nhóm / tên đối tác
         TextView tittle = findViewById(R.id.tittleName);
         tittle.setText(conversation.getTittle());
+
+        CircleImageView userImage = findViewById(R.id.userImage);
+        CircleImageView userActive = findViewById(R.id.userActive);
+
+        HashMap<String, Bitmap> user_image = conversation.getUser_image();
+        for (String userID : conversation.getParticipantListArray())
+            if (!userID.equals(currentUser.getId())){
+                userImage.setImageBitmap(user_image.get(userID));
+            }
     }
 
     /**
@@ -110,18 +123,26 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onSuccess(DataSnapshot snapshot) {
                 conversation = snapshot.getValue(ConversationModel.class);
-                conversation.formatParticipantList();
-                Log.d("abcdef", "onSuccess: " + conversation.getLast_time());
                 if (conversation.getLast_time() == -1) // Nếu như chưa có tin nhắn
                     loading(false);
-                setDataOnConversation();
 
                 //**************************************************************************************
                                     //Tạo RecycleView và Adapter//
 
                 //Tạo Adapter và set Adapter cho conversationRV
-                conversationAdapter = new ConversationAdapter(ChatActivity.this, conversation, currentUser);
-                conversationRv.setAdapter(conversationAdapter);
+                conversation.formatParticipantList(ChatActivity.this, new OnGetValueListener() {
+                    @Override
+                    public void onSuccess(DataSnapshot snapshot) {
+                        setDataOnConversation();
+                        conversationAdapter = new ConversationAdapter(ChatActivity.this, conversation, currentUser);
+                        conversationRv.setAdapter(conversationAdapter);
+                    }
+
+                    @Override
+                    public void onChange(DataSnapshot snapshot) {
+
+                    }
+                });
                 // Set LayoutManager
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
                 conversationRv.setLayoutManager(linearLayoutManager);
@@ -149,9 +170,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                     //Lấy các đoạn tin nhắn của đoạn hội thoại, đồng thời
                                     //lắng nghe nếu có tin nhắn mới
 
+
                 ConversationModel.Message.listenChange(idConversation, new OnGetValueListener() {
                     @Override
-                    public void onSuccess(DataSnapshot snapshot) {
+                    public void onSuccess(DataSnapshot snapshot) { // Nếu một tin nhắn thêm mới thành công
                         loading(false);
                         ConversationModel.Message msg = snapshot.getValue(ConversationModel.Message.class);
                         msg.formatStartTime();
@@ -160,13 +182,46 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         if (list_message == null)
                             list_message = new ArrayList<>();
 
+
+                        //**************************************************************************
+                                            // Xử lý phần seen//
+                        Map<String, Boolean> listSeen = msg.getListSeen();
+                        if (listSeen == null)
+                            listSeen = new HashMap<>();
+
+                        if (!msg.getSender().equals(currentUser.getId()))
+                            listSeen.put(currentUser.getId(), true);
+
+                        msg.setListSeen(listSeen);
+                        //************************************End***********************************
                         list_message.add(msg);
                         conversation.setListMessage(list_message);
                         conversationAdapter.notifyDataSetChanged();
                         conversationRv.scrollToPosition(list_message.size() - 1);
+
+                        ConversationModel.Message.updateMessage(idConversation, msg.getId(), msg.toMap());
+                    }
+
+                    @Override
+                    public void onChange(DataSnapshot snapshot) {
+                        ConversationModel.Message message = snapshot.getValue(ConversationModel.Message.class);
+                        message.formatStartTime();
+
+                        ArrayList<ConversationModel.Message> listMsg = conversation.getListMessage();
+
+                        int lastElement = listMsg.size() - 1;
+                        if (listMsg.get(lastElement).getId().equals(message.getId()))
+                            listMsg.set(lastElement, message);
+
+                        conversationAdapter.notifyDataSetChanged();
                     }
                 });
                 //************************************End***********************************************
+
+            }
+
+            @Override
+            public void onChange(DataSnapshot snapshot) {
 
             }
         });
@@ -183,6 +238,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         rightArrowBtn = findViewById(R.id.rightArrowBtn);
         rightArrowBtn.setOnClickListener(this);
+
+        backwardBtn = findViewById(R.id.backwardBtn);
+        backwardBtn.setOnClickListener(this);
 
         imageSendBtn = findViewById(R.id.imageSendBtn);
         imageSendBtn.setOnClickListener(this);
@@ -251,6 +309,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         switch (view.getId()){
+            case R.id.backwardBtn:{
+                finish();
+            }
+
             case R.id.rightArrowBtn:{
                 rightArrowBtn.setVisibility(View.GONE);
                 sendBtn.setVisibility(View.GONE);
@@ -323,6 +385,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         ConversationModel.Message.insertNewMsgToDatabase(msg, id, idConversation);
                         chatBox.setText("");
                     }
+
+                    @Override
+                    public void onChange(DataSnapshot snapshot) {
+
+                    }
                 });
 
 
@@ -382,6 +449,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                         msg.setId(id);
                         ConversationModel.Message.insertNewMsgToDatabase(msg, id, idConversation);
                         chatBox.setText("");
+                    }
+
+                    @Override
+                    public void onChange(DataSnapshot snapshot) {
+
                     }
                 });
 
@@ -463,5 +535,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         String filePath = Utils.tempFileImage(ChatActivity.this, bm, Constants.KEY_IMAGE);
         intent.putExtra(Constants.KEY_IMAGE, filePath);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ConversationModel.Message.chatReference.removeEventListener(ConversationModel.Message.childEventListener);
     }
 }

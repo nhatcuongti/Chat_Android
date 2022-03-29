@@ -32,6 +32,8 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -41,6 +43,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ConversationModel conversationModel;
     private ArrayList<ConversationModel.Message> listMsg;
     private User currentUser;
+    private Map<String, Bitmap> user_image;
 
     public final int VIEW_SENT = 1;
     public final int VIEW_RECEIVE = 0;
@@ -50,8 +53,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         this.conversationModel = conversationModel;
         listMsg = conversationModel.getListMessage();
         this.currentUser = currentUser;
-    }
 
+        user_image = conversationModel.getUser_image();
+    }
 
     @NonNull
     @Override
@@ -80,9 +84,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         listMsg = conversationModel.getListMessage();
-        // Lấy địa chỉ ảnh của đối tác
-        // Đầu tiên sửa đổi dữ liệu trong class ConversationModel từ Map<String, Boolean> thành Map<String, String>
-        // decode String sang Integer
+        ConversationModel.Message currentMsg = listMsg.get(position);
+        String idUserSendMsg = currentMsg.getSender();
 
         if (getItemViewType(position) == VIEW_SENT){ // Trong trường hợp currentUser gửi tin nhắn .
 
@@ -100,12 +103,28 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             //**************************************************************************************
                             //Xử lý phần "seen" //
 
-            int partnerAvatar = -1;
-            boolean seen = true; // Xem xét người dùng đã seen hay chưa
+            Bitmap partnerAvatar = null;
+            Map<String, Boolean> list_seen = currentMsg.getListSeen();
+            boolean seen = (list_seen != null) ? true : false; // Xem xét người dùng đã seen hay chưa
             if (position == listMsg.size() - 1 && seen){
-                // Vì chưa có dữ liệu nên dùng lệnh dưới đây .
-                partnerAvatar = R.drawable.hieule; // Gắn cứng image tại vì chưa có dữ liệu cụ thể
+                for (String idUser : list_seen.keySet())
+                    if (!idUser.equals(currentUser.getId())){
+                        partnerAvatar = user_image.get(idUser);
+                    }
             }
+
+            if (position == listMsg.size() - 1){
+                partnerAvatar = null;
+                list_seen = currentMsg.getListSeen();
+                seen = (!list_seen.isEmpty()) ? true : false; // Xem xét người dùng đã seen hay chưa
+                if (position == listMsg.size() - 1 && seen){
+                    for (String idUser : list_seen.keySet())
+                        if (!idUser.equals(currentUser.getId())){
+                            partnerAvatar = user_image.get(idUser);
+                        }
+                }
+            }
+
             //***********************************End************************************************
 
 
@@ -114,7 +133,6 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             boolean setStartTime = false;
 
-            ConversationModel.Message currentMsg = listMsg.get(position);
             if (position >= 1){
                 ConversationModel.Message previousMsg = listMsg.get(position - 1);
                 LocalDateTime startTime = currentMsg.getStartTime();
@@ -142,7 +160,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             int topMargin = 30;
             // Vì chưa có dữ liệu nên dùng lệnh dưới đây .
-            int partnerAvatar = R.drawable.hieule;
+            Bitmap partnerAvatar = user_image.get(idUserSendMsg);
 
             if (position >= 1 && getItemViewType(position - 1 ) == VIEW_RECEIVE){   // Nếu như item trước cũng là itemViewSent thì giảm topmargin
                 topMargin = 10;
@@ -157,7 +175,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             // Kiểm tra có để thời gian ở trên đầu hay không
             // Các trường hợp để thời gian trên đầu .
             // Đoạn tin nhắn trước cách đoạn tin nhắn hiện tại 30 phút
-            ConversationModel.Message currentMsg = listMsg.get(position);
+            currentMsg = listMsg.get(position);
 
             if (position >= 1){
                 ConversationModel.Message previousMsg = listMsg.get(position - 1);
@@ -183,7 +201,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 Log.d("test", "OK");
 
                 if (!isAfter30Minutes(startTime, afterStartTime))
-                    partnerAvatar = -1;
+                    partnerAvatar = null;
             }
             //************************************End***********************************************
 
@@ -229,7 +247,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.context = context;
         }
 
-        public void setData(String msg, String typeMsg, int partnerImage, int topMargin, LocalDateTime startTime){
+        public void setData(String msg, String typeMsg, Bitmap partnerImage, int topMargin, LocalDateTime startTime){
             //**************************************************************************************
                                     //Xử lý dữ liệu đoạn tin nhắn (Hỉnh ảnh, text, file, ...)/
             ConversationAdapter.setMessage(binding.message,
@@ -242,8 +260,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             //**************************************************************************************
                                         //Xử lý ảnh và thời gian
-            if (partnerImage != -1){
-                binding.userImage.setImageResource(partnerImage);
+            if (partnerImage != null){
+                binding.userImage.setImageBitmap(partnerImage);
                 binding.userImage.setVisibility(View.VISIBLE);
             }
             else
@@ -286,7 +304,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             this.context = context;
         }
 
-        public void setData(String msg, String typeMsg, Integer partnerAvatar, int topMargin, LocalDateTime startTime){
+        public void setData(String msg, String typeMsg, Bitmap partnerAvatar, int topMargin, LocalDateTime startTime){
             //**************************************************************************************
                                 //Xử lý dữ liệu đoạn tin nhắn (Hỉnh ảnh, text, file, ...)
             ConversationAdapter.setMessage(binding.message,
@@ -324,7 +342,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                String msg,
                                String typeMsg,
                                Context context) {
-        switch (typeMsg){
+            switch (typeMsg){
             case Constants.KEY_TEXT:{
                 messageTxt.setText(msg);
                 messageTxt.setVisibility(View.VISIBLE);
@@ -352,9 +370,9 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                                        CircleImageView userActive,
                                        TextView startTimeText,
                                        LocalDateTime startTime,
-                                       Integer partnerAvatar){
-        if (partnerAvatar != -1){ // Nếu ở đoạn tin nhắn này không được để ảnh
-            userImage.setImageResource(partnerAvatar);
+                                       Bitmap partnerAvatar){
+        if (partnerAvatar != null){ // Nếu ở đoạn tin nhắn này không được để ảnh
+            userImage.setImageBitmap(partnerAvatar);
             userImage.setVisibility(View.VISIBLE);
             userActive.setVisibility(View.VISIBLE);
         }
