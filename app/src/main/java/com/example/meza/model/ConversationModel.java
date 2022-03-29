@@ -1,12 +1,17 @@
 package com.example.meza.model;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.provider.ContactsContract;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.meza.R;
 import com.example.meza.interfaces.OnGetValueListener;
+import com.example.meza.utils.Utils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +36,7 @@ public class ConversationModel {
     private ArrayList<String> participantListArray;
     private ArrayList<ConversationModel.Message> message_list;
     private String creator;
+    HashMap<String, Bitmap> user_image;
 
     // ---- new data was added by nhat---
     private String tittle;
@@ -136,8 +142,45 @@ public class ConversationModel {
                 '}';
     }
 
-    public void formatParticipantList() {
+    public void formatParticipantList(Context context, OnGetValueListener onGetValueListener) {
         participantListArray = new ArrayList<>(participant_list.keySet());
+
+        user_image = new HashMap<>();
+        for (String user : getParticipantListArray()) {
+            User.listenForUserList(user, new OnGetValueListener() {
+                @Override
+                public void onSuccess(DataSnapshot snapshot) {
+                    for (DataSnapshot ds : snapshot.getChildren()){
+                        String imageDecode = ds.child("image").getValue(String.class);
+                        String idUser = ds.getKey();
+                        if (participant_list.get(idUser) != null){
+                            if (imageDecode != null)
+                                user_image.put(idUser, Utils.decodeImage(imageDecode));
+                            else {
+                                Bitmap bitmapTmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_user_image);
+                                user_image.put(idUser, bitmapTmp);
+                            }
+                        }
+                    }
+
+                    if (onGetValueListener != null)
+                        onGetValueListener.onSuccess(null);
+                }
+
+                @Override
+                public void onChange(DataSnapshot snapshot) {
+
+                }
+            });
+        }
+    }
+
+    public HashMap<String, Bitmap> getUser_image() {
+        return user_image;
+    }
+
+    public void setUser_image(HashMap<String, Bitmap> user_image) {
+        this.user_image = user_image;
     }
 
     public static void updateConversation(String idConv, Map<String, Object> convMap){
@@ -166,6 +209,7 @@ public class ConversationModel {
         LocalDateTime startTime;
         private long timestamp;
         private String typeMessage;
+        private Map<String, Boolean> listSeen = null;
 
         public Message(){
 
@@ -184,6 +228,14 @@ public class ConversationModel {
             this.sender = copyMsg.sender;
             this.text = copyMsg.text;
             this.startTime = copyMsg.startTime;
+        }
+
+        public Map<String, Boolean> getListSeen() {
+            return listSeen;
+        }
+
+        public void setListSeen(Map<String, Boolean> listSeen) {
+            this.listSeen = listSeen;
         }
 
         public String getId() {
@@ -241,12 +293,14 @@ public class ConversationModel {
 
         private static ArrayList<ConversationModel.Message> list_message = new ArrayList<>();
 
+        public static DatabaseReference chatReference;
+        public static ChildEventListener childEventListener;
         public static void listenChange(String id, OnGetValueListener onGetValueListener){
             String path = "/message/" + id;
-            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(path);
+            chatReference = FirebaseDatabase.getInstance().getReference(path);
 
             // Xử lý khi có thay đổi database
-            databaseReference.addChildEventListener(new ChildEventListener() {
+            childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
                     onGetValueListener.onSuccess(snapshot);
@@ -254,21 +308,12 @@ public class ConversationModel {
 
                 @Override
                 public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
+                    onGetValueListener.onChange(snapshot);
                 }
 
                 @Override
                 public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                    Message msg = snapshot.getValue(ConversationModel.Message.class);
 
-                    if (list_message == null || list_message.isEmpty())
-                        return;
-
-                    for (int i = 0; i < list_message.size(); i++)
-                        if (msg.getId().equals(list_message.get(i).getId())){
-                            list_message.remove(i);
-                            break;
-                        }
                 }
 
                 @Override
@@ -280,7 +325,8 @@ public class ConversationModel {
                 public void onCancelled(@NonNull DatabaseError error) {
 
                 }
-            });
+            };
+            chatReference.addChildEventListener(childEventListener);
         }
 
         public static ConversationModel.Message getMessageWithID(String id){
@@ -298,6 +344,7 @@ public class ConversationModel {
             msgData.put("text", text);
             msgData.put("timestamp", timestamp);
             msgData.put("typeMessage", typeMessage);
+            msgData.put("listSeen", listSeen);
             return msgData;
         }
 
@@ -324,12 +371,14 @@ public class ConversationModel {
                 }
             });
         }
-        
 
+        public static void updateMessage(String idConv, String idMsg, Map<String, Object> msgMap){
+            String path = "/message/" + idConv;
+            FirebaseDatabase firebaseDatabase = FirebaseDatabase.getInstance();
+            DatabaseReference databaseReference = firebaseDatabase.getReference(path);
 
-
-
-
+            databaseReference.child(idMsg).updateChildren(msgMap);
+        }
 
         @Override
         public String toString() {
