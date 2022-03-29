@@ -194,4 +194,22 @@ public class User implements Serializable {
         }
         return null;
     }
+
+    public static void listenForUserList(String idUser, OnGetValueListener onGetValueListener){
+        String path = "/users";
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(path);
+
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (onGetValueListener != null)
+                    onGetValueListener.onSuccess(snapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 }
