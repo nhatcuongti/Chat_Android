@@ -1,7 +1,9 @@
 package com.example.meza.activities;
 
+import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,6 +15,7 @@ import com.example.meza.ChatsFragment;
 import com.example.meza.R;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
+import com.example.meza.utilities.JWT;
 import com.example.meza.utils.Utils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -20,9 +23,18 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.sinch.android.rtc.ClientRegistration;
+import com.sinch.android.rtc.Sinch;
+import com.sinch.android.rtc.SinchClient;
+import com.sinch.android.rtc.SinchClientListener;
+import com.sinch.android.rtc.SinchError;
+import com.sinch.android.rtc.calling.Call;
+import com.sinch.android.rtc.calling.CallClient;
+import com.sinch.android.rtc.calling.CallClientListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -41,6 +53,9 @@ public class HomePageActivity extends FragmentActivity {
     ChatsFragment chatsFragment;
     ActivePeopleFragment activePeopleFragment;
 
+    String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    Boolean permissionToRecordAccepted = false;
+
     ArrayList<User> listActiveUser;
     ArrayList<String> listFriend;
     ArrayList<User> listObjectUserFriend;
@@ -49,6 +64,7 @@ public class HomePageActivity extends FragmentActivity {
     private DatabaseReference mDatabase;
     private User currentUser;
     private String userID;
+    SinchClient sinchClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +72,7 @@ public class HomePageActivity extends FragmentActivity {
         setContentView(R.layout.activity_homepage);
 
         intData();
+        initSinch();
 
         fragmentName = findViewById(R.id.name_fragment);
         chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
@@ -96,7 +113,7 @@ public class HomePageActivity extends FragmentActivity {
                 fragmentName.setText("Active People");
             }
         });
-
+        this.requestPermissions(permissions,200);
     }
 
     public void replaceFragment(Fragment fragment) {
@@ -214,7 +231,99 @@ public class HomePageActivity extends FragmentActivity {
 //        listRecentConversation.add("Công Lượng");
     }
 
+    public void initSinch() {
+
+// Instantiate a SinchClient using the SinchClientBuilder.
+        android.content.Context context = this.getApplicationContext();
+        sinchClient = Sinch.getSinchClientBuilder()
+                .context(context)
+                .applicationKey("b0274bc0-fb51-4fae-b3eb-5d75b673c442")
+                .environmentHost("ocra.api.sinch.com")
+                .userId(userID)
+                .build();
+
+//        sinchClient.setSupportManagedPush(true);
+        sinchClient.startListeningOnActiveConnection();
+        sinchClient.addSinchClientListener(new MySinchClientListener());
+        sinchClient.start();
+
+        sinchClient.getCallClient().setRespectNativeCalls(false);
+        sinchClient.getCallClient().addCallClientListener(new MyCallClientListener());
+
+        Utils.sinchClient = sinchClient;
+
+    }
+
+    private class MySinchClientListener implements SinchClientListener{
+
+        @Override
+        public void onClientStarted(SinchClient sinchClient) {
+
+        }
+
+        @Override
+        public void onClientFailed(SinchClient sinchClient, SinchError sinchError) {
+            sinchClient.terminateGracefully();
+            Utils.sinchClient = null;
+        }
+
+        @Override
+        public void onLogMessage(int i, String s, String s1) {
+
+        }
+
+        @Override
+        public void onPushTokenRegistered() {
+            Log.d("sinchError", "push fffffffffffffffffffffffffffffffff ");
+
+        }
+
+        @Override
+        public void onPushTokenRegistrationFailed(SinchError sinchError) {
+            Log.d("sinchError", "onPushTokenRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
+
+        }
+
+        @Override
+        public void onCredentialsRequired(ClientRegistration clientRegistration) {
+            String jwt = JWT.create("b0274bc0-fb51-4fae-b3eb-5d75b673c442"
+                    , "aROplhftr0CC4+loLEN7RA=="
+                    , userID);
+            clientRegistration.register(jwt);
+        }
+
+        @Override
+        public void onUserRegistered() {
+
+        }
+
+        @Override
+        public void onUserRegistrationFailed(SinchError sinchError) {
+            Log.d("failed", "onUserRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
+
+        }
+    }
+    private class MyCallClientListener implements CallClientListener{
+
+        @Override
+        public void onIncomingCall(CallClient callClient, Call call) {
+
+        }
+    }
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        switch (requestCode){
+            case REQUEST_RECORD_AUDIO_PERMISSION:
+                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                break;
+        }
+        if (!permissionToRecordAccepted ) finish();
+    }
+
     public interface ItemClickListener {
+
         void onClick(View view, int position, boolean isLongClick);
     }
 }

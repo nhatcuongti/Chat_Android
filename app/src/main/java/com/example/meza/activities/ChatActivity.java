@@ -336,6 +336,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.audioCallBtn:{ // Nếu người dùng bấm nút gọi điện theo dạng audio
+                Intent intent = new Intent(ChatActivity.this, VoiceCallingActivity.class);
+                startActivity(intent);
                 break;
             }
 

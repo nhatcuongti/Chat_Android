@@ -48,6 +48,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/state_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -94,6 +95,7 @@
                     android:src="@drawable/btn_mute" />
 
                 <ImageView
+                    android:id="@+id/hangon_Btn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="20"

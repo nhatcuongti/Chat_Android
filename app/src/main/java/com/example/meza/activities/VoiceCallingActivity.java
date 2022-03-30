@@ -1,5 +1,6 @@
 package com.example.meza.activities;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -41,7 +43,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 /**
  * Created by reiko-lhnhat on 3/26/2022.
  */
-public class VoiceCallingActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection {
+public class VoiceCallingActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView muteBtn, endBtn, speakerBtn;
     CircleImageView avatar;
     TextView name, state;
@@ -69,40 +71,47 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         currentUser = User.getCurrentUser(context);
         userID = currentUser.getPhone_number();
 
-        sinchClient = Utils.client;
-//        call();
+        sinchClient = Utils.sinchClient;
+        call();
     }
 
     void call(){
-        String receiveUserID = "0987783897";
-        CallClient voiceCallClient = sinchClient.getCallClient();
-        // contains info of call such as time,participants ,error...
-        call = voiceCallClient.callUser(receiveUserID);
+        String receiveUserID = "0365863817";
+        if(sinchClient.isStarted()) {
 
-        // outgoing call
-        call.addCallListener(new CallListener() {
-            @Override
-            public void onCallProgressing(Call call) {
-                // duoc goi khi cuoc goi dang thuc hien
-                Toast.makeText(getApplicationContext(),"Đang đổ chuông",Toast.LENGTH_LONG);
-                state.setText("Đang đổ chuông");
-                // them nhac cho hoac hien thi text
-            }
+            CallClient voiceCallClient = sinchClient.getCallClient();
+            // contains info of call such as time,participants ,error...
+            call = voiceCallClient.callUser(receiveUserID);
 
-            @Override
-            public void onCallEstablished(Call call) {
-                // dc goi khi nguoi dung bat may
-                state.setText("Trong cuộc gọi");
-                // dung nhac cho, thay doi trang thai text
-            }
+            // outgoing call
+            call.addCallListener(new CallListener() {
+                @Override
+                public void onCallProgressing(Call call) {
+                    // duoc goi khi cuoc goi dang thuc hien
+                    Toast.makeText(getApplicationContext(), "Đang đổ chuông", Toast.LENGTH_LONG);
+                    state.setText("Đang đổ chuông");
+                    // them nhac cho hoac hien thi text
+                }
 
-            @Override
-            public void onCallEnded(Call call) {
-                // quay ve activity ban dau
-                finish();
-            }
-        });
+                @Override
+                public void onCallEstablished(Call call) {
+                    // dc goi khi nguoi dung bat may
+                    state.setText("Trong cuộc gọi");
+                    // dung nhac cho, thay doi trang thai text
+                }
 
+                @Override
+                public void onCallEnded(Call call) {
+                    // quay ve activity ban dau
+                    finish();
+                }
+            });
+        }
+        else {
+            Log.d("err", "SinchClient not started");
+
+            Toast.makeText(getApplicationContext(), "SinchClient not started", Toast.LENGTH_LONG);
+        }
     }
 
     @Override
@@ -111,16 +120,6 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
             case R.id.hangon_Btn:
                 call.hangup();
         }
-    }
-
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
-
-    }
-
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
-
     }
 
 
