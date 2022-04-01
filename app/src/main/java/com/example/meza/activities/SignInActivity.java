@@ -3,23 +3,33 @@ package com.example.meza.activities;
 import androidx.appcompat.app.AppCompatActivity;
 import at.favre.lib.crypto.bcrypt.BCrypt;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
 import com.example.meza.databinding.ActivitySignInBinding;
+import com.example.meza.services.SinchService;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
+import com.example.meza.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.sinch.android.rtc.SinchError;
 
-public class SignInActivity extends AppCompatActivity {
+public class SignInActivity extends AppCompatActivity implements ServiceConnection, SinchService.SinchClientInitializationListener {
 
+
+    private static final String TAG = "Login1";
     private ActivitySignInBinding binding;
     private PreferenceManager preferenceManager;
+    SinchService.SinchServiceBinder serviceBinder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +39,12 @@ public class SignInActivity extends AppCompatActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
             Intent intent = new Intent(getApplicationContext(), HomePageActivity.class);
+            bindService(new Intent(this, SinchService.class), this, BIND_AUTO_CREATE);
             startActivity(intent);
             finish();
         }
         setListeners();
+
     }
 
     private void setListeners() {
@@ -66,6 +78,9 @@ public class SignInActivity extends AppCompatActivity {
                             loading(false);
                             showToast("Mật khẩu không đúng");
                         } else {
+                            bindService(new Intent(this, SinchService.class), this, BIND_AUTO_CREATE);
+
+
                             preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                             preferenceManager.putString(Constants.KEY_USER_ID, binding.inputPhone.getText().toString());
                             preferenceManager.putString(Constants.KEY_FULL_NAME, (String) ds.child(Constants.KEY_FULL_NAME).getValue());
@@ -105,5 +120,30 @@ public class SignInActivity extends AppCompatActivity {
         } else {
             return true;
         }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+        Log.d("service", "on service connected");
+        serviceBinder = (SinchService.SinchServiceBinder)service;
+        Utils.serviceBinder = serviceBinder;
+        serviceBinder.setClientInitializationListener(this);
+        serviceBinder.start(preferenceManager.getString(Constants.KEY_USER_ID));
+
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
+    }
+
+    @Override
+    public void onStartedSuccessfully() {
+        Log.d(TAG, "onStartedSuccessfully");
+    }
+
+    @Override
+    public void onFailed(SinchError error) {
+        Log.e(TAG, "SinchClientInitializationListener error :" + error.getMessage());
     }
 }

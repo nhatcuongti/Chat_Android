@@ -3,12 +3,14 @@ package com.example.meza.utilities;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
 final class Hmac {
 
-  private Hmac() {}
+  private Hmac() {
+  }
 
   public static byte[] hmacSha256(byte[] key, String message) {
     if (null == key || key.length == 0)

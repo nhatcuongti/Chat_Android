@@ -7,6 +7,7 @@ import android.graphics.Matrix;
 import android.util.Base64;
 import android.util.Log;
 
+import com.example.meza.services.SinchService;
 import com.sinch.android.rtc.SinchClient;
 import com.sinch.android.rtc.calling.Call;
 import com.sinch.android.rtc.calling.CallClient;
@@ -26,6 +27,8 @@ public class Utils {
     public static Call call;
     public static CallClient callClient;
     public static SinchClient sinchClient;
+    public static SinchService.SinchServiceBinder serviceBinder;
+
 
     // Decode base64 string to set image bitmap
     public static Bitmap decodeImage(String encodedImage) {

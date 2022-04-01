@@ -1,9 +1,10 @@
 package com.example.meza.utilities;
 
+import android.util.Base64;
+
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.util.Base64;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,7 +23,7 @@ public class JWT {
   // It might be tempting to re-use this class and store the APPLICATION_SECRET in your app, but that would
   // greatly compromise security.
 
-  public static  String create(String appKey, String appSecret, String userId) {
+  public static String create(String appKey, String appSecret, String userId) {
     JSONObject header = new JSONObject();
     JSONObject payload = new JSONObject();
     final long issuedAt = System.currentTimeMillis() / 1000;
@@ -31,17 +32,17 @@ public class JWT {
       header.put("alg", "HS256");
       header.put("typ", "JWT");
       header.put("kid", kid);
-      payload.put("iss","//rtc.sinch.com/applications/" + appKey);
-      payload.put("sub","//rtc.sinch.com/applications/" + appKey + "/users/" + userId);
-      payload.put("iat",issuedAt);
-      payload.put("exp",issuedAt + 600);
+      payload.put("iss", "//rtc.sinch.com/applications/" + appKey);
+      payload.put("sub", "//rtc.sinch.com/applications/" + appKey + "/users/" + userId);
+      payload.put("iat", issuedAt);
+      payload.put("exp", issuedAt + 600);
       payload.put("nonce", UUID.randomUUID());
     } catch (JSONException e) {
       throw new RuntimeException(e.getMessage(), e.getCause());
     }
 
-    String headerStr = header.toString().trim().replace("\\/","/");
-    String payloadStr = payload.toString().trim().replace("\\/","/");
+    String headerStr = header.toString().trim().replace("\\/", "/");
+    String payloadStr = payload.toString().trim().replace("\\/", "/");
     String headerBase64 = Base64.encodeToString(headerStr.getBytes(), Base64.NO_PADDING | Base64.NO_WRAP | Base64.URL_SAFE);
     String payloadBase64 = Base64.encodeToString(payloadStr.getBytes(), Base64.NO_PADDING | Base64.NO_WRAP | Base64.URL_SAFE);
 

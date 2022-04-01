@@ -72,7 +72,7 @@ public class HomePageActivity extends FragmentActivity {
         setContentView(R.layout.activity_homepage);
 
         intData();
-        initSinch();
+//        initSinch();
 
         fragmentName = findViewById(R.id.name_fragment);
         chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
@@ -231,85 +231,87 @@ public class HomePageActivity extends FragmentActivity {
 //        listRecentConversation.add("Công Lượng");
     }
 
-    public void initSinch() {
+//    public void initSinch() {
+//
+//// Instantiate a SinchClient using the SinchClientBuilder.
+//        android.content.Context context = this.getApplicationContext();
+//        sinchClient = Sinch.getSinchClientBuilder()
+//                .context(context)
+//                .applicationKey("b0274bc0-fb51-4fae-b3eb-5d75b673c442")
+//                .environmentHost("ocra.api.sinch.com")
+//                .userId(userID)
+//                .build();
+//
+////        sinchClient.setSupportManagedPush(true);
+//        sinchClient.startListeningOnActiveConnection();
+//        sinchClient.addSinchClientListener(new MySinchClientListener());
+//        sinchClient.start();
+//
+//        sinchClient.getCallClient().setRespectNativeCalls(false);
+//        sinchClient.getCallClient().addCallClientListener(new MyCallClientListener());
+//
+//        Utils.sinchClient = sinchClient;
+//
+//    }
 
-// Instantiate a SinchClient using the SinchClientBuilder.
-        android.content.Context context = this.getApplicationContext();
-        sinchClient = Sinch.getSinchClientBuilder()
-                .context(context)
-                .applicationKey("b0274bc0-fb51-4fae-b3eb-5d75b673c442")
-                .environmentHost("ocra.api.sinch.com")
-                .userId(userID)
-                .build();
-
-//        sinchClient.setSupportManagedPush(true);
-        sinchClient.startListeningOnActiveConnection();
-        sinchClient.addSinchClientListener(new MySinchClientListener());
-        sinchClient.start();
-
-        sinchClient.getCallClient().setRespectNativeCalls(false);
-        sinchClient.getCallClient().addCallClientListener(new MyCallClientListener());
-
-        Utils.sinchClient = sinchClient;
-
-    }
-
-    private class MySinchClientListener implements SinchClientListener{
-
-        @Override
-        public void onClientStarted(SinchClient sinchClient) {
-
-        }
-
-        @Override
-        public void onClientFailed(SinchClient sinchClient, SinchError sinchError) {
-            sinchClient.terminateGracefully();
-            Utils.sinchClient = null;
-        }
-
-        @Override
-        public void onLogMessage(int i, String s, String s1) {
-
-        }
-
-        @Override
-        public void onPushTokenRegistered() {
-            Log.d("sinchError", "push fffffffffffffffffffffffffffffffff ");
-
-        }
-
-        @Override
-        public void onPushTokenRegistrationFailed(SinchError sinchError) {
-            Log.d("sinchError", "onPushTokenRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
-
-        }
-
-        @Override
-        public void onCredentialsRequired(ClientRegistration clientRegistration) {
-            String jwt = JWT.create("b0274bc0-fb51-4fae-b3eb-5d75b673c442"
-                    , "aROplhftr0CC4+loLEN7RA=="
-                    , userID);
-            clientRegistration.register(jwt);
-        }
-
-        @Override
-        public void onUserRegistered() {
-
-        }
-
-        @Override
-        public void onUserRegistrationFailed(SinchError sinchError) {
-            Log.d("failed", "onUserRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
-
-        }
-    }
-    private class MyCallClientListener implements CallClientListener{
-
-        @Override
-        public void onIncomingCall(CallClient callClient, Call call) {
-
-        }
-    }
+//    private class MySinchClientListener implements SinchClientListener{
+//
+//        @Override
+//        public void onClientStarted(SinchClient sinchClient) {
+//            Log.d("failed", "client started ");
+//
+//        }
+//
+//        @Override
+//        public void onClientFailed(SinchClient sinchClient, SinchError sinchError) {
+//            sinchClient.terminateGracefully();
+//            Utils.sinchClient = null;
+//        }
+//
+//        @Override
+//        public void onLogMessage(int i, String s, String s1) {
+//
+//        }
+//
+//        @Override
+//        public void onPushTokenRegistered() {
+//            Log.d("failed", "push fffffffffffffffffffffffffffffffff ");
+//
+//        }
+//
+//        @Override
+//        public void onPushTokenRegistrationFailed(SinchError sinchError) {
+//            Log.d("failed", "onPushTokenRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
+//
+//        }
+//
+//        @Override
+//        public void onCredentialsRequired(ClientRegistration clientRegistration) {
+//            String jwt = JWT.create("b0274bc0-fb51-4fae-b3eb-5d75b673c442"
+//                    , "aROplhftr0CC4+loLEN7RA=="
+//                    , userID);
+//            clientRegistration.register(jwt);
+//        }
+//
+//        @Override
+//        public void onUserRegistered() {
+//            Log.d("failed", "onUserRegistered ");
+//
+//        }
+//
+//        @Override
+//        public void onUserRegistrationFailed(SinchError sinchError) {
+//            Log.d("failed", "onUserRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
+//
+//        }
+//    }
+//    private class MyCallClientListener implements CallClientListener{
+//
+//        @Override
+//        public void onIncomingCall(CallClient callClient, Call call) {
+//
+//        }
+//    }
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

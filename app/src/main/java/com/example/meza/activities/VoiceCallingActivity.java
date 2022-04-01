@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -45,6 +46,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class VoiceCallingActivity extends AppCompatActivity implements View.OnClickListener {
     ImageView muteBtn, endBtn, speakerBtn;
+    String Tag = "statecall";
     CircleImageView avatar;
     TextView name, state;
     Context context = this;
@@ -76,34 +78,33 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
     }
 
     void call(){
-        String receiveUserID = "0365863817";
+        String receiveUserID = "0987783897";
         if(sinchClient.isStarted()) {
-
-            CallClient voiceCallClient = sinchClient.getCallClient();
             // contains info of call such as time,participants ,error...
-            call = voiceCallClient.callUser(receiveUserID);
+            call = Utils.serviceBinder.callUser(receiveUserID);
 
             // outgoing call
             call.addCallListener(new CallListener() {
                 @Override
                 public void onCallProgressing(Call call) {
                     // duoc goi khi cuoc goi dang thuc hien
-                    Toast.makeText(getApplicationContext(), "Đang đổ chuông", Toast.LENGTH_LONG);
-                    state.setText("Đang đổ chuông");
+                    Log.d(Tag, "onCallProgressing");//                    Toast.makeText(getApplicationContext(), "Đang đổ chuông", Toast.LENGTH_LONG);
+//                    state.setText("Đang đổ chuông");
                     // them nhac cho hoac hien thi text
                 }
 
                 @Override
                 public void onCallEstablished(Call call) {
                     // dc goi khi nguoi dung bat may
-                    state.setText("Trong cuộc gọi");
+//                    state.setText("Trong cuộc gọi");
                     // dung nhac cho, thay doi trang thai text
                 }
 
                 @Override
                 public void onCallEnded(Call call) {
                     // quay ve activity ban dau
-                    finish();
+                    Log.d(Tag , "cuocgoi ket thuc");
+//                    finish();
                 }
             });
         }
