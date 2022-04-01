@@ -17,7 +17,7 @@ import com.example.meza.databinding.ActivitySignInBinding;
 import com.example.meza.services.SinchService;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -126,7 +126,7 @@ public class SignInActivity extends AppCompatActivity implements ServiceConnecti
     public void onServiceConnected(ComponentName name, IBinder service) {
         Log.d("service", "on service connected");
         serviceBinder = (SinchService.SinchServiceBinder)service;
-        Utils.serviceBinder = serviceBinder;
+        Utilss.serviceBinder = serviceBinder;
         serviceBinder.setClientInitializationListener(this);
         serviceBinder.start(preferenceManager.getString(Constants.KEY_USER_ID));
 

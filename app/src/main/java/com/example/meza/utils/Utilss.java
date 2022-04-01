@@ -22,7 +22,7 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 /**
  * Created by reiko-lhnhat on 3/22/2022.
  */
-public class Utils {
+public class Utilss {
 
     public static Call call;
     public static CallClient callClient;

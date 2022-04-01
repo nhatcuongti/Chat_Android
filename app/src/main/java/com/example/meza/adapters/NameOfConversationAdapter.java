@@ -2,7 +2,6 @@ package com.example.meza.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,7 +18,7 @@ import com.example.meza.activities.ChatActivity;
 import com.example.meza.activities.HomePageActivity;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 
 import java.util.ArrayList;
 
@@ -66,7 +65,7 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
             for (User u: listObjectUserFriend){
                 if(u.getPhone_number().equals(chosenUserPhoneNumber)) {
 //                    chosenUser = u;
-                    holder.thumnail.setImageBitmap(Utils.decodeImage(u.getImage()));
+                    holder.thumnail.setImageBitmap(Utilss.decodeImage(u.getImage()));
                     holder.name.setText(u.getFullname());
                     break;
                 }

@@ -2,7 +2,6 @@ package com.example.meza.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import at.favre.lib.crypto.bcrypt.BCrypt;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,7 +17,7 @@ import com.example.meza.databinding.ActivityVerifyOtpBinding;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -116,7 +115,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
             HashMap<String, Object> newUser = new HashMap<>();
             newUser.put(Constants.KEY_FULL_NAME, user.fullname);
             newUser.put(Constants.KEY_PHONE, user.phone_number);
-            newUser.put(Constants.KEY_PASSWORD, Utils.hashPassword(user.password));
+            newUser.put(Constants.KEY_PASSWORD, Utilss.hashPassword(user.password));
             newUser.put(Constants.KEY_IMAGE, user.image);
             newUser.put(Constants.KEY_IS_ACTIVE, 1);
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);

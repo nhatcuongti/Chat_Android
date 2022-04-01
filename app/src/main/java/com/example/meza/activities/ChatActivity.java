@@ -36,7 +36,7 @@ import com.example.meza.interfaces.OnGetValueListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.google.firebase.database.DataSnapshot;
 
 import java.io.FileNotFoundException;
@@ -423,7 +423,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 InputStream is = getContentResolver().openInputStream(uri);
                 Bitmap bitmap = BitmapFactory.decodeStream(is);
-                String encodeString = Utils.encodeImageForSend(bitmap);
+                String encodeString = Utilss.encodeImageForSend(bitmap);
 
                 //********************************************************************************//
                             //Khởi tạo Message mà người dùng vừa gửi//
@@ -533,8 +533,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onGetImageClick(String encodeImage) {
         Intent intent = new Intent(ChatActivity.this, FullImageScreenActivity.class);
-        Bitmap bm = Utils.decodeImage(encodeImage);
-        String filePath = Utils.tempFileImage(ChatActivity.this, bm, Constants.KEY_IMAGE);
+        Bitmap bm = Utilss.decodeImage(encodeImage);
+        String filePath = Utilss.tempFileImage(ChatActivity.this, bm, Constants.KEY_IMAGE);
         intent.putExtra(Constants.KEY_IMAGE, filePath);
         startActivity(intent);
     }

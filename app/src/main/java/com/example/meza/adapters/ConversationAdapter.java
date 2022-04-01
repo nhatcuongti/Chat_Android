@@ -1,10 +1,7 @@
 package com.example.meza.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,23 +13,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.meza.R;
 import com.example.meza.activities.ChatActivity;
 import com.example.meza.databinding.ItemReceiveChatboxBinding;
 import com.example.meza.databinding.ItemSendChatboxBinding;
-import com.example.meza.interfaces.OnGetImageClickListener;
-import com.example.meza.interfaces.OnGetValueListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
-import com.example.meza.utils.Utils;
-import com.google.firebase.database.DataSnapshot;
+import com.example.meza.utils.Utilss;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -350,8 +342,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 break;
             }
             case Constants.KEY_IMAGE:{
-                Bitmap bitmap = Utils.decodeImage(msg);
-                Bitmap resizeBitmap = Utils.resizedBitmap(bitmap, 400);
+                Bitmap bitmap = Utilss.decodeImage(msg);
+                Bitmap resizeBitmap = Utilss.resizedBitmap(bitmap, 400);
                 imgMessage.setImageBitmap(resizeBitmap);
                 imgMessage.setOnClickListener(new View.OnClickListener() {
                     @Override

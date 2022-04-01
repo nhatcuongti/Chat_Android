@@ -3,7 +3,6 @@ package com.example.meza.activities;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,26 +14,17 @@ import com.example.meza.ChatsFragment;
 import com.example.meza.R;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
-import com.example.meza.utilities.JWT;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.sinch.android.rtc.ClientRegistration;
-import com.sinch.android.rtc.Sinch;
 import com.sinch.android.rtc.SinchClient;
-import com.sinch.android.rtc.SinchClientListener;
-import com.sinch.android.rtc.SinchError;
-import com.sinch.android.rtc.calling.Call;
-import com.sinch.android.rtc.calling.CallClient;
-import com.sinch.android.rtc.calling.CallClientListener;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -87,7 +77,7 @@ public class HomePageActivity extends FragmentActivity {
 
         // decode base64 string to bitmap image and set image for imageview
         if (currentUser.getImage() != null) {
-            circleImageView.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
+            circleImageView.setImageBitmap(Utilss.decodeImage(currentUser.getImage()));
         }
 
         // chuyen sang man hinh setting, chua truyen du lieu
@@ -312,17 +302,34 @@ public class HomePageActivity extends FragmentActivity {
 //
 //        }
 //    }
-    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode){
-            case REQUEST_RECORD_AUDIO_PERMISSION:
-                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                break;
-        }
-        if (!permissionToRecordAccepted ) finish();
-    }
+//    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+//        switch (requestCode){
+//            case REQUEST_RECORD_AUDIO_PERMISSION:
+//                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+//                break;
+//        }
+//        if (!permissionToRecordAccepted ) finish();
+//    }
+
+//    // request permission
+//    private static final int PERMISSION_REQ_ID = 22;
+//
+//    private static final String[] REQUESTED_PERMISSIONS = {
+//            Manifest.permission.RECORD_AUDIO,
+//            Manifest.permission.CAMERA
+//    };
+//
+//    private boolean checkSelfPermission(String permission, int requestCode) {
+//        if (ContextCompat.checkSelfPermission(this, permission) !=
+//                PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
+//            return false;
+//        }
+//        return true;
+//    }
 
     public interface ItemClickListener {
 

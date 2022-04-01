@@ -11,7 +11,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -20,14 +19,13 @@ import android.widget.Toast;
 import com.example.meza.databinding.ActivitySignUpBinding;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
-import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.concurrent.TimeUnit;
@@ -132,7 +130,7 @@ public class SignUpActivity extends AppCompatActivity {
                             Bitmap bitmap = BitmapFactory.decodeStream(is);
                             binding.imageProfile.setImageBitmap(bitmap);
                             binding.textAddImage.setVisibility(View.GONE);
-                            encodedImage = Utils.encodeImage(bitmap);
+                            encodedImage = Utilss.encodeImage(bitmap);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }

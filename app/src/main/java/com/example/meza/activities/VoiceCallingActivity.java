@@ -1,13 +1,8 @@
 package com.example.meza.activities;
 
-import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.content.ServiceConnection;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -19,32 +14,18 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meza.R;
-import com.example.meza.databinding.ActivityFullImageScreenBinding;
 import com.example.meza.model.User;
-import com.example.meza.utilities.Constants;
-import com.example.meza.utilities.JWT;
-import com.example.meza.utils.Utils;
-import com.google.api.JwtLocation;
-import com.sinch.android.rtc.ClientRegistration;
-import com.sinch.android.rtc.Sinch;
+import com.example.meza.utils.Utilss;
 import com.sinch.android.rtc.SinchClient;
-import com.sinch.android.rtc.SinchClientListener;
-import com.sinch.android.rtc.SinchError;
 import com.sinch.android.rtc.calling.Call;
-import com.sinch.android.rtc.calling.CallClient;
-import com.sinch.android.rtc.calling.CallClientListener;
 import com.sinch.android.rtc.calling.CallListener;
-
-import org.w3c.dom.Text;
-
-import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by reiko-lhnhat on 3/26/2022.
  */
-public class VoiceCallingActivity extends AppCompatActivity implements View.OnClickListener {
+public class VoiceCallingActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection{
     ImageView muteBtn, endBtn, speakerBtn;
     String Tag = "statecall";
     CircleImageView avatar;
@@ -73,15 +54,17 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         currentUser = User.getCurrentUser(context);
         userID = currentUser.getPhone_number();
 
-        sinchClient = Utils.sinchClient;
+        sinchClient = Utilss.sinchClient;
         call();
     }
+
+
 
     void call(){
         String receiveUserID = "0987783897";
         if(sinchClient.isStarted()) {
             // contains info of call such as time,participants ,error...
-            call = Utils.serviceBinder.callUser(receiveUserID);
+            call = Utilss.serviceBinder.callUser(receiveUserID);
 
             // outgoing call
             call.addCallListener(new CallListener() {
@@ -121,6 +104,16 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
             case R.id.hangon_Btn:
                 call.hangup();
         }
+    }
+
+    @Override
+    public void onServiceConnected(ComponentName name, IBinder service) {
+
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName name) {
+
     }
 
 

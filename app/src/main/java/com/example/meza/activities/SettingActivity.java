@@ -3,12 +3,9 @@ package com.example.meza.activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.meza.R;
 import com.example.meza.model.User;
 import com.example.meza.utilities.PreferenceManager;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 public class SettingActivity extends Activity {
@@ -46,7 +43,7 @@ public class SettingActivity extends Activity {
         //set name and profile image (avatar)
         username.setText(currentUser.getFullname());
         if (currentUser.getImage() != null) {
-            userAvatar.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
+            userAvatar.setImageBitmap(Utilss.decodeImage(currentUser.getImage()));
         } else {
             userAvatar.setImageResource(R.drawable.ic_baseline_person_24);
         }

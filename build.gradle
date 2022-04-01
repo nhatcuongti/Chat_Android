@@ -3,6 +3,13 @@ buildscript {
         classpath 'com.google.gms:google-services:4.3.10'
     }
 }
+//buildscript {
+//    repositories {
+//
+//        mavenCentral()
+//    }
+//
+//}
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
     id 'com.android.application' version '7.1.2' apply false
@@ -10,6 +17,12 @@ plugins {
 }
 
 
+//allprojects {
+//    repositories {
+//
+//        mavenCentral()
+//    }
+//}
 
 task clean(type: Delete) {
     delete rootProject.buildDir

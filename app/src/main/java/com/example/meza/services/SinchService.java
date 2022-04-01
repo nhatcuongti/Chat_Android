@@ -6,7 +6,7 @@ import android.os.Binder;
 import android.os.IBinder;
 
 import com.example.meza.utilities.JWT;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.sinch.android.rtc.ClientRegistration;
 import com.sinch.android.rtc.Sinch;
 import com.sinch.android.rtc.SinchClient;
@@ -50,7 +50,7 @@ public class SinchService extends Service implements SinchClientListener, CallCl
                 .build();
 //        sinchClient.setSupportManagedPush(true);
         sinchClient.addSinchClientListener(this);
-        Utils.sinchClient = sinchClient;
+        Utilss.sinchClient = sinchClient;
     }
 
     @Override

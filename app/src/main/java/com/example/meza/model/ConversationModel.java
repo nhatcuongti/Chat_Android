@@ -3,15 +3,13 @@ package com.example.meza.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.ContactsContract;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.meza.R;
 import com.example.meza.interfaces.OnGetValueListener;
-import com.example.meza.utils.Utils;
+import com.example.meza.utils.Utilss;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -155,7 +153,7 @@ public class ConversationModel {
                         String idUser = ds.getKey();
                         if (participant_list.get(idUser) != null){
                             if (imageDecode != null)
-                                user_image.put(idUser, Utils.decodeImage(imageDecode));
+                                user_image.put(idUser, Utilss.decodeImage(imageDecode));
                             else {
                                 Bitmap bitmapTmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_user_image);
                                 user_image.put(idUser, bitmapTmp);

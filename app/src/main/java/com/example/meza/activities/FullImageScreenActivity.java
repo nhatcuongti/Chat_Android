@@ -8,10 +8,8 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 
-import com.example.meza.R;
 import com.example.meza.databinding.ActivityFullImageScreenBinding;
 import com.example.meza.utilities.Constants;
-import com.example.meza.utils.Utils;
 
 import java.io.File;
 

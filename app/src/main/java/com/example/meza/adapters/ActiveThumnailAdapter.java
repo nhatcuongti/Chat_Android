@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,16 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
 import com.example.meza.activities.ChatActivity;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
-import com.example.meza.utils.Utils;
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.badge.BadgeUtils;
+import com.example.meza.utils.Utilss;
 
 import java.util.ArrayList;
 
@@ -57,7 +53,7 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
         User activeUser = listActiveUser.get(position);
 
         holder.thumnail.setImageBitmap(
-                Utils.decodeImage(
+                Utilss.decodeImage(
                         listActiveUser.get(position).getImage()));
 
         holder.name.setText(activeUser.getFullname());
