@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
+import com.example.meza.VideoCallScreen;
 import com.example.meza.adapters.ConversationAdapter;
 import com.example.meza.databinding.ActivityChatBinding;
 import com.example.meza.databinding.BottombarChatBinding;
@@ -331,7 +332,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.voiceSendBtn:{ // Nếu người dùng bấm nút gửi đoạn record
-
                 break;
             }
 
@@ -346,6 +346,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.videoCallBtn:{ // Nếu người dùng bấm nút video call
+                Intent intent = new Intent(ChatActivity.this, VideoCallScreen.class);
+                startActivity(intent);
                 break;
             }
 

@@ -71,6 +71,9 @@
         <activity
             android:name=".activities.VoiceCallingActivity"
             android:exported="false" />
+        <activity
+            android:name=".VideoCallScreen"
+            android:exported="false" />
     </application>
 
 </manifest>

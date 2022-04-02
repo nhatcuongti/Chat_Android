@@ -31,10 +31,10 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
     // Fill the App ID of your project generated on Agora Console.
     private String appId = "e5cf25f6acaa4808a27459bd1ea82edd";
     // Fill the channel name.
-    private String appCertificate = "f8963aaa51394434b5f7e7d831de66b7";
-    private String channelName = "";
+    private String appCertificate = "4db004afc19a439992fd082560165ac8";
+    private String channelName = "test";
     // Fill the temp token generated on Agora Console.
-    private String token = "";
+    private String token = "006e5cf25f6acaa4808a27459bd1ea82eddIAC45W74tGr1WyPWTvdS5Fz4nPhTCdFxETErauWzyZmcNAx+f9gAAAAAEABrDG+dUFZJYgEAAQBPVkli";
     private RtcEngine mRtcEngine;
 
     // Java
@@ -68,6 +68,7 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
 
     private void inflateBtn() {
         hangonBtn = findViewById(R.id.hangon_video_Btn);
+        hangonBtn.setOnClickListener(this);
     }
 
 
@@ -90,7 +91,7 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
 
         // Join the channel with a token.
-        token =  new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, channelName,curUserID, RtcTokenBuilder.Role.Role_Admin, 1000);
+//        token =  new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, channelName,curUserID, RtcTokenBuilder.Role.Role_Admin, 1000);
         mRtcEngine.joinChannel(token, channelName, "", 0);
     }
 
