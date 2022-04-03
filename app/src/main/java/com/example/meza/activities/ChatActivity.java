@@ -40,8 +40,16 @@ import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utilss;
 import com.google.firebase.database.DataSnapshot;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -68,16 +76,35 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     BottombarChatBinding bottombarChatBinding;
 
 
+    String token = "";
+    String urlStr = "";
+    String urlBase = "https://mezatoken.herokuapp.com";
+    String channelName = "test";
+    String curUserID;
+    Bundle myBundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        channelName = bundle.getString("conversationID");
+
         progressBar = findViewById(R.id.progressBar);
         conversationRv = findViewById(R.id.conversationListRv);
+
+        curUserID = User.getCurrentUser(getApplicationContext()).getPhone_number();
+        urlStr = urlBase + "/rtc/" + "meza" + channelName + "/publisher/uid/"  + channelName  + "/";
+        Log.d("channel name", channelName);
+        Log.d("url", urlStr);
+        new fetchData(token, urlStr).start();
+
         loading(true);
         initData();
         initButton();
+
     }
 
 
@@ -94,10 +121,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         CircleImageView userActive = findViewById(R.id.userActive);
 
         HashMap<String, Bitmap> user_image = conversation.getUser_image();
-        for (String userID : conversation.getParticipantListArray())
-            if (!userID.equals(currentUser.getId())){
+        for (String userID : conversation.getParticipantListArray()) {
+            if (!userID.equals(currentUser.getId())) {
                 userImage.setImageBitmap(user_image.get(userID));
             }
+
+
+        }
+
     }
 
     /**
@@ -112,9 +143,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         //**************************************************************************************
                                     //Lấy dữ liệu của conversation hiện tại/
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        idConversation = bundle.getString("conversationID");
+
+        idConversation = channelName;
         //************************************End***********************************************
 
 
@@ -347,6 +377,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.videoCallBtn:{ // Nếu người dùng bấm nút video call
                 Intent intent = new Intent(ChatActivity.this, VideoCallScreen.class);
+                myBundle.putString("channelName", channelName);
+                intent.putExtras(myBundle);
                 startActivity(intent);
                 break;
             }
@@ -546,4 +578,37 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         super.onPause();
         ConversationModel.Message.chatReference.removeEventListener(ConversationModel.Message.childEventListener);
     }
+
+    class fetchData extends Thread  {
+        String token;
+        String data = "";
+        String urlStr;
+
+        public fetchData(String token, String urlStr) {
+            this.token = token;
+            this.urlStr = urlStr;
+        }
+
+        @Override
+        public void run() {
+            super.run();
+            try {
+                URL url = new URL(urlStr);
+                HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                InputStream inputStream = con.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line;
+                while ((line = bufferedReader.readLine())!= null){
+                    data += line;
+                }
+                JSONObject jsonObject = new JSONObject(data);
+                this.token = jsonObject.getString("rtcToken");
+                myBundle = new Bundle();
+                myBundle.putString("token", this.token);
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }

@@ -1,28 +1,28 @@
 package com.example.meza;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-// Java
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
-// Java
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+
+import com.example.meza.model.User;
+
+import java.net.MalformedURLException;
+
 import io.agora.rtc.IRtcEngineEventHandler;
 import io.agora.rtc.RtcEngine;
 import io.agora.rtc.video.VideoCanvas;
 
-import android.os.Bundle;
-import android.widget.ImageView;
-
-import com.example.meza.model.User;
-import com.example.meza.utilities.RtcTokenBuilder;
-import com.example.meza.utilities.Utilities;
+// Java
+// Java
 
 public class VideoCallScreen extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,19 +34,23 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
     private String appCertificate = "4db004afc19a439992fd082560165ac8";
     private String channelName = "test";
     // Fill the temp token generated on Agora Console.
-    private String token = "006e5cf25f6acaa4808a27459bd1ea82eddIAC45W74tGr1WyPWTvdS5Fz4nPhTCdFxETErauWzyZmcNAx+f9gAAAAAEABrDG+dUFZJYgEAAQBPVkli";
+//    private String token = "006e5cf25f6acaa4808a27459bd1ea82eddIAC45W74tGr1WyPWTvdS5Fz4nPhTCdFxETErauWzyZmcNAx+f9gAAAAAEABrDG+dUFZJYgEAAQBPVkli";
+    private String token;
+
+    String urlStr = "";
     private RtcEngine mRtcEngine;
 
     // Java
     private static final int PERMISSION_REQ_ID = 22;
 
     private static final String[] REQUESTED_PERMISSIONS = {
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CAMERA
-    };
+    Manifest.permission.RECORD_AUDIO,
+    Manifest.permission.CAMERA
+};
 
     // btn
     ImageView muteBtn, hangonBtn, speakerBtn;
+    String urlBase = "https://mezatoken.herokuapp.com/";
 
 
     @Override
@@ -57,12 +61,22 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
         //inflate btn
         inflateBtn();
 
+        Bundle bundle = getIntent().getExtras();
+        token = bundle.getString("token");
+        channelName = bundle.getString("channelName");
+
         User curUser = User.getCurrentUser(getApplicationContext());
         curUserID = curUser.getPhone_number();
+
         // If all the permissions are granted, initialize the RtcEngine object and join a channel.
-        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
-                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+//        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
+//        checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+//
+//    }
+        try {
             initializeAndJoinChannel();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 
@@ -73,7 +87,7 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
 
 
 
-    private void initializeAndJoinChannel() {
+    private void initializeAndJoinChannel() throws MalformedURLException {
         try {
             mRtcEngine = RtcEngine.create(getBaseContext(), appId, mRtcEventHandler);
         } catch (Exception e) {
@@ -91,8 +105,10 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
         mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
 
         // Join the channel with a token.
-//        token =  new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, channelName,curUserID, RtcTokenBuilder.Role.Role_Admin, 1000);
-        mRtcEngine.joinChannel(token, channelName, "", 0);
+//        String token1 =  new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, channelName,curUserID, RtcTokenBuilder.Role.Role_Admin, 1000);
+//        token = new MyTask().doInBackground("https://mezatoken.herokuapp.com/", "my-channel", "0");
+        Log.d("token", token);
+        mRtcEngine.joinChannel(token,"meza" +  channelName, "",  0);
     }
 
     private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
@@ -119,20 +135,50 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
 
     private boolean checkSelfPermission(String permission, int requestCode) {
         if (ContextCompat.checkSelfPermission(this, permission) !=
-                PackageManager.PERMISSION_GRANTED) {
+        PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
             return false;
         }
         return true;
     }
 
+
+
+//    public  void fetchToken(String urlBase, String channelName, String userId)  {
+////        Logger log = LoggerFactory.getLogger("AgoraTokenRequester");
+//
+//        OkHttpClient client = new OkHttpClient();
+//        String url = urlBase + "/rtc/" + channelName + "/publisher/uid/" + userId + "/";
+//
+//        okhttp3.Request request = new okhttp3.Request.Builder()
+//                .url(url)
+//                .method("GET", null)
+//                .build();
+//
+//        try (okhttp3.Response response = client.newCall(request).execute()) {
+//            if (!response.isSuccessful()) {
+//                Log.d("Unexpected code " , response.toString());
+//            } else {
+//                JSONObject jObject = new JSONObject(response.body().string());
+//                return jObject.getString("rtcToken");
+//            }
+//        } catch (IOException | JSONException e) {
+//            e.printStackTrace();
+//        }
+//        return "";
+//    }
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.hangon_video_Btn:
                 mRtcEngine.leaveChannel();
                 mRtcEngine.destroy();
+                finish();
                 break;
         }
     }
+
+
 }
+
+

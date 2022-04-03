@@ -74,6 +74,9 @@ dependencies {
 
     implementation 'commons-codec:commons-codec:1.9'
 
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+
+
 
 
 }

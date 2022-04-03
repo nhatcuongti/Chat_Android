@@ -35,6 +35,8 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
     User currentUser;
     String userID;
 
+
+
     Call call;
 
     public VoiceCallingActivity() {
@@ -55,6 +57,7 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         userID = currentUser.getPhone_number();
 
         sinchClient = Utilss.sinchClient;
+
         call();
     }
 
@@ -103,6 +106,8 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         switch (v.getId()){
             case R.id.hangon_Btn:
                 call.hangup();
+                finish();
+                break;
         }
     }
 
