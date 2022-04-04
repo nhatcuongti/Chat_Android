@@ -3,6 +3,7 @@ package com.example.meza.activities;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+
 import android.content.Intent;
 import android.os.Bundle;
 //import android.support.v4.media.app.NotificationCompat;
@@ -10,32 +11,63 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
+import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
 import com.example.meza.R;
+import com.example.meza.model.User;
+import com.example.meza.utilities.PreferenceManager;
+import com.example.meza.utils.Utils;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 public class SettingActivity extends Activity {
 
+    PreferenceManager preferenceManager;
+    TextView username;
+    RoundedImageView userAvatar;
     Button Phone, Password, deleteAccount, Logout, Bell, Vibrate;
     EditText oldPassword, newPassword1, newPassword2;
+    ImageButton backWardBtn;
+
+
+    User currentUser;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
+        preferenceManager = new PreferenceManager(getApplicationContext());
+        //receive current user data from homepage activity
+        currentUser = (User) getIntent().getSerializableExtra("currentUser");
+
+        //inflate view
+        username = findViewById(R.id.tvUsername);
+        userAvatar = findViewById(R.id.imageProfile);
+
+        //set name and profile image (avatar)
+        username.setText(currentUser.getFullname());
+        if (currentUser.getImage() != null) {
+            userAvatar.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
+        } else {
+            userAvatar.setImageResource(R.drawable.ic_baseline_person_24);
+        }
 
         actionButton();
     }
 
     private void actionButton() {
+        backWardBtn = findViewById(R.id.backwardBtn);
         Bell = (Button) findViewById(R.id.btnNotificationApp);
         Vibrate = (Button) findViewById(R.id.btnVibrate);
         Phone = (Button) findViewById(R.id.btnChangePhone);
-        Password = (Button)findViewById(R.id.btnChangePassword);
-        deleteAccount = (Button)findViewById(R.id.btnDeleteAccount);
-        Logout = (Button)findViewById(R.id.btnLogout);
+        Password = (Button) findViewById(R.id.btnChangePassword);
+        deleteAccount = (Button) findViewById(R.id.btnDeleteAccount);
+        Logout = (Button) findViewById(R.id.btnLogout);
 
         oldPassword = (EditText) findViewById(R.id.oldpassword);
         newPassword1 = (EditText) findViewById(R.id.newPassword1);
@@ -68,11 +100,15 @@ public class SettingActivity extends Activity {
                     alert.show();
 
                 }else {
+                if (Bell.getText().equals("Tắt thông báo")) {
+                    Toast.makeText(SettingActivity.this, "Đã tắt thông báo ứng dụng", Toast.LENGTH_SHORT).show();
+                    Bell.setText("Bật thông báo");
+                } else {
                     Toast.makeText(SettingActivity.this, "Đã bật thông báo ứng dụng", Toast.LENGTH_SHORT).show();
                     Bell.setText("Tắt thông báo");
                 }
             }
-        });
+        }});
         //Cài rung
         Vibrate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,11 +136,15 @@ public class SettingActivity extends Activity {
 
 
                 }else {
+                if (Vibrate.getText().equals("Tắt rung")) {
+                    Toast.makeText(SettingActivity.this, "Đã tắt rung", Toast.LENGTH_SHORT).show();
+                    Vibrate.setText("Bật rung");
+                } else {
                     Toast.makeText(SettingActivity.this, "Đã bật rung", Toast.LENGTH_SHORT).show();
                     Vibrate.setText("Tắt rung");
                 }
             }
-        });
+        }});
         //Đổi số điện thoại
         Phone.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,57 +240,23 @@ public class SettingActivity extends Activity {
                     }
                 });
                 alert.show();
+                Toast.makeText(SettingActivity.this, "Đăng xuất", Toast.LENGTH_SHORT).show();
+                preferenceManager.clear();
+                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+        });
+
+        backWardBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
 
 
-    }
+    }}
 
-//    public void sendNotification(String title, String message,boolean playSound) {
-//
-//
-//        int NOTIFICATION_ID = 234;
-//        NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//        String CHANNEL_ID = "my_channel_01";
-//
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-//        {
-//            CharSequence name = "my_channel";
-//            String Description = "This is my channel";
-//            int importance = NotificationManager.IMPORTANCE_HIGH;
-//            NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
-//            mChannel.setDescription(Description);
-//            mChannel.enableLights(true);
-//            mChannel.setLightColor(Color.RED);
-//            mChannel.enableVibration(false);
-//            mChannel.setVibrationPattern(new long[]{100, 200, 300, 400, 500, 400, 300, 200, 400});
-//            mChannel.setShowBadge(false);
-//            notificationManager.createNotificationChannel(mChannel);
-//        }
-//
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-//                .setSmallIcon(R.mipmap.ic_launcher)
-//                .setContentTitle(title)
-//                .setContentText(message)
-//                .setPriority(NotificationCompat.PRIORITY_HIGH);
-//
-//
-////        Intent notificationIntent = new Intent(this, HomePageActivity.class);
-////        notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
-////                | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-////        PendingIntent intent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-////
-////        builder.setContentIntent(intent);
-//
-//
-//
-////        Intent resultIntent = new Intent(this, HomePageActivity.class);
-////        TaskStackBuilder stackBuilder = TaskStackBuilder.create(this);
-////        stackBuilder.addParentStack(HomePageActivity.class);
-////        stackBuilder.addNextIntent(resultIntent);
-////        PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-////        builder.setContentIntent(resultPendingIntent);
-//
-//        notificationManager.notify(NOTIFICATION_ID, builder.build());
-//    }
-}
+

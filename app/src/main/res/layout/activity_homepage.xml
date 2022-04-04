@@ -23,7 +23,7 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:padding="5dp"
-                android:src="@drawable/muitreo"/>
+                android:src="@drawable/ic_baseline_person_24"/>
             <TextView
                 android:id="@+id/name_fragment"
                 android:layout_width="wrap_content"
@@ -46,9 +46,9 @@
         android:id="@+id/fragment_chats"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/chats_toolbar_layout"
         android:layout_above="@id/bottombar_layout"
-        android:backgroundTint="@color/white"/>
+        android:layout_below="@id/chats_toolbar_layout"
+        android:backgroundTint="@color/white" />
 
         <LinearLayout
             android:id="@+id/bottombar_layout"

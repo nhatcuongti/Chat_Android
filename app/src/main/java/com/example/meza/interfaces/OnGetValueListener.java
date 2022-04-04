@@ -4,4 +4,5 @@ import com.google.firebase.database.DataSnapshot;
 
 public interface OnGetValueListener {
     public void onSuccess(DataSnapshot snapshot);
+    public void onChange(DataSnapshot snapshot);
 }

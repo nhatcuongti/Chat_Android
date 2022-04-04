@@ -15,13 +15,14 @@ import com.example.meza.activities.HomePageActivity;
 import com.example.meza.adapters.ActiveThumnailAdapter;
 import com.example.meza.adapters.NameOfConversationAdapter;
 import com.example.meza.model.ConversationModel;
-import com.example.meza.model.User2;
+import com.example.meza.model.User;
 
 import java.util.ArrayList;
 
 
 public class ChatsFragment extends Fragment {
-    private ArrayList<User2> listActiveUser;
+    private ArrayList<User> listActiveUser;
+    ArrayList<User> listObjectUserFriend;
     private ArrayList<ConversationModel> listRecentConversation;
     View view;
     RecyclerView listActiveUserView, listRecentConversationView;
@@ -29,15 +30,20 @@ public class ChatsFragment extends Fragment {
     NameOfConversationAdapter nameOfConversationAdapter;
     Context mcontext;
 
-    public ChatsFragment(Context c,ArrayList<User2> listActiveUser) {
+    public ChatsFragment(){
+
+    }
+
+    public ChatsFragment(Context c,ArrayList<User> listActiveUser) {
         mcontext = c;
         this.listActiveUser = listActiveUser;
     }
 
-    public ChatsFragment(Context c,ArrayList<User2> listActiveUser, ArrayList<ConversationModel> listRecentConversation) {
+    public ChatsFragment(Context c,ArrayList<User> listActiveUser, ArrayList<ConversationModel> listRecentConversation, ArrayList<User> listObjectUserFriend) {
         this.listActiveUser = listActiveUser;
         mcontext = c;
         this.listRecentConversation = listRecentConversation;
+        this.listObjectUserFriend = listObjectUserFriend;
     }
 
     public ActiveThumnailAdapter getActiveThumnailAdapter() {
@@ -55,12 +61,12 @@ public class ChatsFragment extends Fragment {
         // active user
         view = inflater.inflate(R.layout.fragment_chats, container, false);
         listActiveUserView = view.findViewById(R.id.recycle_list_active_user);
-        activeThumnailAdapter = new ActiveThumnailAdapter(listActiveUser);
+        activeThumnailAdapter = new ActiveThumnailAdapter(mcontext,listActiveUser, listRecentConversation);
         listActiveUserView.setAdapter(activeThumnailAdapter);
 
         //recent conversation
         listRecentConversationView = view.findViewById(R.id.recycle_list_recent_conversation);
-        nameOfConversationAdapter = new NameOfConversationAdapter(mcontext,listRecentConversation);
+        nameOfConversationAdapter = new NameOfConversationAdapter(mcontext,listRecentConversation, listObjectUserFriend);
         listRecentConversationView.setAdapter(nameOfConversationAdapter);
 
         return view;

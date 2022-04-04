@@ -18,6 +18,8 @@ import com.example.meza.R;
 import com.example.meza.activities.ChatActivity;
 import com.example.meza.activities.HomePageActivity;
 import com.example.meza.model.ConversationModel;
+import com.example.meza.model.User;
+import com.example.meza.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -29,10 +31,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConversationAdapter.ViewHolder> {
     ArrayList<ConversationModel> listRecentConversation;
     Context context;
+    ArrayList<User> listObjectUserFriend;
 
-    public NameOfConversationAdapter(Context c,ArrayList<ConversationModel> listRecentConversation) {
+    public NameOfConversationAdapter(Context c,ArrayList<ConversationModel> listRecentConversation, ArrayList<User> listObjectUserFriend) {
         context = c;
         this.listRecentConversation = listRecentConversation;
+        this.listObjectUserFriend = listObjectUserFriend;
     }
 
     @NonNull
@@ -46,9 +50,35 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        User currentUser = User.getCurrentUser(context);
+//        User chosenUser;
+
         ConversationModel conversation = listRecentConversation.get(position);
-        holder.thumnail.setImageResource(R.drawable.muitreo);
-        holder.name.setText(conversation.getTittle());
+        String [] arrKey = conversation.getParticipant_list().keySet().toArray(new String[0]);
+        String chosenUserPhoneNumber; // user was clicked by current user
+
+        if(arrKey.length <= 2) {
+            if(arrKey[0].equals(currentUser.getId()))
+                chosenUserPhoneNumber = arrKey[1];
+            else
+                chosenUserPhoneNumber = arrKey[0];
+
+            for (User u: listObjectUserFriend){
+                if(u.getPhone_number().equals(chosenUserPhoneNumber)) {
+//                    chosenUser = u;
+                    holder.thumnail.setImageBitmap(Utils.decodeImage(u.getImage()));
+                    holder.name.setText(u.getFullname());
+                    break;
+                }
+            }
+        }
+        else {
+            // here: handle conversation with 2 or more
+        }
+
+
+
+
         holder.lastMessage.setText(conversation.getLast_message());
 
         holder.layout.setOnClickListener(new View.OnClickListener() {

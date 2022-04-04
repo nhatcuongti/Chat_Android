@@ -1,10 +1,15 @@
 package com.example.meza.adapters;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,7 +17,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
-import com.example.meza.model.User2;
+import com.example.meza.activities.ChatActivity;
+import com.example.meza.model.ConversationModel;
+import com.example.meza.model.User;
+import com.example.meza.utils.Utils;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
 
@@ -24,10 +32,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by reiko-lhnhat on 2/25/2022.
  */
 public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAdapter.ViewHolder> {
-    ArrayList<User2> listActiveUser;
+    ArrayList<User> listActiveUser;
+    ArrayList<ConversationModel> listRecentConversation;
+    Context mContext;
 
-    public ActiveThumnailAdapter(ArrayList<User2> listActiveUser) {
+    public ActiveThumnailAdapter(Context c,ArrayList<User> listActiveUser, ArrayList<ConversationModel> listRecentConversation) {
         this.listActiveUser = listActiveUser;
+        mContext = c;
+        this.listRecentConversation = listRecentConversation;
     }
 
     @NonNull
@@ -42,9 +54,43 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
     @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        User2 activeUser = listActiveUser.get(position);
-        holder.thumnail.setImageResource(R.drawable.muitreo);
+        User activeUser = listActiveUser.get(position);
+
+        holder.thumnail.setImageBitmap(
+                Utils.decodeImage(
+                        listActiveUser.get(position).getImage()));
+
         holder.name.setText(activeUser.getFullname());
+
+        holder.layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                Bundle bundle = new Bundle();
+
+                ConversationModel temp = null; //
+
+                for(ConversationModel cm: listRecentConversation){
+                    if(cm.getParticipant_list().get(
+                            listActiveUser.get(
+                                    holder.getAdapterPosition()).getPhone_number()) != null){
+
+                        temp = cm;
+                        break;
+                    }
+                }
+
+                if(temp != null){
+                    bundle.putString("conversationID",temp.getID());
+                    intent.putExtras(bundle);
+                    mContext.startActivity(intent);
+                }
+                else {
+                    // not exists conversation between cur user and chosen user --> create new conversation
+                }
+            }
+        });
 
 
     }
@@ -57,6 +103,7 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
     public class ViewHolder extends RecyclerView.ViewHolder {
         CircleImageView thumnail;
         TextView name;
+        LinearLayout layout;
         FrameLayout container;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +111,7 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
             thumnail =itemView.findViewById(R.id.item_active_thumnail);
             name = itemView.findViewById(R.id.item_active_name);
             container = itemView.findViewById(R.id.framelayout_thumnail);
+            layout = itemView.findViewById(R.id.item_active_thumnail_layout);
         }
     }
 }

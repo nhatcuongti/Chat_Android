@@ -12,14 +12,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_keyboard_arrow_right_24"
-            android:visibility="gone"/>
+            android:visibility="gone"
+            android:backgroundTint="@color/sendChatboxColor"/>
 
         <ImageButton
             android:id="@+id/imageSendBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_image_24"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/sendChatboxColor"
             android:layout_gravity="center" />
 
         <ImageButton
@@ -27,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_mic_24"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/sendChatboxColor"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center"/>
 
@@ -36,13 +37,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_photo_camera_24"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/sendChatboxColor"
             android:layout_marginLeft="10dp"
             android:layout_gravity="center"/>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
-            android:layout_height="50dp"
+            android:layout_height="60dp"
             android:layout_weight="1"
             android:layout_marginLeft="10dp">
                 <EditText
@@ -63,7 +64,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintHorizontal_chainStyle="spread"
-                    android:background="@drawable/ic_baseline_insert_emoticon_24"
+                    android:background="@drawable/ic_baseline_emoji_emotions_24"
+                    android:backgroundTint="@color/sendChatboxColor"
                     app:layout_constraintTop_toTopOf="@id/chatboxEdit"
                     app:layout_constraintBottom_toBottomOf="@id/chatboxEdit"
                     app:layout_constraintLeft_toLeftOf="@id/chatboxEdit"
@@ -77,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_baseline_send_24"
-            android:backgroundTint="@color/black"
+            android:backgroundTint="@color/sendChatboxColor"
             android:layout_marginLeft="20dp"
             android:layout_gravity="center"
             android:visibility="gone"/>

@@ -18,6 +18,7 @@ import com.example.meza.databinding.ActivityVerifyOtpBinding;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
+import com.example.meza.utils.Utils;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
@@ -115,7 +116,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
             HashMap<String, Object> newUser = new HashMap<>();
             newUser.put(Constants.KEY_FULL_NAME, user.fullname);
             newUser.put(Constants.KEY_PHONE, user.phone_number);
-            newUser.put(Constants.KEY_PASSWORD, hashPassword(user.password));
+            newUser.put(Constants.KEY_PASSWORD, Utils.hashPassword(user.password));
             newUser.put(Constants.KEY_IMAGE, user.image);
             newUser.put(Constants.KEY_IS_ACTIVE, 1);
             PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(verificationId, inputCode);
@@ -147,9 +148,7 @@ public class VerifyOtpActivity extends AppCompatActivity {
         }
     }
 
-    private String hashPassword(String password) {
-        return BCrypt.withDefaults().hashToString(12, password.toCharArray());
-    }
+
 
     private void setOtpInputs() {
         binding.inputCode1.addTextChangedListener(new GenericTextWatcher(binding.inputCode1));
