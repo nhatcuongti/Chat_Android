@@ -24,8 +24,10 @@
             android:name=".activities.SettingUserActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize"/>
-
-
+        <activity
+            android:name=".activities.HomePageActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
         <activity
             android:name=".activities.SignInActivity"
             android:exported="true"
@@ -35,8 +37,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
+
+<!--            android:name=".activities.ChatActivity"-->
+<!--            android:exported="false"-->
+<!--            android:windowSoftInputMode="adjustResize"/>-->
+
+
 
         <!--                <activity-->
         <!--                    android:name=".activities.HomePageActivity"-->
@@ -59,12 +66,6 @@
         <!--                    </intent-filter>-->
         <!--                </activity>-->
 
-
-        <activity
-            android:name=".activities.HomePageActivity"
-            android:exported="false" >
-
-        </activity>
 
     </application>
 

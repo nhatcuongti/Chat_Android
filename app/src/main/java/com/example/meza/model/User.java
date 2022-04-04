@@ -1,11 +1,14 @@
 package com.example.meza.model;
 
+import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.meza.interfaces.OnGetValueListener;
+import com.example.meza.utilities.Constants;
+import com.example.meza.utilities.PreferenceManager;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -164,5 +167,18 @@ public class User implements Serializable {
 
             }
         });
+    }
+
+    public static User getCurrentUser(Context context){
+        PreferenceManager preferenceManager = new PreferenceManager(context);
+        User user = new User();
+        if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)){
+            user.setFullname(preferenceManager.getString(Constants.KEY_FULL_NAME));
+            user.setId(preferenceManager.getString(Constants.KEY_USER_ID));
+            user.setPhone_number(preferenceManager.getString(Constants.KEY_USER_ID));
+            user.setImage(preferenceManager.getString(Constants.KEY_IMAGE));
+            return user;
+        }
+        return null;
     }
 }
