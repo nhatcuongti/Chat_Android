@@ -17,12 +17,6 @@ plugins {
 }
 
 
-//allprojects {
-//    repositories {
-//
-//        mavenCentral()
-//    }
-//}
 
 task clean(type: Delete) {
     delete rootProject.buildDir

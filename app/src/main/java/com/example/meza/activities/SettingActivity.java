@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 import com.example.meza.R;
 import com.example.meza.model.User;
 import com.example.meza.utilities.PreferenceManager;
-import com.example.meza.utils.Utilss;
+import com.example.meza.utils.Utils;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 public class SettingActivity extends Activity {
@@ -43,7 +43,7 @@ public class SettingActivity extends Activity {
         //set name and profile image (avatar)
         username.setText(currentUser.getFullname());
         if (currentUser.getImage() != null) {
-            userAvatar.setImageBitmap(Utilss.decodeImage(currentUser.getImage()));
+            userAvatar.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
         } else {
             userAvatar.setImageResource(R.drawable.ic_baseline_person_24);
         }

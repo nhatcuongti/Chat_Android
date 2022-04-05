@@ -1,43 +1,44 @@
 package com.example.meza.activities;
 
-import android.content.ComponentName;
 import android.content.Context;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meza.R;
 import com.example.meza.model.User;
-import com.example.meza.utils.Utilss;
-import com.sinch.android.rtc.SinchClient;
-import com.sinch.android.rtc.calling.Call;
-import com.sinch.android.rtc.calling.CallListener;
+import com.example.meza.utils.Utils;
+import com.stringee.StringeeClient;
+import com.stringee.call.StringeeCall;
+import com.stringee.common.StringeeAudioManager;
+
+import org.json.JSONObject;
+
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by reiko-lhnhat on 3/26/2022.
  */
-public class VoiceCallingActivity extends AppCompatActivity implements View.OnClickListener, ServiceConnection{
+public class VoiceCallingActivity extends AppCompatActivity implements View.OnClickListener{
     ImageView muteBtn, endBtn, speakerBtn;
     String Tag = "statecall";
     CircleImageView avatar;
     TextView name, state;
     Context context = this;
-    SinchClient sinchClient;
+    StringeeClient client;
+//Call call;
     User currentUser;
     String userID;
+    private StringeeCall stringeeCall;
+    private StringeeAudioManager audioManager;
 
 
-
-    Call call;
 
     public VoiceCallingActivity() {
 
@@ -56,69 +57,126 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         currentUser = User.getCurrentUser(context);
         userID = currentUser.getPhone_number();
 
-        sinchClient = Utilss.sinchClient;
+        client = Utils.stringeeClient;
 
-        call();
+//        sinchClient = Utilss.sinchClient;
+
+//        call();
+        makeCAll();
+        handleOutgoingCallState();
     }
 
 
 
-    void call(){
-        String receiveUserID = "0987783897";
-        if(sinchClient.isStarted()) {
-            // contains info of call such as time,participants ,error...
-            call = Utilss.serviceBinder.callUser(receiveUserID);
-
-            // outgoing call
-            call.addCallListener(new CallListener() {
-                @Override
-                public void onCallProgressing(Call call) {
-                    // duoc goi khi cuoc goi dang thuc hien
-                    Log.d(Tag, "onCallProgressing");//                    Toast.makeText(getApplicationContext(), "Đang đổ chuông", Toast.LENGTH_LONG);
-//                    state.setText("Đang đổ chuông");
-                    // them nhac cho hoac hien thi text
-                }
-
-                @Override
-                public void onCallEstablished(Call call) {
-                    // dc goi khi nguoi dung bat may
-//                    state.setText("Trong cuộc gọi");
-                    // dung nhac cho, thay doi trang thai text
-                }
-
-                @Override
-                public void onCallEnded(Call call) {
-                    // quay ve activity ban dau
-                    Log.d(Tag , "cuocgoi ket thuc");
-//                    finish();
-                }
-            });
-        }
-        else {
-            Log.d("err", "SinchClient not started");
-
-            Toast.makeText(getApplicationContext(), "SinchClient not started", Toast.LENGTH_LONG);
-        }
-    }
+//    void call(){
+//        String receiveUserID = "0987783897";
+//        if(sinchClient.isStarted()) {
+//            // contains info of call such as time,participants ,error...
+//            call = Utilss.serviceBinder.callUser(receiveUserID);
+//
+//            // outgoing call
+//            call.addCallListener(new CallListener() {
+//                @Override
+//                public void onCallProgressing(Call call) {
+//                    // duoc goi khi cuoc goi dang thuc hien
+//                    Log.d(Tag, "onCallProgressing");//                    Toast.makeText(getApplicationContext(), "Đang đổ chuông", Toast.LENGTH_LONG);
+////                    state.setText("Đang đổ chuông");
+//                    // them nhac cho hoac hien thi text
+//                }
+//
+//                @Override
+//                public void onCallEstablished(Call call) {
+//                    // dc goi khi nguoi dung bat may
+////                    state.setText("Trong cuộc gọi");
+//                    // dung nhac cho, thay doi trang thai text
+//                }
+//
+//                @Override
+//                public void onCallEnded(Call call) {
+//                    // quay ve activity ban dau
+//                    Log.d(Tag , "cuocgoi ket thuc");
+////                    finish();
+//                }
+//            });
+//        }
+//        else {
+//            Log.d("err", "SinchClient not started");
+//
+//            Toast.makeText(getApplicationContext(), "SinchClient not started", Toast.LENGTH_LONG);
+//        }
+//    }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.hangon_Btn:
-                call.hangup();
+//                call.hangup();
                 finish();
                 break;
         }
     }
 
-    @Override
-    public void onServiceConnected(ComponentName name, IBinder service) {
+    void makeCAll(){
 
+        stringeeCall = new StringeeCall(client , userID, "0987783897");
+// Initialize audio manager to manage the audio routing
+        audioManager = StringeeAudioManager.create(this);
+        audioManager.start(new StringeeAudioManager.AudioManagerEvents() {
+            @Override
+            public void onAudioDeviceChanged(StringeeAudioManager.AudioDevice selectedAudioDevice, Set<StringeeAudioManager.AudioDevice> availableAudioDevices) {
+                // All change of audio devices will receive in here
+            }
+        });
+        audioManager.setSpeakerphoneOn(false); // false: Audio Call, true: Video Call
+// Make a call
+        stringeeCall.setVideoCall(false); // false: Audio Call, true: Video Call
+
+        stringeeCall.setCustom("app-to-app");
+
+
+        stringeeCall.makeCall();
     }
+    void handleOutgoingCallState(){
+        stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
+            @Override
+            public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
+                Log.d("callstate", signalingState.toString());
+                if(signalingState.toString().equals("ringing"));{
+                    state.setText("Đang đổ chuông");
+                }
+            }
 
-    @Override
-    public void onServiceDisconnected(ComponentName name) {
+            @Override
+            public void onError(StringeeCall stringeeCall, int i, String s) {
+                //When the client fails to make a call,
+                Log.d("error make call", "onError: " + s);
+            }
 
+            @Override
+            public void onHandledOnAnotherDevice(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s) {
+                //When the call is handled on another device
+            }
+
+            @Override
+            public void onMediaStateChange(StringeeCall stringeeCall, StringeeCall.MediaState mediaState) {
+                //When the call's media stream is connected or disconnected,
+            }
+
+            @Override
+            public void onLocalStream(StringeeCall stringeeCall) {
+
+            }
+
+            @Override
+            public void onRemoteStream(StringeeCall stringeeCall) {
+
+            }
+
+            @Override
+            public void onCallInfo(StringeeCall stringeeCall, JSONObject jsonObject) {
+
+            }
+        });
     }
 
 

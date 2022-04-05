@@ -9,7 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.example.meza.R;
 import com.example.meza.interfaces.OnGetValueListener;
-import com.example.meza.utils.Utilss;
+import com.example.meza.utils.Utils;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -153,7 +153,7 @@ public class ConversationModel {
                         String idUser = ds.getKey();
                         if (participant_list.get(idUser) != null){
                             if (imageDecode != null)
-                                user_image.put(idUser, Utilss.decodeImage(imageDecode));
+                                user_image.put(idUser, Utils.decodeImage(imageDecode));
                             else {
                                 Bitmap bitmapTmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_user_image);
                                 user_image.put(idUser, bitmapTmp);

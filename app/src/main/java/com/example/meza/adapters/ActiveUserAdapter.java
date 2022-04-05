@@ -16,7 +16,7 @@ import com.example.meza.R;
 import com.example.meza.activities.ChatActivity;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
-import com.example.meza.utils.Utilss;
+import com.example.meza.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -50,7 +50,7 @@ public class ActiveUserAdapter extends RecyclerView.Adapter<ActiveUserAdapter.Vi
         User activeUser = listActiveUser.get(position);
 
         holder.thumnail.setImageBitmap(
-                Utilss.decodeImage(
+                Utils.decodeImage(
                         listActiveUser.get(position).getImage()));
 
         holder.name.setText(activeUser.getFullname());

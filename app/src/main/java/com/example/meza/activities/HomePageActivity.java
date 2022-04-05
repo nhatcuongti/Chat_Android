@@ -9,26 +9,33 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.example.meza.ActivePeopleFragment;
-import com.example.meza.ChatsFragment;
-import com.example.meza.R;
-import com.example.meza.model.ConversationModel;
-import com.example.meza.model.User;
-import com.example.meza.utils.Utilss;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.sinch.android.rtc.SinchClient;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import com.example.meza.ActivePeopleFragment;
+import com.example.meza.ChatsFragment;
+import com.example.meza.R;
+import com.example.meza.model.ConversationModel;
+import com.example.meza.model.User;
+import com.example.meza.utilities.GenAccessToken;
+import com.example.meza.utils.Utils;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.stringee.StringeeClient;
+import com.stringee.call.StringeeCall;
+import com.stringee.call.StringeeCall2;
+import com.stringee.exception.StringeeError;
+import com.stringee.listener.StringeeConnectionListener;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -54,7 +61,11 @@ public class HomePageActivity extends FragmentActivity {
     private DatabaseReference mDatabase;
     private User currentUser;
     private String userID;
-    SinchClient sinchClient;
+
+    StringeeClient client;
+    String stringeeToken;
+    String KEYID = "SKyXNWgIwlhTrsWvXt8DRDcSvenugYiXjz";;
+    String KEYSECRET = "REd3YnBkYW5BM2dVYmdCRlExdHZTWWhNVTYzZmtyY1o=";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +74,7 @@ public class HomePageActivity extends FragmentActivity {
 
         intData();
 //        initSinch();
-
+        initStringeeClient();
         fragmentName = findViewById(R.id.name_fragment);
         chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
         activePeopleBtn = (ImageButton) findViewById(R.id.active_people_Button);
@@ -77,7 +88,7 @@ public class HomePageActivity extends FragmentActivity {
 
         // decode base64 string to bitmap image and set image for imageview
         if (currentUser.getImage() != null) {
-            circleImageView.setImageBitmap(Utilss.decodeImage(currentUser.getImage()));
+            circleImageView.setImageBitmap(Utils.decodeImage(currentUser.getImage()));
         }
 
         // chuyen sang man hinh setting, chua truyen du lieu
@@ -330,6 +341,48 @@ public class HomePageActivity extends FragmentActivity {
 //        }
 //        return true;
 //    }
+    void initStringeeClient(){
+        client = new StringeeClient(this);
+        Utils.stringeeClient = client;
+        stringeeToken = GenAccessToken.genAccessToken(userID,KEYID, KEYSECRET, 600);
+//        stringeeToken = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6LTE2NDkxNDgxNjAiLCJpc3MiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6IiwiZXhwIjoxNjQ5MTUxNzYwLCJ1c2VySWQiOiIwMzY1ODYzODE3In0.2jYdIfADRydckJtdxSpr6S5LM9-SHSxXdpNCjnMzRZc";
+        client.setConnectionListener(new StringeeConnectionListener() {
+            @Override
+            public void onConnectionConnected(final StringeeClient stringeeClient, boolean isReconnecting) {
+                Log.d("clientCon", "connected " + isReconnecting);
+            }
+            @Override
+            public void onConnectionDisconnected(StringeeClient stringeeClient, boolean isReconnecting) {
+                Log.d("clientCon", "disconnected " + isReconnecting);
+            }
+            @Override
+            public void onIncomingCall(final StringeeCall stringeeCall) {
+            }
+            @Override
+            public void onIncomingCall2(StringeeCall2 stringeeCall2) {
+            }
+            @Override
+            public void onConnectionError(StringeeClient stringeeClient, final StringeeError stringeeError) {
+                Log.d("clientCon", "conerror " + stringeeError.toString());
+
+            }
+            @Override
+            public void onRequestNewToken(StringeeClient stringeeClient) {
+                // Get new token here and connect to Stringe server
+                stringeeToken = GenAccessToken.genAccessToken(userID,KEYID, KEYSECRET, 600);
+                Log.d("clientCon", "token " );
+            }
+            @Override
+            public void onCustomMessage(String s, JSONObject jsonObject) {
+            }
+            @Override
+            public void onTopicMessage(String s, JSONObject jsonObject) {
+            }
+        });
+        Log.d("clientCon", "token " + stringeeToken);
+        client.connect(stringeeToken);
+        Log.d("clientCon", "iscon " + client.isConnected());
+    }
 
     public interface ItemClickListener {
 

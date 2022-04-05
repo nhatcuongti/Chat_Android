@@ -3,14 +3,10 @@ package com.example.meza.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.util.Base64;
 import android.util.Log;
 
-import com.example.meza.services.SinchService;
-import com.sinch.android.rtc.SinchClient;
-import com.sinch.android.rtc.calling.Call;
-import com.sinch.android.rtc.calling.CallClient;
+import com.stringee.StringeeClient;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,12 +18,12 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 /**
  * Created by reiko-lhnhat on 3/22/2022.
  */
-public class Utilss {
+public class Utils {
 
-    public static Call call;
-    public static CallClient callClient;
-    public static SinchClient sinchClient;
-    public static SinchService.SinchServiceBinder serviceBinder;
+
+
+
+    public static StringeeClient stringeeClient;
 
 
     // Decode base64 string to set image bitmap

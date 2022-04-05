@@ -46,8 +46,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.firebase:firebase-database:20.0.4'
-    implementation files('libs/sinch-android-rtc-4.11.8+83a3f78')
-    implementation files('libs/sinch-android-rtc-4.11.8+83a3f78.aar')
+    implementation files('libs/java-jwt-3.2.0.jar')
 
 
     testImplementation 'junit:junit:4.13.2'
@@ -77,6 +76,9 @@ dependencies {
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
 
 
-
+    // stringee
+    implementation 'com.stringee.sdk.android:stringee-android-sdk:1.8.5'
+    implementation 'com.android.volley:volley:1.2.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
 
 }

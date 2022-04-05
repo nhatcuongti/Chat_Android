@@ -19,7 +19,7 @@ import com.example.meza.databinding.ItemSendChatboxBinding;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
-import com.example.meza.utils.Utilss;
+import com.example.meza.utils.Utils;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -342,8 +342,8 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 break;
             }
             case Constants.KEY_IMAGE:{
-                Bitmap bitmap = Utilss.decodeImage(msg);
-                Bitmap resizeBitmap = Utilss.resizedBitmap(bitmap, 400);
+                Bitmap bitmap = Utils.decodeImage(msg);
+                Bitmap resizeBitmap = Utils.resizedBitmap(bitmap, 400);
                 imgMessage.setImageBitmap(resizeBitmap);
                 imgMessage.setOnClickListener(new View.OnClickListener() {
                     @Override

@@ -63,22 +63,33 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
 
         Bundle bundle = getIntent().getExtras();
         token = bundle.getString("token");
+//        token = "006e5cf25f6acaa4808a27459bd1ea82eddIAAV541ErNqIlZCij39V0sDXJ5/durbdOEuFOIV52LJByqaVKDEAAAAAEADJZeRX2PpLYgEAAQDY+kti";
+//        token = "006e5cf25f6acaa4808a27459bd1ea82eddIACE6PRsGfb+aFWjOEosh6rPex0z2z20ca+iGRLA83vbjaaVKDGbjtJtEADvDWsB0QpMYgEAAQBhx0pi";
         channelName = bundle.getString("channelName");
 
         User curUser = User.getCurrentUser(getApplicationContext());
         curUserID = curUser.getPhone_number();
 
-        // If all the permissions are granted, initialize the RtcEngine object and join a channel.
-//        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
-//        checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
-//
-//    }
-        try {
-            initializeAndJoinChannel();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+//         If all the permissions are granted, initialize the RtcEngine object and join a channel.
+        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
+                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+            try {
+                initializeAndJoinChannel();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
         }
+
     }
+    private boolean checkSelfPermission(String permission, int requestCode) {
+        if (ContextCompat.checkSelfPermission(this, permission) !=
+                PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
+            return false;
+        }
+        return true;
+    }
+
 
     private void inflateBtn() {
         hangonBtn = findViewById(R.id.hangon_video_Btn);
@@ -133,14 +144,6 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
         mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
     }
 
-    private boolean checkSelfPermission(String permission, int requestCode) {
-        if (ContextCompat.checkSelfPermission(this, permission) !=
-        PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, REQUESTED_PERMISSIONS, requestCode);
-            return false;
-        }
-        return true;
-    }
 
 
 

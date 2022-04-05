@@ -2,21 +2,16 @@ package com.example.meza;
 
 import android.content.Context;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.meza.adapters.ActiveThumnailAdapter;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.meza.adapters.ActiveUserAdapter;
-import com.example.meza.adapters.NameOfConversationAdapter;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
-import com.sinch.android.rtc.SinchClient;
-
 
 import java.util.ArrayList;
 

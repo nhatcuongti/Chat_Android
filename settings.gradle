@@ -10,9 +10,6 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven {
-            url "https://github.com/ConnectyCube/connectycube-android-sdk-releases/raw/master/"
-        }
     }
 }
 rootProject.name = "MeZa"
