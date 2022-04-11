@@ -83,6 +83,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     String curUserID;
     Bundle myBundle;
 
+    String calleeId; // nguoi duoc goi
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +126,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         for (String userID : conversation.getParticipantListArray()) {
             if (!userID.equals(currentUser.getId())) {
                 userImage.setImageBitmap(user_image.get(userID));
+                if(conversation.getParticipant_list().size() == 2){
+                    calleeId = "m" + userID;
+                }
             }
-
-
         }
 
     }
@@ -366,8 +369,12 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.audioCallBtn:{ // Nếu người dùng bấm nút gọi điện theo dạng audio
-                Intent intent = new Intent(ChatActivity.this, VoiceCallingActivity.class);
-                startActivity(intent);
+                // hoi thoai 2 nguoi
+                if(conversation.getParticipant_list().size() == 2){
+                    Intent intent = new Intent(ChatActivity.this, VoiceCallingActivity.class);
+                    intent.putExtra("calleeId", calleeId);
+                    startActivity(intent);
+                }
                 break;
             }
 

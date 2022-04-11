@@ -61,6 +61,7 @@ public class HomePageActivity extends FragmentActivity {
     private DatabaseReference mDatabase;
     private User currentUser;
     private String userID;
+    private String callerId;
 
     StringeeClient client;
     String stringeeToken;
@@ -127,6 +128,7 @@ public class HomePageActivity extends FragmentActivity {
     public void intData() {
         currentUser = User.getCurrentUser(this);
         userID = currentUser.getId();
+        callerId = "m" + userID;
         listFriend = new ArrayList<>();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         DatabaseReference listFriendRef = mDatabase.child("users").child(userID).child("list_friend");
@@ -218,112 +220,10 @@ public class HomePageActivity extends FragmentActivity {
 
             }
         });
-//        listRecentConversation.add("Linh Giang");
-//        listRecentConversation.add("Thu Nga");
-//        listRecentConversation.add("Quỳnh Hương");
-//        listRecentConversation.add("Hữu Long");
-//        listRecentConversation.add("Ngọc Luân");
-//        listRecentConversation.add("Nhật Anh");
-//        listRecentConversation.add("Bảo Trung");
-//        listRecentConversation.add("Hoàng Nhật");
-//        listRecentConversation.add("Hữu Toàn");
-//        listRecentConversation.add("Việt Hùng");
-//        listRecentConversation.add("Bảo Long");
-//        listRecentConversation.add("Công Lượng");
+
     }
 
-//    public void initSinch() {
-//
-//// Instantiate a SinchClient using the SinchClientBuilder.
-//        android.content.Context context = this.getApplicationContext();
-//        sinchClient = Sinch.getSinchClientBuilder()
-//                .context(context)
-//                .applicationKey("b0274bc0-fb51-4fae-b3eb-5d75b673c442")
-//                .environmentHost("ocra.api.sinch.com")
-//                .userId(userID)
-//                .build();
-//
-////        sinchClient.setSupportManagedPush(true);
-//        sinchClient.startListeningOnActiveConnection();
-//        sinchClient.addSinchClientListener(new MySinchClientListener());
-//        sinchClient.start();
-//
-//        sinchClient.getCallClient().setRespectNativeCalls(false);
-//        sinchClient.getCallClient().addCallClientListener(new MyCallClientListener());
-//
-//        Utils.sinchClient = sinchClient;
-//
-//    }
 
-//    private class MySinchClientListener implements SinchClientListener{
-//
-//        @Override
-//        public void onClientStarted(SinchClient sinchClient) {
-//            Log.d("failed", "client started ");
-//
-//        }
-//
-//        @Override
-//        public void onClientFailed(SinchClient sinchClient, SinchError sinchError) {
-//            sinchClient.terminateGracefully();
-//            Utils.sinchClient = null;
-//        }
-//
-//        @Override
-//        public void onLogMessage(int i, String s, String s1) {
-//
-//        }
-//
-//        @Override
-//        public void onPushTokenRegistered() {
-//            Log.d("failed", "push fffffffffffffffffffffffffffffffff ");
-//
-//        }
-//
-//        @Override
-//        public void onPushTokenRegistrationFailed(SinchError sinchError) {
-//            Log.d("failed", "onPushTokenRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
-//
-//        }
-//
-//        @Override
-//        public void onCredentialsRequired(ClientRegistration clientRegistration) {
-//            String jwt = JWT.create("b0274bc0-fb51-4fae-b3eb-5d75b673c442"
-//                    , "aROplhftr0CC4+loLEN7RA=="
-//                    , userID);
-//            clientRegistration.register(jwt);
-//        }
-//
-//        @Override
-//        public void onUserRegistered() {
-//            Log.d("failed", "onUserRegistered ");
-//
-//        }
-//
-//        @Override
-//        public void onUserRegistrationFailed(SinchError sinchError) {
-//            Log.d("failed", "onUserRegistrationFailed "+ sinchError.getMessage()+ " " + sinchError.getCode());
-//
-//        }
-//    }
-//    private class MyCallClientListener implements CallClientListener{
-//
-//        @Override
-//        public void onIncomingCall(CallClient callClient, Call call) {
-//
-//        }
-//    }
-//    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 200;
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        switch (requestCode){
-//            case REQUEST_RECORD_AUDIO_PERMISSION:
-//                permissionToRecordAccepted  = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-//                break;
-//        }
-//        if (!permissionToRecordAccepted ) finish();
-//    }
 
 //    // request permission
 //    private static final int PERMISSION_REQ_ID = 22;
@@ -344,33 +244,39 @@ public class HomePageActivity extends FragmentActivity {
     void initStringeeClient(){
         client = new StringeeClient(this);
         Utils.stringeeClient = client;
-        stringeeToken = GenAccessToken.genAccessToken(userID,KEYID, KEYSECRET, 600);
-//        stringeeToken = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6LTE2NDkxNDgxNjAiLCJpc3MiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6IiwiZXhwIjoxNjQ5MTUxNzYwLCJ1c2VySWQiOiIwMzY1ODYzODE3In0.2jYdIfADRydckJtdxSpr6S5LM9-SHSxXdpNCjnMzRZc";
+        stringeeToken = GenAccessToken.genAccessToken(callerId,KEYID, KEYSECRET, 3600);
+//        stringeeToken = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6LTE2NDk2MDg0NDEiLCJpc3MiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6IiwiZXhwIjoxNjQ5NjEyMDQxLCJ1c2VySWQiOiIwMzY1ODYzODE3In0.TzoK9GssTV1fe20_LKbzzbHtYJSX_bWZkSUAz9rrJ4U";
+        client = new StringeeClient(this);
         client.setConnectionListener(new StringeeConnectionListener() {
             @Override
             public void onConnectionConnected(final StringeeClient stringeeClient, boolean isReconnecting) {
-                Log.d("clientCon", "connected " + isReconnecting);
+                Log.d("clientCon", "onConnectionConnected: " + client.getUserId());
+                Utils.stringeeClient = client;
+                CallsMap.putData("client", client);
+
             }
             @Override
             public void onConnectionDisconnected(StringeeClient stringeeClient, boolean isReconnecting) {
-                Log.d("clientCon", "disconnected " + isReconnecting);
             }
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
+                Log.d("clientCon", "onIncomingCall: ");
+                CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
+                Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
+                intent.putExtra("call_id", stringeeCall.getCallId());
+                startActivity(intent);
             }
             @Override
             public void onIncomingCall2(StringeeCall2 stringeeCall2) {
             }
             @Override
             public void onConnectionError(StringeeClient stringeeClient, final StringeeError stringeeError) {
-                Log.d("clientCon", "conerror " + stringeeError.toString());
-
             }
             @Override
             public void onRequestNewToken(StringeeClient stringeeClient) {
                 // Get new token here and connect to Stringe server
-                stringeeToken = GenAccessToken.genAccessToken(userID,KEYID, KEYSECRET, 600);
-                Log.d("clientCon", "token " );
+                stringeeToken = GenAccessToken.genAccessToken(callerId,KEYID, KEYSECRET, 3600);
+
             }
             @Override
             public void onCustomMessage(String s, JSONObject jsonObject) {
@@ -379,9 +285,7 @@ public class HomePageActivity extends FragmentActivity {
             public void onTopicMessage(String s, JSONObject jsonObject) {
             }
         });
-        Log.d("clientCon", "token " + stringeeToken);
         client.connect(stringeeToken);
-        Log.d("clientCon", "iscon " + client.isConnected());
     }
 
     public interface ItemClickListener {

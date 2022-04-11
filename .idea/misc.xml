@@ -3,20 +3,26 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Chat_Android/app/src/main/res/drawable/background_bottombar.xml" value="0.1" />
         <entry key="..\:/Chat_Android/app/src/main/res/drawable/background_chatbox.xml" value="0.1" />
         <entry key="..\:/Chat_Android/app/src/main/res/drawable/background_with_shadow.xml" value="0.1" />
         <entry key="..\:/Chat_Android/app/src/main/res/drawable/bg_white_rounded.xml" value="0.1" />
+        <entry key="..\:/Chat_Android/app/src/main/res/drawable/ic_baseline_call_24.xml" value="0.105" />
+        <entry key="..\:/Chat_Android/app/src/main/res/drawable/ic_baseline_image_24.xml" value="0.105" />
+        <entry key="..\:/Chat_Android/app/src/main/res/drawable/ic_baseline_keyboard_backspace_24.xml" value="0.105" />
         <entry key="..\:/Chat_Android/app/src/main/res/drawable/round_button.xml" value="0.1355" />
         <entry key="..\:/Chat_Android/app/src/main/res/drawable/top_shadow_gradient.xml" value="0.143" />
+        <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_add_realtime_database.xml" value="0.13177083333333334" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_chat.xml" value="0.25" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_homepage.xml" value="0.22" />
+        <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_incoming_call.xml" value="0.18" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_main.xml" value="0.15" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_setting.xml" value="0.22447916666666667" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_sign_in.xml" value="0.22447916666666667" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_user_setting.xml" value="0.22447916666666667" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_video_call1.xml" value="0.33" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_video_call_screen.xml" value="0.21" />
-        <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_voice_calling.xml" value="0.25" />
+        <entry key="..\:/Chat_Android/app/src/main/res/layout/activity_voice_calling.xml" value="0.16" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_active_people.xml" value="0.33" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_active_people2.xml" value="0.2" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_chats.xml" value="0.31722054380664655" />

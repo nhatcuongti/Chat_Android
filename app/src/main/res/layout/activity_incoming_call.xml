@@ -48,7 +48,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/state_call"
+                android:id="@+id/state_call_incomming_call"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -58,64 +58,68 @@
                 android:textSize="20sp" />
         </LinearLayout>
 
-        <LinearLayout
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <!--            <TextView-->
-            <!--                android:id="@+id/quick_tips_when_use_agora_sdk"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_marginStart="@dimen/activity_horizontal_margin"-->
-            <!--                android:layout_marginLeft="@dimen/activity_horizontal_margin"-->
-            <!--                android:layout_marginBottom="40dp"-->
-            <!--                android:gravity="center_vertical|start"-->
-            <!--                android:text="1. Default channel name is voiceDemoChannel1\n2. Waiting for remote users\n3. This demo only supports 1v1 voice calling" />-->
+            android:layout_gravity="bottom|center"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="20dp"
+            app:cardCornerRadius="30dp"
+            app:cardElevation="10dp"
+            >
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:paddingHorizontal="20dp"
+                android:paddingVertical="10dp"
+                android:layout_marginBottom="10dp">
 
                 <ImageView
+                    android:id="@+id/decline_call_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:onClick="declineClick"
+                    android:layout_weight="1"
+
+                    android:src="@drawable/end_call" />
+
+                <androidx.legacy.widget.Space
                     android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="20"
-                    android:onClick="onLocalAudioMuteClicked"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/btn_mute" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+
+                </LinearLayout>
+
+                <androidx.legacy.widget.Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    />
+
 
                 <ImageView
-                    android:id="@+id/hangon_Btn"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="20"
-                    android:onClick="onEncCallClicked"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/btn_end_call" />
-
-
-                <ImageView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="20"
-                    android:onClick="onSwitchSpeakerphoneClicked"
-                    android:scaleType="centerInside"
-                    android:src="@drawable/btn_speaker" />
-
+                    android:id="@+id/accept_call_btn"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/accept_call" />
 
             </LinearLayout>
-
-        </LinearLayout>
+        </androidx.cardview.widget.CardView>
     </LinearLayout>
 
 
