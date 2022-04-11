@@ -52,6 +52,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
+
             android:name=".activities.ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
@@ -59,6 +60,7 @@
             android:name=".activities.SettingActivity"
             android:exported="false" />
         <activity
+
             android:name=".activities.SignInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
@@ -68,6 +70,36 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+
+<!--            android:name=".activities.ChatActivity"-->
+<!--            android:exported="false"-->
+<!--            android:windowSoftInputMode="adjustResize"/>-->
+
+
+
+        <!--                <activity-->
+        <!--                    android:name=".activities.HomePageActivity"-->
+        <!--                    android:exported="true">-->
+        <!--                    <intent-filter>-->
+        <!--                        <action android:name="android.intent.action.MAIN" />-->
+
+        <!--                        <category android:name="android.intent.category.LAUNCHER" />-->
+        <!--                    </intent-filter>-->
+        <!--                </activity>-->
+
+        <!--                <activity-->
+        <!--                    android:name=".activities.ChatActivity"-->
+        <!--                    android:exported="true"-->
+        <!--                    android:windowSoftInputMode="adjustResize">-->
+        <!--                    <intent-filter>-->
+        <!--                        <action android:name="android.intent.action.MAIN" />-->
+
+        <!--                        <category android:name="android.intent.category.LAUNCHER" />-->
+        <!--                    </intent-filter>-->
+        <!--                </activity>-->
+
+
         <activity
             android:name=".activities.VoiceCallingActivity"
             android:exported="false" />
