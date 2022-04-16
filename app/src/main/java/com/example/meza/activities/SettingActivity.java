@@ -1,31 +1,50 @@
 package com.example.meza.activities;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
-//import android.support.v4.media.app.NotificationCompat;
-import android.view.LayoutInflater;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.CompoundButton;
 import android.widget.ImageButton;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meza.R;
 import com.example.meza.model.User;
+import com.example.meza.utilities.AlertDialogEx;
+import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
 import com.example.meza.utils.Utils;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 
-public class SettingActivity extends Activity {
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
+//import android.support.v4.media.app.NotificationCompat;
+
+public class SettingActivity extends AppCompatActivity implements AlertDialogEx.DialogListener{
 
     PreferenceManager preferenceManager;
     TextView username;
@@ -33,6 +52,12 @@ public class SettingActivity extends Activity {
     Button Phone, Password, deleteAccount, Logout, Bell, Vibrate;
     EditText oldPassword, newPassword1, newPassword2;
     ImageButton backWardBtn;
+    String encodedImage = null;
+
+    TextView textAddImage;
+    RoundedImageView imageView;
+
+
 
 
     User currentUser;
@@ -69,9 +94,8 @@ public class SettingActivity extends Activity {
         deleteAccount = (Button) findViewById(R.id.btnDeleteAccount);
         Logout = (Button) findViewById(R.id.btnLogout);
 
-        oldPassword = (EditText) findViewById(R.id.oldpassword);
-        newPassword1 = (EditText) findViewById(R.id.newPassword1);
-        newPassword2 = (EditText) findViewById(R.id.newPassword2);
+        imageView = findViewById(R.id.imageProfile);
+
 
         //Cài thông báo
         Bell.setOnClickListener(new View.OnClickListener() {
@@ -156,65 +180,9 @@ public class SettingActivity extends Activity {
         Password.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                AlertDialog.Builder alert = new AlertDialog.Builder(SettingActivity.this);
-                LayoutInflater inflater = getLayoutInflater();
-
-                alert.setView(inflater.inflate(R.layout.fragment_change_password, null))
-                        .setPositiveButton("Đổi mật khẩu", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //Trường hợp đúng mật khẩu cũ
-//                                if(oldPassword.getText().toString().equals("abc")){
-//                                    //Trường hợp khớp mật khẩu mới
-//                                    if(newPassword1.getText().toString().equals("1212")){
-//                                        Toast.makeText(SettingActivity.this, "Đổi password", Toast.LENGTH_SHORT).show();
-//
-//                                    }else {
-//                                        Toast.makeText(SettingActivity.this, "Mật khẩu không trùng khớp", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                                else {
-//                                    Toast.makeText(SettingActivity.this, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
-//                                }
-//                                Toast.makeText(SettingActivity.this, "Sai mật khẩu", Toast.LENGTH_SHORT).show();
-
-                            }
-                        })
-                        .setNegativeButton("Trở lại", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                //do nothing
-                            }
-                        });
-
-                alert.show();
+                openDialog();
             }
-        });
-        //Xóa tài khoản khỏi hệ thống
-        deleteAccount.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(SettingActivity.this);
-                alert.setTitle("Thông báo");
-                alert.setMessage("Bạn sẽ xóa tài khoản này?");
 
-                alert.setPositiveButton("Có", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(SettingActivity.this, "Xóa tài khoản thành công", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-                alert.setNegativeButton("Không", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        //do nothing
-                    }
-                });
-                alert.show();
-            }
         });
         //Đăng xuất
         Logout.setOnClickListener(new View.OnClickListener() {
@@ -256,7 +224,104 @@ public class SettingActivity extends Activity {
             }
         });
 
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                pickImage.launch(intent);
+            }
+        });
 
-    }}
+    }
+
+    private void openDialog() {
+        AlertDialogEx alertDialogEx = new AlertDialogEx();
+        alertDialogEx.show(getSupportFragmentManager(), "dialog");
+
+
+    }
+
+    @Override
+    public void applyTexts(String oldpw, String newpw, String confirmpw) {
+
+        currentUser = (User) getIntent().getSerializableExtra("currentUser");
+
+        Log.d("IDcurrentUser", currentUser.getId());
+
+        DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        mDatabase.child(Constants.KEY_COLLECTION_USERS).child(currentUser.getId()).child(Constants.KEY_PASSWORD).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                String pass = dataSnapshot.getValue(String.class);
+
+                Log.d("passsss", pass);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                // Failed to read value
+                Log.e("TAG", "Failed to read value.", error.toException());
+            }
+        });
+
+
+        Log.d("oldpass", oldpw);
+        Log.d("newpass", newpw);
+        Log.d("confirm", confirmpw);
+
+//        if(currentUser.getPassword().equals(oldpw)){
+//
+//            currentUser.setPassword(newpw);
+//
+//            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+//
+//            mDatabase.child(currentUser.id).child(Constants.KEY_PASSWORD).setValue(newpw);
+//
+//            Intent intent = new Intent(SettingActivity.this, SignInActivity.class);
+//            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//            startActivity(intent);
+//            Toast.makeText(SettingActivity.this, "Đổi mật khẩu thành công", Toast.LENGTH_SHORT);
+//
+//
+//
+//        } else {
+//            Toast.makeText(SettingActivity.this, "Mật khẩu không đúng", Toast.LENGTH_SHORT);
+//        }
+
+    }
+
+    private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    if (result.getData() != null) {
+                        Uri imageUri = result.getData().getData();
+                        try {
+
+
+                            InputStream is = getContentResolver().openInputStream(imageUri);
+                            Bitmap bitmap = BitmapFactory.decodeStream(is);
+                            imageView.setImageBitmap(bitmap);
+//                            binding.imageProfile.setImageBitmap(bitmap);
+//                            binding.textAddImage.setVisibility(View.GONE);
+                            encodedImage = Utils.encodeImage(bitmap);
+                            Log.d("Imageeeeeeeeeeeee", encodedImage);
+                            // Update Avater currentUser
+                            currentUser.setImage(encodedImage);
+                            //Update trên Firebase
+                            DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
+                            mDatabase.child(currentUser.id).child(Constants.KEY_IMAGE).setValue(encodedImage);
+
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+    );
+}
 
 

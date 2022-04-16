@@ -56,17 +56,23 @@
         <entry key="..\:/Users/CSM/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/toolbar_chat.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/drawable/ic_launcher_background.xml" value="0.1825" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_chat.xml" value="0.264" />
+        <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_full_image_screen.xml" value="0.221875" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_homepage.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_setting.xml" value="0.2" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_sign_in.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_sign_up.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_user_setting.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_verify_otp.xml" value="0.215625" />
+        <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/activity_video_call_screen.xml" value="0.221875" />
+        <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/bottombar_chat.xml" value="0.221875" />
+        <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/fragment_active_people.xml" value="0.221875" />
+        <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/fragment_active_people2.xml" value="0.221875" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/fragment_change_password.xml" value="0.215625" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/fragment_chats.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/item_active_thumnail_horizontal.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/item_nameconversation_in_chats__vertical.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/item_receive_chatbox.xml" value="0.17395833333333333" />
+        <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/item_send_chatbox.xml" value="0.221875" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/item_user_in_activepeople__vertical.xml" value="0.21979166666666666" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/toolbar_chat.xml" value="0.264" />
         <entry key="..\:/Users/Le Trung Hieu/Desktop/Mobile/Final Project/Chat_Android/app/src/main/res/layout/toolbar_setting.xml" value="0.264" />

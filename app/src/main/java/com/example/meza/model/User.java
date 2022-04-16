@@ -190,6 +190,7 @@ public class User implements Serializable {
             user.setId(preferenceManager.getString(Constants.KEY_USER_ID));
             user.setPhone_number(preferenceManager.getString(Constants.KEY_USER_ID));
             user.setImage(preferenceManager.getString(Constants.KEY_IMAGE));
+            user.setPassword(preferenceManager.getString(Constants.KEY_PASSWORD));
             return user;
         }
         return null;

@@ -124,6 +124,7 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
                         break;
                     case BUSY:
                         Log.d("call", "call: " + "busy");
+                        finish();
                         break;
                     case ENDED:
                         Log.d("call", "call: " + "ended");

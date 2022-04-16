@@ -379,6 +379,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.inforBtn:{ // Nếu người dùng bấm nút infor
+
+                Intent intent = new Intent(ChatActivity.this, SettingUserActivity.class);
+                ArrayList<String> list_user = conversation.getParticipantListArray();
+                intent.putExtra("IDreceiver", list_user);
+                startActivity(intent);
                 break;
             }
 

@@ -96,6 +96,8 @@ public class HomePageActivity extends FragmentActivity {
         circleImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 Intent intent = new Intent(HomePageActivity.this, SettingActivity.class);
                 intent.putExtra("currentUser", currentUser);
                 startActivity(intent);

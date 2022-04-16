@@ -29,14 +29,6 @@
                 android:scaleType="centerCrop"
                 app:riv_oval="true" />
 
-            <TextView
-                android:id="@+id/textAddImage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/add_image"
-                android:textColor="@color/secondary_text"
-                android:textSize="@dimen/_10ssp" />
 
         </FrameLayout>
         <TextView android:id="@+id/tvUsername"
@@ -59,23 +51,29 @@
             android:layout_marginLeft="30dp"/>
 
         <Button android:id="@+id/btnNotificationApp"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:gravity="left|center_vertical"
             android:text="Tắt thông báo"
             android:backgroundTint="@color/receiveChatboxColor"
             android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textAllCaps="false"
+            android:textSize="16dp"/>
+
         <Button android:id="@+id/btnVibrate"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:gravity="left|center_vertical"
             android:text="Tắt rung"
             android:backgroundTint="@color/receiveChatboxColor"
             android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textAllCaps="false"
+            android:textSize="16dp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -85,42 +83,54 @@
             android:layout_gravity="left"
             android:textSize="20dp"
             android:layout_marginLeft="30dp"/>
+
         <Button android:id="@+id/btnChangePhone"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:gravity="left|center_vertical"
             android:text="Đổi số điện thoại"
             android:backgroundTint="@color/receiveChatboxColor"
             android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textAllCaps="false"
+            android:textSize="16dp" />
+
         <Button android:id="@+id/btnChangePassword"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:gravity="left|center_vertical"
             android:text="Đổi mật khẩu"
             android:backgroundTint="@color/receiveChatboxColor"
             android:textColor="@color/black"
-            android:textStyle="bold"/>
+            android:textAllCaps="false"
+            android:textSize="16dp"/>
+
         <Button android:id="@+id/btnDeleteAccount"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:gravity="left|center_vertical"
             android:text="Xóa tài khoản"
             android:backgroundTint="@color/receiveChatboxColor"
             android:textColor="@color/error"
-            android:textStyle="bold"/>
+            android:textAllCaps="false"
+            android:textSize="16dp"/>
+
         <Button android:id="@+id/btnLogout"
-            android:layout_width="350dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
             android:gravity="left|center_vertical"
             android:text="Đăng xuất"
             android:backgroundTint="@color/receiveChatboxColor"
             android:textColor="@color/error"
-            android:textStyle="bold"/>
+            android:textAllCaps="false"
+            android:textSize="16dp"/>
 
 
 
