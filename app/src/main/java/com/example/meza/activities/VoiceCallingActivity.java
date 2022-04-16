@@ -3,6 +3,8 @@ package com.example.meza.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.meza.R;
 import com.example.meza.model.User;
+import com.example.meza.services.SoundService;
 import com.example.meza.utils.Utils;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
@@ -19,7 +22,9 @@ import com.stringee.common.StringeeAudioManager;
 
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.Set;
+import java.util.TimeZone;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -39,6 +44,12 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
     String calleeId;
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
+
+    //xu li timer
+    long startTime, timeInMilliseconds = 0;
+    Handler customHandler = new Handler();
+
+    Intent intentSoundService;
 
 
 
@@ -65,6 +76,9 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         client = Utils.stringeeClient;
         Log.d("call","isCon " + client.isConnected() + " " + client.getUserId());
 
+        intentSoundService = new Intent(this, SoundService.class);
+        intentSoundService.putExtra("type", "outGoingCall");
+
 
 
 //        sinchClient = Utilss.sinchClient;
@@ -81,6 +95,11 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
             case R.id.hangon_Btn:
 //                call.hangup();
 //                finish();
+//                if(stringeeCall.getState() == StringeeCall.SignalingState.RINGING){
+//                    stringeeCall.reject();
+//                    break;
+//                }
+
                 endCall();
                 break;
         }
@@ -115,19 +134,38 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
                 switch (signalingState) {
                     case CALLING:
                         Log.d("call", "call: " + "calling " + calleeId);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                state.setText("Đang kết nối");
+                            }
+                        });
                         break;
                     case RINGING:
                         Log.d("call", "call: " + "ring");
+                        startService(intentSoundService);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                state.setText("Đang đổ chuông");
+                            }
+                        });
                         break;
                     case ANSWERED:
+                        start(state);
+                        stopService(intentSoundService);
                         Log.d("call", "call: " + "anser");
                         break;
                     case BUSY:
+                        finish();
+                        stopService(intentSoundService);
                         Log.d("call", "call: " + "busy");
                         finish();
                         break;
                     case ENDED:
+                        stop(state);
                         Log.d("call", "call: " + "ended");
+                        finish();
                         break;
                 }
 
@@ -164,76 +202,34 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
             }
         });
     }
-//    void handleOutgoingCallState(){
-//        stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
-//            @Override
-//            public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
-//                Log.d("callstate", signalingState.toString());
-//                if(signalingState.toString().equals("ringing"));{
-//                    state.setText("Đang đổ chuông");
-//                }
-//            }
-//
-//            @Override
-//            public void onError(StringeeCall stringeeCall, int i, String s) {
-//                //When the client fails to make a call,
-//                Log.d("error make call", "onError: " + s + stringeeCall.getFrom());
-//            }
-//
-//            @Override
-//            public void onHandledOnAnotherDevice(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s) {
-//                //When the call is handled on another device
-//            }
-//
-//            @Override
-//            public void onMediaStateChange(StringeeCall stringeeCall, StringeeCall.MediaState mediaState) {
-//                //When the call's media stream is connected or disconnected,
-//            }
-//
-//            @Override
-//            public void onLocalStream(StringeeCall stringeeCall) {
-//
-//            }
-//
-//            @Override
-//            public void onRemoteStream(StringeeCall stringeeCall) {
-//
-//            }
-//
-//            @Override
-//            public void onCallInfo(StringeeCall stringeeCall, JSONObject jsonObject) {
-//
-//            }
-//        });
-//    }
 
+    // định dạng thời gian
+    public static String getDateFromMillis(long d) {
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm:ss");
+        df.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return df.format(d);
+    }
 
-//    void handleIncomingCall(){
-//        CallClient callClient = sinchClient.getCallClient();
-//        callClient.addCallClientListener(new CallClientListener() {
-//            @Override
-//            public void onIncomingCall(CallClient callClient, Call call) {
-//                // phat nhac chuong
-//                // phan hoi cuoc goi toi
-//
-//                call.addCallListener(new CallListener() {
-//                    @Override
-//                    public void onCallProgressing(Call call) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCallEstablished(Call call) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCallEnded(Call call) {
-//                        //quay ve activity ban dau
-//                    }
-//                });
-//            }
-//        });
-//    }
+    public void start(View v) {
+        startTime = SystemClock.uptimeMillis();
+        customHandler.postDelayed(updateTimerThread, 0);
+    }
 
+    public void stop(View v) {
+        customHandler.removeCallbacks(updateTimerThread);
+    }
+
+    private Runnable updateTimerThread = new Runnable() {
+        public void run() {
+            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+            state.setText(getDateFromMillis(timeInMilliseconds));
+            customHandler.postDelayed(this, 1000);
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        stopService(intentSoundService);
+    }
 }
