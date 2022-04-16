@@ -88,18 +88,39 @@
         <entry key="..\:/Users/SU HAO/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/item_send_chatbox.xml" value="0.25" />
         <entry key="..\:/Users/SU HAO/AndroidStudioProjects/Chat_Android/app/src/main/res/layout/toolbar_chat.xml" value="0.25" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.205" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/background_content_bottom.xml" value="0.2175" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/background_icon.xml" value="0.2175" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/background_input.xml" value="0.205" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/bg_white_rounded.xml" value="0.205" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/ic_add.xml" value="0.2175" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/ic_back.xml" value="0.2175" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/ic_baseline_chat_bubble_outline_24.xml" value="0.205" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/ic_baseline_people_outline_24.xml" value="0.205" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/ic_launcher_background.xml" value="0.205" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/drawable/round_button.xml" value="0.205" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_add_realtime_database.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_chat.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_full_image_screen.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_homepage.xml" value="0.33" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_incoming_call.xml" value="0.36730072463768115" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_sign_in.xml" value="0.3374094202898551" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_sign_up.xml" value="0.33" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_user_setting.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_users.xml" value="0.36730072463768115" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_verify_otp.xml" value="0.33" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_video_call_screen.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/activity_voice_calling.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/bottombar_chat.xml" value="0.36730072463768115" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/fragment_chats.xml" value="0.3374094202898551" />
         <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_active_thumnail_horizontal.xml" value="0.3374094202898551" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_container_user.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_nameconversation_in_chats__vertical.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_receive_chatbox.xml" value="0.1884498480243161" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_send_chatbox.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/item_user_in_activepeople__vertical.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/toolbar_chat.xml" value="0.36730072463768115" />
+        <entry key="..\:/Users/asus/Desktop/Mobile Dev/19KTPM3_Mobile_Project/Chat_Android/app/src/main/res/layout/toolbar_setting.xml" value="0.36730072463768115" />
       </map>
     </option>
   </component>

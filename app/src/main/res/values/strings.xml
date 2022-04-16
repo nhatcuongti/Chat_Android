@@ -18,4 +18,5 @@
     <string name="otp_fail_message">Không nhận được mã OTP?</string>
     <string name="resend_otp">Gửi lại mã OTP</string>
     <string name="verify">Xác thực</string>
+    <string name="select_user">Chọn người dùng</string>
 </resources>

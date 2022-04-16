@@ -2,6 +2,7 @@ package com.example.meza.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
@@ -19,7 +20,6 @@ import at.favre.lib.crypto.bcrypt.BCrypt;
 
 public class SignInActivity extends AppCompatActivity {
 
-
     private static final String TAG = "Login1";
     private ActivitySignInBinding binding;
     private PreferenceManager preferenceManager;
@@ -36,7 +36,6 @@ public class SignInActivity extends AppCompatActivity {
             finish();
         }
         setListeners();
-
     }
 
     private void setListeners() {
@@ -57,6 +56,7 @@ public class SignInActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         DataSnapshot ds = task.getResult();
+                        Log.d(TAG, "User " + ds);
                         String password = binding.inputPassword.getText().toString(); // From user's input
                         String hash = (String) ds.child(Constants.KEY_PASSWORD).getValue(); // From database
                         BCrypt.Result result = null;
@@ -70,8 +70,6 @@ public class SignInActivity extends AppCompatActivity {
                             loading(false);
                             showToast("Mật khẩu không đúng");
                         } else {
-
-
                             preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
                             preferenceManager.putString(Constants.KEY_USER_ID, binding.inputPhone.getText().toString());
                             preferenceManager.putString(Constants.KEY_FULL_NAME, (String) ds.child(Constants.KEY_FULL_NAME).getValue());
