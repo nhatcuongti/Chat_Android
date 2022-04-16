@@ -21,14 +21,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MeZa">
+        <service
+            android:name=".services.SoundService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name=".services.SoundService2"
+            android:enabled="true"
+            android:exported="true"/>
+
         <activity
             android:name=".VideoCallScreen"
             android:exported="false" />
 
-        <service
-            android:name=".services.SinchService"
-            android:enabled="true"
-            android:exported="true" />
 
         <activity
             android:name=".activities.FullImageScreenActivity"
@@ -52,17 +57,16 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
-
             android:name=".activities.ChatActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".activities.SettingActivity"
             android:exported="false" />
-        <activity android:name=".activities.IncommingCallActivity"
+        <activity
+            android:name=".activities.IncommingCallActivity"
             android:exported="false" />
         <activity
-
             android:name=".activities.SignInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">
@@ -71,37 +75,26 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-
-<!--            android:name=".activities.ChatActivity"-->
-<!--            android:exported="false"-->
-<!--            android:windowSoftInputMode="adjustResize"/>-->
-
-
-
-        <!--                <activity-->
-        <!--                    android:name=".activities.HomePageActivity"-->
-        <!--                    android:exported="true">-->
-        <!--                    <intent-filter>-->
-        <!--                        <action android:name="android.intent.action.MAIN" />-->
-
-        <!--                        <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--                    </intent-filter>-->
-        <!--                </activity>-->
-
-        <!--                <activity-->
-        <!--                    android:name=".activities.ChatActivity"-->
-        <!--                    android:exported="true"-->
-        <!--                    android:windowSoftInputMode="adjustResize">-->
-        <!--                    <intent-filter>-->
-        <!--                        <action android:name="android.intent.action.MAIN" />-->
-
-        <!--                        <category android:name="android.intent.category.LAUNCHER" />-->
-        <!--                    </intent-filter>-->
-        <!--                </activity>-->
-
-
+        </activity> <!-- android:name=".activities.ChatActivity" -->
+        <!-- android:exported="false" -->
+        <!-- android:windowSoftInputMode="adjustResize"/> -->
+        <!-- <activity -->
+        <!-- android:name=".activities.HomePageActivity" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <!-- <activity -->
+        <!-- android:name=".activities.ChatActivity" -->
+        <!-- android:exported="true" -->
+        <!-- android:windowSoftInputMode="adjustResize"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
         <activity
             android:name=".activities.VoiceCallingActivity"
             android:exported="false" />

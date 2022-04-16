@@ -24,6 +24,7 @@ public class Utils {
 
 
     public static StringeeClient stringeeClient;
+    public static int countInCommingCallAtMoment = 0;
 
 
     // Decode base64 string to set image bitmap

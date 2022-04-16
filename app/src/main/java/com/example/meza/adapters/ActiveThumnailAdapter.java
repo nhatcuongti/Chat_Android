@@ -57,7 +57,6 @@ public class ActiveThumnailAdapter extends RecyclerView.Adapter<ActiveThumnailAd
                         listActiveUser.get(position).getImage()));
 
         holder.name.setText(activeUser.getFullname());
-
         holder.layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
