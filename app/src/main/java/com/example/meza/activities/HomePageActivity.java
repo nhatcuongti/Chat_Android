@@ -261,16 +261,20 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
                 Log.d("clientCon", "onIncomingCall: ");
-                CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
-                Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
-                intent.putExtra("call_id", stringeeCall.getCallId());
-                startActivity(intent);
+                Utils.countInCommingCallAtMoment++;
+                if(Utils.countInCommingCallAtMoment >= 1) {
+                    CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
+                    Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
+                    intent.putExtra("call_id", stringeeCall.getCallId());
+                    startActivity(intent);
+                }
             }
             @Override
             public void onIncomingCall2(StringeeCall2 stringeeCall2) {
             }
             @Override
             public void onConnectionError(StringeeClient stringeeClient, final StringeeError stringeeError) {
+                Log.d("clientCon", "onConnectionError: ");
             }
             @Override
             public void onRequestNewToken(StringeeClient stringeeClient) {

@@ -38,24 +38,26 @@
                 app:civ_border_width="3dp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="Hieu Le"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="20sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_gravity="center"/>
 
             <TextView
                 android:id="@+id/state_call"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="Dang do chuong"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:layout_gravity="center"/>
         </LinearLayout>
 
         <LinearLayout

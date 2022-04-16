@@ -21,6 +21,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MeZa">
+        <service
+            android:name=".services.SoundService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name=".services.SoundService2"
+            android:enabled="true"
+            android:exported="true"/>
+
         <activity
             android:name=".activities.UsersActivity"
             android:exported="false" />

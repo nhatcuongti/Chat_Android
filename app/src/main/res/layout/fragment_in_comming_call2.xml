@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="10dp"
+
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_weight="20"
+        android:onClick="onLocalAudioMuteClicked"
+        android:scaleType="centerInside"
+        android:src="@drawable/btn_mute" />
+
+    <ImageView
+        android:id="@+id/hangon_Btn_in_frag_2"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_weight="20"
+        android:onClick="onEncCallClicked"
+        android:scaleType="centerInside"
+        android:src="@drawable/btn_end_call"/>
+
+
+    <ImageView
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_weight="20"
+        android:onClick="onSwitchSpeakerphoneClicked"
+        android:scaleType="centerInside"
+        android:src="@drawable/btn_speaker"/>
+
+
+</LinearLayout>
