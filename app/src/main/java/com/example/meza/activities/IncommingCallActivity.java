@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -29,16 +28,18 @@ import java.text.SimpleDateFormat;
 import java.util.Set;
 import java.util.TimeZone;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 /**
  * Created by reiko-lhnhat on 4/11/2022.
  */
 public class IncommingCallActivity extends FragmentActivity {
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
-    ImageView acceptBtn, declineBtn;
     InCommingCall1Fragment fragment1;
     InCommingCall2Fragment fragment2;
-    TextView state;
+    TextView state, callerName;
+    CircleImageView avatar;
 
     long startTime, timeInMilliseconds = 0;
     Handler customHandler = new Handler();
@@ -50,12 +51,25 @@ public class IncommingCallActivity extends FragmentActivity {
         setContentView(R.layout.activity_incoming_call);
 
         state = findViewById(R.id.state_call_incomming_call);
+        callerName = findViewById(R.id.caller_name_in_comming);
+        avatar = findViewById(R.id.caller_image_in_comming);
+
+
+        //tao intent startservice
         intentSoundService = new Intent(IncommingCallActivity.this, SoundService2.class);
         startService(intentSoundService);
 
-
+        // lay du lieu tu intent
         Intent intent = getIntent();
-        String callID = intent.getStringExtra("call_id");
+        Bundle bundle = intent.getExtras();
+        String callID = bundle.getString("call_id");
+        String name = bundle.getString("callerName");
+        String ava = bundle.getString("callerImage");
+
+        callerName.setText(name);
+        avatar.setImageBitmap(Utils.decodeImage(ava));
+
+
         stringeeCall = (StringeeCall) CallsMap.getData(callID);
         audioManager = StringeeAudioManager.create(this);
         audioManager.start(new StringeeAudioManager.AudioManagerEvents() {

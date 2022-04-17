@@ -1,4 +1,4 @@
-package com.example.meza;
+package com.example.meza.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.meza.R;
 import com.example.meza.adapters.ActiveUserAdapter;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;

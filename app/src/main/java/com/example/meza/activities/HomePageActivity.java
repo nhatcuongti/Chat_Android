@@ -16,8 +16,8 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.meza.ActivePeopleFragment;
-import com.example.meza.ChatsFragment;
+import com.example.meza.fragment.ActivePeopleFragment;
+import com.example.meza.fragment.ChatsFragment;
 import com.example.meza.R;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
@@ -263,11 +263,17 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
                 Log.d("clientCon", "onIncomingCall: ");
+
                 Utils.countInCommingCallAtMoment++;
                 if(Utils.countInCommingCallAtMoment >= 1) {
                     CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
                     Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
-                    intent.putExtra("call_id", stringeeCall.getCallId());
+                    User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
+                    Bundle bundle = new Bundle();
+                    bundle.putString("callerName", caller.getFullname());
+                    bundle.putString("callerImage", caller.getImage());
+                    bundle.putString("call_id", stringeeCall.getCallId());
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
             }
@@ -298,4 +304,17 @@ public class HomePageActivity extends FragmentActivity {
 
         void onClick(View view, int position, boolean isLongClick);
     }
+
+    int findFriendById(String userID){
+        String user = userID.substring(1);
+        int i = 0;
+        for(User u : listObjectUserFriend){
+            if(u.getId().equals(user)){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
+
 }

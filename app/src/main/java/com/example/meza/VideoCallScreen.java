@@ -3,10 +3,7 @@ package com.example.meza;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.SurfaceView;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,11 +12,7 @@ import androidx.core.content.ContextCompat;
 
 import com.example.meza.model.User;
 
-import java.net.MalformedURLException;
 
-import io.agora.rtc.IRtcEngineEventHandler;
-import io.agora.rtc.RtcEngine;
-import io.agora.rtc.video.VideoCanvas;
 
 // Java
 // Java
@@ -38,7 +31,7 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
     private String token;
 
     String urlStr = "";
-    private RtcEngine mRtcEngine;
+
 
     // Java
     private static final int PERMISSION_REQ_ID = 22;
@@ -71,14 +64,14 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
         curUserID = curUser.getPhone_number();
 
 //         If all the permissions are granted, initialize the RtcEngine object and join a channel.
-        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
-                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
-            try {
-                initializeAndJoinChannel();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
+//        if (checkSelfPermission(REQUESTED_PERMISSIONS[0], PERMISSION_REQ_ID) &&
+//                checkSelfPermission(REQUESTED_PERMISSIONS[1], PERMISSION_REQ_ID)) {
+//            try {
+////                initializeAndJoinChannel();
+//            } catch (MalformedURLException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
     }
     private boolean checkSelfPermission(String permission, int requestCode) {
@@ -98,51 +91,51 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
 
 
 
-    private void initializeAndJoinChannel() throws MalformedURLException {
-        try {
-            mRtcEngine = RtcEngine.create(getBaseContext(), appId, mRtcEventHandler);
-        } catch (Exception e) {
-            throw new RuntimeException("Check the error.");
-        }
-
-        // By default, video is disabled, and you need to call enableVideo to start a video stream.
-        mRtcEngine.enableVideo();
-
-        FrameLayout container = findViewById(R.id.local_video_view_container);
-        // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
-        container.addView(surfaceView);
-        // Pass the SurfaceView object to Agora so that it renders the local video.
-        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
-
-        // Join the channel with a token.
-//        String token1 =  new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, channelName,curUserID, RtcTokenBuilder.Role.Role_Admin, 1000);
-//        token = new MyTask().doInBackground("https://mezatoken.herokuapp.com/", "my-channel", "0");
-        Log.d("token", token);
-        mRtcEngine.joinChannel(token,"meza" +  channelName, "",  0);
-    }
-
-    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
-        @Override
-        // Listen for the remote user joining the channel to get the uid of the user.
-        public void onUserJoined(int uid, int elapsed) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    // Call setupRemoteVideo to set the remote video view after getting uid from the onUserJoined callback.
-                    setupRemoteVideo(uid);
-                }
-            });
-        }
-    };
-
-    private void setupRemoteVideo(int uid) {
-        FrameLayout container = findViewById(R.id.remote_video_view_container);
-        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
-        surfaceView.setZOrderMediaOverlay(true);
-        container.addView(surfaceView);
-        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
-    }
+//    private void initializeAndJoinChannel() throws MalformedURLException {
+//        try {
+//            mRtcEngine = RtcEngine.create(getBaseContext(), appId, mRtcEventHandler);
+//        } catch (Exception e) {
+//            throw new RuntimeException("Check the error.");
+//        }
+//
+//        // By default, video is disabled, and you need to call enableVideo to start a video stream.
+//        mRtcEngine.enableVideo();
+//
+//        FrameLayout container = findViewById(R.id.local_video_view_container);
+//        // Call CreateRendererView to create a SurfaceView object and add it as a child to the FrameLayout.
+//        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+//        container.addView(surfaceView);
+//        // Pass the SurfaceView object to Agora so that it renders the local video.
+//        mRtcEngine.setupLocalVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, 0));
+//
+//        // Join the channel with a token.
+////        String token1 =  new RtcTokenBuilder().buildTokenWithUserAccount(appId, appCertificate, channelName,curUserID, RtcTokenBuilder.Role.Role_Admin, 1000);
+////        token = new MyTask().doInBackground("https://mezatoken.herokuapp.com/", "my-channel", "0");
+//        Log.d("token", token);
+//        mRtcEngine.joinChannel(token,"meza" +  channelName, "",  0);
+//    }
+//
+//    private final IRtcEngineEventHandler mRtcEventHandler = new IRtcEngineEventHandler() {
+//        @Override
+//        // Listen for the remote user joining the channel to get the uid of the user.
+//        public void onUserJoined(int uid, int elapsed) {
+//            runOnUiThread(new Runnable() {
+//                @Override
+//                public void run() {
+//                    // Call setupRemoteVideo to set the remote video view after getting uid from the onUserJoined callback.
+//                    setupRemoteVideo(uid);
+//                }
+//            });
+//        }
+//    };
+//
+//    private void setupRemoteVideo(int uid) {
+//        FrameLayout container = findViewById(R.id.remote_video_view_container);
+//        SurfaceView surfaceView = RtcEngine.CreateRendererView(getBaseContext());
+//        surfaceView.setZOrderMediaOverlay(true);
+//        container.addView(surfaceView);
+//        mRtcEngine.setupRemoteVideo(new VideoCanvas(surfaceView, VideoCanvas.RENDER_MODE_FIT, uid));
+//    }
 
 
 
@@ -174,8 +167,8 @@ public class VideoCallScreen extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.hangon_video_Btn:
-                mRtcEngine.leaveChannel();
-                mRtcEngine.destroy();
+//                mRtcEngine.leaveChannel();
+//                mRtcEngine.destroy();
                 finish();
                 break;
         }

@@ -1,4 +1,4 @@
-package com.example.meza;
+package com.example.meza.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.meza.R;
 import com.example.meza.activities.HomePageActivity;
 import com.example.meza.adapters.ActiveThumnailAdapter;
 import com.example.meza.adapters.NameOfConversationAdapter;
