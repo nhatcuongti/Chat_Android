@@ -19,7 +19,6 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,18 +28,17 @@ import com.example.meza.utilities.AlertDialogEx;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
 import com.example.meza.utils.Utils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+
+import at.favre.lib.crypto.bcrypt.BCrypt;
 
 //import android.support.v4.media.app.NotificationCompat;
 
@@ -84,7 +82,6 @@ public class SettingActivity extends AppCompatActivity implements AlertDialogEx.
 
         actionButton();
     }
-
     private void actionButton() {
         backWardBtn = findViewById(R.id.backwardBtn);
         Bell = (Button) findViewById(R.id.btnNotificationApp);
@@ -188,32 +185,36 @@ public class SettingActivity extends AppCompatActivity implements AlertDialogEx.
         Logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder alert = new AlertDialog.Builder(SettingActivity.this);
-                alert.setTitle("Thông báo");
-                alert.setMessage("Bạn sẽ đăng xuất khỏi ứng dụng?");
+                AlertDialog.Builder builder = new AlertDialog.Builder(SettingActivity.this);
+                builder.setTitle("Thông báo");
+                builder.setMessage("Bạn sẽ đăng xuất khỏi ứng dụng?");
 
-                alert.setPositiveButton("Có", new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Có", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(SettingActivity.this, SignInActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK |Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        preferenceManager.clear();
+                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                        finish();
                     }
                 });
 
-                alert.setNegativeButton("Không", new DialogInterface.OnClickListener() {
+                builder.setNegativeButton("Không", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         //do nothing
                     }
                 });
+                AlertDialog alert = builder.create();
+                alert.setOnShowListener(arg0 -> {
+                    alert.getButton(androidx.appcompat.app.AlertDialog.BUTTON_NEGATIVE).setTextColor(getResources().getColor(R.color.primary));
+                    alert.getButton(androidx.appcompat.app.AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(R.color.primary));
+                });
                 alert.show();
-                Toast.makeText(SettingActivity.this, "Đăng xuất", Toast.LENGTH_SHORT).show();
-                preferenceManager.clear();
-                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+
+//                Toast.makeText(SettingActivity.this, "Đăng xuất", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -238,8 +239,6 @@ public class SettingActivity extends AppCompatActivity implements AlertDialogEx.
     private void openDialog() {
         AlertDialogEx alertDialogEx = new AlertDialogEx();
         alertDialogEx.show(getSupportFragmentManager(), "dialog");
-
-
     }
 
     @Override
@@ -257,7 +256,22 @@ public class SettingActivity extends AppCompatActivity implements AlertDialogEx.
 
                 String pass = dataSnapshot.getValue(String.class);
 
-                Log.d("passsss", pass);
+                BCrypt.Result result = null;
+                if (oldpw != null) {
+                    result = BCrypt.verifyer().verify(pass.toCharArray(), oldpw); // Comparison
+                }else if (!result.verified) {
+                    Toast.makeText(SettingActivity.this, "Mật khẩu không đúng", Toast.LENGTH_SHORT);
+                }else if(!newpw.equals(confirmpw)){
+                    Toast.makeText(SettingActivity.this, "Mật khẩu không trùng khớp", Toast.LENGTH_SHORT);
+                }else{
+                    //mã hóa mật khẩu
+
+                    //Update trên Firebase
+//                    DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
+//                    mDatabase.child(currentUser.id).child(Constants.KEY_PASSWORD).setValue(encodedImage);
+
+                    Toast.makeText(SettingActivity.this, "Đổi mật khẩu thành công" + newpw, Toast.LENGTH_SHORT);
+                }
             }
 
             @Override
