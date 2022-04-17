@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -34,6 +35,7 @@ import com.example.meza.databinding.BottombarChatBinding;
 import com.example.meza.databinding.ToolbarChatBinding;
 import com.example.meza.interfaces.OnGetImageClickListener;
 import com.example.meza.interfaces.OnGetValueListener;
+import com.example.meza.interfaces.PaginationScrollListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
@@ -69,11 +71,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton backwardBtn, rightArrowBtn, imageSendBtn, takePhotoBtn, voiceSendBtn, sendBtn, videoCallBtn, audioCallBtn, inforBtn;
     ConversationModel conversation;
     String idConversation;
-    ProgressBar progressBar;
+    ProgressBar progressBar, progressBarLoadData;
+    HashMap<String, Boolean> mesID;
 
     ActivityChatBinding chatBinding;
     ToolbarChatBinding toolbarChatBinding;
     BottombarChatBinding bottombarChatBinding;
+
 
 
     String token = "";
@@ -95,6 +99,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         channelName = bundle.getString("conversationID");
 
         progressBar = findViewById(R.id.progressBar);
+        progressBarLoadData = findViewById(R.id.progressBarLoadData);
         conversationRv = findViewById(R.id.conversationListRv);
 
         curUserID = User.getCurrentUser(getApplicationContext()).getPhone_number();
@@ -138,6 +143,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      * initData() là hàm dùng để khởi tạo dữ liệu ban đầu
      * Mục đích của hàm này là tìm ID của Conversation
      */
+    boolean isLastPage = false, isLoading = false;
     public void initData(){
         //**************************************************************************************
                                     //Lấy dữ liệu của user hiện tại//
@@ -180,6 +186,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 // Set LayoutManager
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
                 conversationRv.setLayoutManager(linearLayoutManager);
+                conversationRv.setHasFixedSize(true);
 
                 conversationRv.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
                     @Override
@@ -189,14 +196,85 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                 @Override
                                 public void run() {
                                     ArrayList<ConversationModel.Message> listMsg = conversation.getListMessage();
-                                    if (listMsg != null && !listMsg.isEmpty())
+                                    if (listMsg != null && !listMsg.isEmpty()){
+                                        Log.d("ScrollPage", "Bottom : " + i3 + "\nOld Bottom : " + i7);
                                         conversationRv.smoothScrollToPosition(
                                                 conversationRv.getAdapter().getItemCount() - 1);
+                                    }
                                 }
                             }, 100);
                         }
                     }
                 });
+
+                //Xử lý sự kiện scroll (pagination)
+                conversationRv.addOnScrollListener(new PaginationScrollListener(linearLayoutManager) {
+                    @Override
+                    public void loadMoreItems() {
+//                        progressBarLoadData.setVisibility(View.VISIBLE);
+                        isLoading = true;
+                        conversationAdapter.addLoading();
+
+                        ConversationModel.Message.listenMessageAtOffset(conversation.getListMessage().get(1).getId(),
+                                idConversation,
+                                new OnGetValueListener() {
+                                    @Override
+                                    public void onSuccess(DataSnapshot snapshot) {
+                                        if (!snapshot.hasChildren()){
+                                            isLastPage = true;
+                                            isLoading = false;
+                                            Log.d("LastPageCheck", "onSuccess: " + "last page");
+                                            conversationAdapter.removeLoading();
+                                            return;
+                                        }
+
+                                        int index = 0;
+                                        conversationAdapter.removeLoading();
+                                        for (DataSnapshot childSnapshot : snapshot.getChildren()){
+                                            ConversationModel.Message msg = childSnapshot.getValue(ConversationModel.Message.class);
+                                            msg.formatStartTime();
+                                            ArrayList<ConversationModel.Message> list_message = conversation.getListMessage();
+
+                                            //**************************************************************************
+                                            // Xử lý phần seen//
+                                            Map<String, Boolean> listSeen = msg.getListSeen();
+                                            if (listSeen == null)
+                                                listSeen = new HashMap<>();
+
+                                            if (!msg.getSender().equals(currentUser.getId()))
+                                                listSeen.put(currentUser.getId(), true);
+
+                                            msg.setListSeen(listSeen);
+                                            //************************************End***********************************
+
+                                            ConversationModel.Message.updateMessage(idConversation, msg.getId(), msg.toMap());
+                                            list_message.add(index, msg);
+                                            conversation.setListMessage(list_message);
+                                            conversationAdapter.notifyItemInserted(index);
+                                            index++;
+                                        }
+
+                                        isLoading = false;
+                                    }
+
+                                    @Override
+                                    public void onChange(DataSnapshot snapshot) {
+
+                                    }
+                                });
+                    }
+
+                    @Override
+                    public boolean isLoading() {
+                         return isLoading;
+                    }
+
+                    @Override
+                    public boolean isLastPage() {
+                        return isLastPage;
+                    }
+                });
+
                 //************************************End***********************************************
 
 
@@ -204,52 +282,113 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                     //Lấy các đoạn tin nhắn của đoạn hội thoại, đồng thời
                                     //lắng nghe nếu có tin nhắn mới
 
-
-                ConversationModel.Message.listenChange(idConversation, new OnGetValueListener() {
+                ConversationModel.Message.listenFirstMessage(idConversation, new OnGetValueListener() {
                     @Override
-                    public void onSuccess(DataSnapshot snapshot) { // Nếu một tin nhắn thêm mới thành công
+                    public void onSuccess(DataSnapshot snapshot) {
                         loading(false);
-                        ConversationModel.Message msg = snapshot.getValue(ConversationModel.Message.class);
-                        msg.formatStartTime();
+                        for (DataSnapshot childSnapshot : snapshot.getChildren()){
+                            ConversationModel.Message msg = childSnapshot.getValue(ConversationModel.Message.class);
+                            msg.formatStartTime();
+
+                            ArrayList<ConversationModel.Message> list_message = conversation.getListMessage();
+                            if (list_message == null)
+                                list_message = new ArrayList<>();
+
+                            //**************************************************************************
+                            // Xử lý phần seen//
+                            Map<String, Boolean> listSeen = msg.getListSeen();
+                            if (listSeen == null)
+                                listSeen = new HashMap<>();
+
+
+                            Boolean isCurrentUserExists = (listSeen.get(currentUser.getId()) != null) ? true : false;
+
+                            if (!msg.getSender().equals(currentUser.getId()))
+                                listSeen.put(currentUser.getId(), true);
+
+                            msg.setListSeen(listSeen);
+                            //************************************End***********************************
+
+                            list_message.add(msg);
+                            conversation.setListMessage(list_message);
+                            conversationAdapter.notifyItemInserted(list_message.size() - 1);
+                            conversationRv.scrollToPosition(list_message.size() - 1);
+
+                            if (!msg.getSender().equals(currentUser.getId()) && !isCurrentUserExists)
+                                ConversationModel.Message.updateMessage(idConversation, msg.getId(), msg.toMap());
+
+                            Log.d("firstMessage", list_message.toString());
+                        }
 
                         ArrayList<ConversationModel.Message> list_message = conversation.getListMessage();
-                        if (list_message == null)
-                            list_message = new ArrayList<>();
+                        String lastID = list_message.get(list_message.size() - 1).getId();
+                        ConversationModel.Message.listenChange(idConversation, lastID, new OnGetValueListener() {
+                            @Override
+                            public void onSuccess(DataSnapshot snapshot) { // Nếu một tin nhắn thêm mới thành công
+                                ConversationModel.Message msg = snapshot.getValue(ConversationModel.Message.class);
+                                msg.formatStartTime();
+
+                                ArrayList<ConversationModel.Message> list_message = conversation.getListMessage();
+                                if (list_message == null)
+                                    list_message = new ArrayList<>();
 
 
-                        //**************************************************************************
-                                            // Xử lý phần seen//
-                        Map<String, Boolean> listSeen = msg.getListSeen();
-                        if (listSeen == null)
-                            listSeen = new HashMap<>();
+                                //**************************************************************************
+                                // Xử lý phần seen//
+                                Map<String, Boolean> listSeen = msg.getListSeen();
+                                if (listSeen == null)
+                                    listSeen = new HashMap<>();
 
-                        if (!msg.getSender().equals(currentUser.getId()))
-                            listSeen.put(currentUser.getId(), true);
+                                if (!msg.getSender().equals(currentUser.getId()))
+                                    listSeen.put(currentUser.getId(), true);
 
-                        msg.setListSeen(listSeen);
-                        //************************************End***********************************
-                        list_message.add(msg);
-                        conversation.setListMessage(list_message);
-                        conversationAdapter.notifyDataSetChanged();
-                        conversationRv.scrollToPosition(list_message.size() - 1);
+                                msg.setListSeen(listSeen);
+                                //************************************End***********************************
 
-                        ConversationModel.Message.updateMessage(idConversation, msg.getId(), msg.toMap());
+                                list_message.add(msg);
+                                conversation.setListMessage(list_message);
+                                conversationAdapter.notifyItemInserted(list_message.size() - 1);
+                                conversationRv.scrollToPosition(list_message.size() - 1);
+
+                                ConversationModel.Message.updateMessage(idConversation, msg.getId(), msg.toMap());
+                            }
+
+                            @Override
+                            public void onChange(DataSnapshot snapshot) {
+                                ConversationModel.Message message = snapshot.getValue(ConversationModel.Message.class);
+                                message.formatStartTime();
+
+                                ArrayList<ConversationModel.Message> listMsg = conversation.getListMessage();
+
+                                int lastElement = listMsg.size() - 1;
+                                if (listMsg.get(lastElement).getId().equals(message.getId()))
+                                    listMsg.set(lastElement, message);
+
+//                                conversationAdapter.notifyDataSetChanged();
+                                conversationAdapter.notifyItemChanged(lastElement);
+                            }
+                        });
+
+                        ConversationModel.Message.listenChangTest(idConversation, lastID, new OnGetValueListener() {
+                            @Override
+                            public void onSuccess(DataSnapshot snapshot) {
+
+                            }
+
+                            @Override
+                            public void onChange(DataSnapshot snapshot) {
+
+                            }
+                        });
                     }
 
                     @Override
                     public void onChange(DataSnapshot snapshot) {
-                        ConversationModel.Message message = snapshot.getValue(ConversationModel.Message.class);
-                        message.formatStartTime();
 
-                        ArrayList<ConversationModel.Message> listMsg = conversation.getListMessage();
-
-                        int lastElement = listMsg.size() - 1;
-                        if (listMsg.get(lastElement).getId().equals(message.getId()))
-                            listMsg.set(lastElement, message);
-
-                        conversationAdapter.notifyDataSetChanged();
                     }
                 });
+
+//                ArrayList<ConversationModel.Message> list_message = conversation.getListMessage();
                 //************************************End***********************************************
 
             }
@@ -359,6 +498,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.imageSendBtn:{ // Nếu người dùng bấm nút gửi ảnh từ thư viện ảnh
                 //Tạo một intent để có thể truy cập được tới gallery và chọn ảnh
+                isStoppedByImage = true;
                 Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                 startActivityForResult(intent, 1);
                 break;
@@ -415,31 +555,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 //********************************************************************************//
                                         //Gửi đoạn tin nhắn lên database//
-                ConversationModel.Message.listenLastElement(idConversation, new OnGetValueListener() { // Cập nhật tin nhắn
-                    @Override
-                    public void onSuccess(DataSnapshot snapshot) {
-                        //************************************************************************//
-                                            //Generate ra ID mới dựa trên ID lớn nhất//
-                        DataSnapshot lastSnapshot = null;
-                        for (DataSnapshot ds : snapshot.getChildren())
-                            lastSnapshot = ds;
 
-                        String id = (lastSnapshot == null) ? "0" : lastSnapshot.getKey();
-                        Log.d("test", "onSuccess: " + id);
-                        id = String.valueOf(Integer.valueOf(id) + 1);
-                        //*********************************End************************************//
+                    //************************************************************************//
+                    //Generate ra ID mới dựa trên ID lớn nhất//
 
-                        msg.setId(id);
-                        ConversationModel.Message.insertNewMsgToDatabase(msg, id, idConversation);
-                        chatBox.setText("");
-                    }
+                    ArrayList<ConversationModel.Message> list_msg = conversation.getListMessage();
+                    String id = (list_msg == null || list_msg.isEmpty()) ? "0" : list_msg.get(list_msg.size() - 1).getId() ;
+                    Log.d("test", "onSuccess: " + id);
+                    id = String.valueOf(Integer.valueOf(id) + 1);
+                    //*********************************End************************************//
 
-                    @Override
-                    public void onChange(DataSnapshot snapshot) {
-
-                    }
-                });
-
+                    msg.setId(id);
+                    ConversationModel.Message.insertNewMsgToDatabase(msg, id, idConversation);
+                    chatBox.setText("");
 
                 // Cập nhật conversation
                 conversation.setLast_message(msg.getText());
@@ -465,6 +593,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK && data != null && requestCode == 1){
             Uri uri = data.getData();
+            isStoppedByImage = false;
 
             try {
                 InputStream is = getContentResolver().openInputStream(uri);
@@ -480,30 +609,13 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 msg.setTypeMessage(Constants.KEY_IMAGE);
                 //*********************************End********************************************//
 
-                ConversationModel.Message.listenLastElement(idConversation, new OnGetValueListener() { // Cập nhật tin nhắn
-                    @Override
-                    public void onSuccess(DataSnapshot snapshot) {
-                        //************************************************************************//
-                        //Generate ra ID mới dựa trên ID lớn nhất//
-                        DataSnapshot lastSnapshot = null;
-                        for (DataSnapshot ds : snapshot.getChildren())
-                            lastSnapshot = ds;
+                ArrayList<ConversationModel.Message> list_msg = conversation.getListMessage();
+                String id = (list_msg == null || list_msg.isEmpty()) ? "0" : list_msg.get(list_msg.size() - 1).getId() ;
+                id = String.valueOf(Integer.valueOf(id) + 1);
+                //*********************************End************************************//
 
-                        String id = (lastSnapshot == null) ? "0" : lastSnapshot.getKey();
-                        Log.d("test", "onSuccess: " + id);
-                        id = String.valueOf(Integer.valueOf(id) + 1);
-                        //*********************************End************************************//
-
-                        msg.setId(id);
-                        ConversationModel.Message.insertNewMsgToDatabase(msg, id, idConversation);
-                        chatBox.setText("");
-                    }
-
-                    @Override
-                    public void onChange(DataSnapshot snapshot) {
-
-                    }
-                });
+                msg.setId(id);
+                ConversationModel.Message.insertNewMsgToDatabase(msg, id, idConversation);
 
                 // Cập nhật conversation
                 conversation.setLast_message("Hình ảnh vừa được gửi");
@@ -576,6 +688,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
      * xem ảnh ở trạng thái full screen
      * @param encodeImage
      */
+    Boolean isStoppedByImage = false;
     @Override
     public void onGetImageClick(String encodeImage) {
         Intent intent = new Intent(ChatActivity.this, FullImageScreenActivity.class);
@@ -585,9 +698,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         startActivity(intent);
     }
 
+
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("FlowTask", "onPause: " + isStoppedByImage);
+
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
         ConversationModel.Message.chatReference.removeEventListener(ConversationModel.Message.childEventListener);
     }
 

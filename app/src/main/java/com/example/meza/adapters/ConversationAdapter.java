@@ -14,12 +14,14 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.activities.ChatActivity;
+import com.example.meza.databinding.ItemLoadingBinding;
 import com.example.meza.databinding.ItemReceiveChatboxBinding;
 import com.example.meza.databinding.ItemSendChatboxBinding;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utils;
+import com.google.api.LogDescriptor;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -37,8 +39,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private User currentUser;
     private Map<String, Bitmap> user_image;
 
+    public final int VIEW_LOADING = 2;
     public final int VIEW_SENT = 1;
     public final int VIEW_RECEIVE = 0;
+    Boolean isLoadingAdd = false;
 
     public ConversationAdapter(Context context, ConversationModel conversationModel, User currentUser) {
         this.context = context;
@@ -61,9 +65,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             ));
 
             return  viewHolder;
-        } else {
+        } else if (viewType == VIEW_RECEIVE) {
 
             ItemReceiveViewHolder viewHolder = new ItemReceiveViewHolder(context, ItemReceiveChatboxBinding.inflate(
+                    LayoutInflater.from(context),
+                    parent,
+                    false
+            ));
+
+            return  viewHolder;
+        } else {
+            ItemLoadingViewHolder viewHolder = new ItemLoadingViewHolder(context, ItemLoadingBinding.inflate(
                     LayoutInflater.from(context),
                     parent,
                     false
@@ -145,7 +157,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                     topMargin,
                     (setStartTime) ? currentMsg.getStartTime() : null);
         }
-        else { // Nếu các bên khác gửi tin nhắn về currentUser
+        else if (getItemViewType(position) == VIEW_RECEIVE) { // Nếu các bên khác gửi tin nhắn về currentUser
 
             //**************************************************************************************
                                         //Xử lý khoảng cách giữa các item//
@@ -219,14 +231,37 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     public int getItemViewType(int position) {
         listMsg = conversationModel.getListMessage();
         ConversationModel.Message currentMsg = listMsg.get(position);
-        Log.d("test", "ConversationAdapter : " + currentMsg.toString());
         String senderId = currentMsg.getSender();
 
-        if (senderId.equals(currentUser.getId()))
+        Log.d("ItemViewTypeDebug", "list Msg: " + listMsg.toString());
+        Log.d("ItemViewTypeDebug", "(position, isLoadingAdd, sender) = " + "(" + position + "," + isLoadingAdd + "," + senderId + ")");
+
+        if (isLoadingAdd && position == 0)
+            return VIEW_LOADING;
+        else if (senderId.equals(currentUser.getId()))
             return VIEW_SENT;
         else
             return VIEW_RECEIVE;
     }
+
+    public void addLoading(){
+        isLoadingAdd = true;
+        listMsg = conversationModel.getListMessage();
+        listMsg.add(0, new ConversationModel.Message());
+        conversationModel.setListMessage(listMsg);
+        notifyItemInserted(0);
+    }
+
+    public void removeLoading(){
+        isLoadingAdd = false;
+
+        listMsg = conversationModel.getListMessage();
+        if (!listMsg.isEmpty()){
+            listMsg.remove(0);
+            notifyItemRemoved(0);
+        }
+    }
+
 
     public static class ItemSendViewHolder extends RecyclerView.ViewHolder {
 
@@ -328,6 +363,20 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
     }
+
+    public static class ItemLoadingViewHolder extends RecyclerView.ViewHolder {
+
+        ItemLoadingBinding binding;
+        Context context;
+
+        public ItemLoadingViewHolder(Context context, ItemLoadingBinding itemLoadingBinding) {
+            super(itemLoadingBinding.getRoot());
+            binding = itemLoadingBinding;
+            this.context = context;
+        }
+
+    }
+
 
     public static void setMessage(TextView messageTxt,
                                ImageView imgMessage,

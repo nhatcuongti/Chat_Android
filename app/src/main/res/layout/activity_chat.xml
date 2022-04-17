@@ -8,6 +8,14 @@
         android:id="@+id/chatToolbar"
         layout="@layout/toolbar_chat"/>
 
+    <ProgressBar
+        android:id="@+id/progressBarLoadData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/conversationListRv"
         android:layout_width="match_parent"

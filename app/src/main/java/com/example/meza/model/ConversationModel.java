@@ -3,6 +3,7 @@ package com.example.meza.model;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -115,6 +116,7 @@ public class ConversationModel {
                                                   OnGetValueListener onGetValueListener){
         String path = "/conversation/" + id;
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(path);
+
 
         databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -293,7 +295,82 @@ public class ConversationModel {
 
         public static DatabaseReference chatReference;
         public static ChildEventListener childEventListener;
-        public static void listenChange(String id, OnGetValueListener onGetValueListener){
+
+        public static void listenFirstMessage(String id, OnGetValueListener onGetValueListener) {
+            String path = "/message/" + id;
+            chatReference = FirebaseDatabase.getInstance().getReference(path);
+            Query query=chatReference.orderByKey().limitToLast(15);
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    onGetValueListener.onSuccess(snapshot);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+        public static void listenMessageAtOffset(String firstMessageId, String convId, OnGetValueListener onGetValueListener) {
+            String path = "/message/" + convId;
+            chatReference = FirebaseDatabase.getInstance().getReference(path);
+            Query query = chatReference.orderByKey().endBefore(firstMessageId).limitToLast(15);
+            Log.d("MessageOffset", "listenMessageAtOffset: " + firstMessageId );
+
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        onGetValueListener.onSuccess(snapshot);
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+
+        public static void listenChangTest(String id, String idlastMsg, OnGetValueListener onGetValueListener){
+            String path = "/message/" + id;
+            chatReference = FirebaseDatabase.getInstance().getReference(path);
+
+            // Xử lý khi có thay đổi database
+            chatReference.orderByKey().startAfter(idlastMsg).addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Log.d("ConvDB", "onChildAdded: ");
+                    onGetValueListener.onSuccess(snapshot);
+                }
+
+                @Override
+                public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Log.d("ConvDB", "onChildChanged: ");
+                    onGetValueListener.onChange(snapshot);
+                }
+
+                @Override
+                public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+                    Log.d("ConvDB", "onChildChanged: ");
+                }
+
+                @Override
+                public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Log.d("ConvDB", "onChildMoved: ");
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    Log.d("ConvDB", "onCancelled: " + error);
+
+                }
+            });
+        }
+
+
+        public static void listenChange(String id, String idlastMsg, OnGetValueListener onGetValueListener){
             String path = "/message/" + id;
             chatReference = FirebaseDatabase.getInstance().getReference(path);
 
@@ -301,6 +378,7 @@ public class ConversationModel {
             childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                    Log.d("ConvDB", "onChildAdded1: " );
                     onGetValueListener.onSuccess(snapshot);
                 }
 
@@ -311,12 +389,10 @@ public class ConversationModel {
 
                 @Override
                 public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-
                 }
 
                 @Override
                 public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-
                 }
 
                 @Override
@@ -324,7 +400,7 @@ public class ConversationModel {
 
                 }
             };
-            chatReference.addChildEventListener(childEventListener);
+            chatReference.orderByKey().startAfter(idlastMsg).addChildEventListener(childEventListener);
         }
 
         public static ConversationModel.Message getMessageWithID(String id){

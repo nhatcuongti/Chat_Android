@@ -45,12 +45,12 @@ public class Utils {
     }
 
     public static String encodeImageForSend(Bitmap bitmap) {
-        int previewHeight = 1000;
+        int previewHeight = 500;
 //        int previewWidth = (bitmap.getWidth() * previewHeight) / bitmap.getHeight();
 
         Bitmap previewBitmap = resizedBitmap(bitmap, previewHeight);
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        previewBitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        previewBitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
         byte[] bytes = baos.toByteArray();
         return Base64.encodeToString(bytes, Base64.DEFAULT);
     } 
