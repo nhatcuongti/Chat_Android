@@ -2,6 +2,8 @@ package com.example.meza.activities;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -42,6 +44,9 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
     User currentUser;
     String callerId;
     String calleeId;
+    String calleeName;
+    Bitmap calleeImage;
+
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
 
@@ -63,12 +68,21 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         setContentView(R.layout.activity_voice_calling);
 
         Intent intent = getIntent();
-        calleeId = intent.getStringExtra("calleeId");
+        Bundle  bundle= intent.getExtras();
+        calleeId = bundle.getString("calleeId");
+        calleeName = bundle.getString("calleeName");
+        byte[] byteArray = bundle.getByteArray("calleeImage");
+        calleeImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
         endBtn = findViewById(R.id.hangon_Btn);
         endBtn.setOnClickListener(this);
 
         state = findViewById(R.id.state_call);
+        avatar = findViewById(R.id.callee_image_out_going);
+        name = findViewById(R.id.callee_name_out_going);
+
+        avatar.setImageBitmap(calleeImage);
+        name.setText(calleeName);
 
         currentUser = User.getCurrentUser(context);
         callerId = "m" + currentUser.getPhone_number();

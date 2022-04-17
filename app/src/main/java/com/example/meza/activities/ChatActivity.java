@@ -46,6 +46,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -78,6 +79,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     ToolbarChatBinding toolbarChatBinding;
     BottombarChatBinding bottombarChatBinding;
 
+    HashMap<String, Bitmap> user_image;
 
 
     String token = "";
@@ -88,6 +90,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     Bundle myBundle;
 
     String calleeId; // nguoi duoc goi
+    String calleeName;
+    Bitmap calleeImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,16 +127,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         // Set tên nhóm / tên đối tác
         TextView tittle = findViewById(R.id.tittleName);
         tittle.setText(conversation.getTittle());
+        calleeName = conversation.getTittle();
 
         CircleImageView userImage = findViewById(R.id.userImage);
         CircleImageView userActive = findViewById(R.id.userActive);
 
-        HashMap<String, Bitmap> user_image = conversation.getUser_image();
+        user_image = conversation.getUser_image();
         for (String userID : conversation.getParticipantListArray()) {
             if (!userID.equals(currentUser.getId())) {
                 userImage.setImageBitmap(user_image.get(userID));
                 if(conversation.getParticipant_list().size() == 2){
                     calleeId = "m" + userID;
+                    calleeImage = user_image.get(userID);
+
                 }
             }
         }
@@ -512,7 +519,14 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 // hoi thoai 2 nguoi
                 if(conversation.getParticipant_list().size() == 2){
                     Intent intent = new Intent(ChatActivity.this, VoiceCallingActivity.class);
-                    intent.putExtra("calleeId", calleeId);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("calleeId", calleeId);
+                    bundle.putString("calleeName", calleeName);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    calleeImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    bundle.putByteArray("calleeImage", byteArray);
+                    intent.putExtras(bundle);
                     startActivity(intent);
                 }
                 break;
