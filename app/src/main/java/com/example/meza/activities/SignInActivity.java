@@ -80,6 +80,7 @@ public class SignInActivity extends AppCompatActivity {
                         }
                     }
                 });
+
     }
 
     private void loading(Boolean isLoading) {

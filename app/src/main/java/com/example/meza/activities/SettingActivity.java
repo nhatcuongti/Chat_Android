@@ -28,6 +28,7 @@ import com.example.meza.utilities.AlertDialogEx;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
 import com.example.meza.utils.Utils;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -196,6 +197,17 @@ public class SettingActivity extends AppCompatActivity implements AlertDialogEx.
                         Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+
+                        //xóa token trên firebase
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                        ref.child(Constants.KEY_COLLECTION_USERS).child(currentUser.getId()).
+                                child("token").removeValue().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+
+                            }
+                        });
+
                         finish();
                     }
                 });
@@ -306,7 +318,7 @@ public class SettingActivity extends AppCompatActivity implements AlertDialogEx.
 //        }
 
     }
-
+    // hàm này đổi ảnh đại diện
     private final ActivityResultLauncher<Intent> pickImage = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -322,7 +334,6 @@ public class SettingActivity extends AppCompatActivity implements AlertDialogEx.
 //                            binding.imageProfile.setImageBitmap(bitmap);
 //                            binding.textAddImage.setVisibility(View.GONE);
                             encodedImage = Utils.encodeImage(bitmap);
-                            Log.d("Imageeeeeeeeeeeee", encodedImage);
                             // Update Avater currentUser
                             currentUser.setImage(encodedImage);
                             //Update trên Firebase

@@ -75,5 +75,10 @@ dependencies {
     implementation 'com.stringee.sdk.android:stringee-android-sdk:1.8.5'
     implementation 'com.android.volley:volley:1.2.1'
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.13.1'
+    implementation 'commons-codec:commons-codec:1.9'
 
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
 }

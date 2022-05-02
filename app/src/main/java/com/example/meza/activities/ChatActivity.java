@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -38,10 +37,13 @@ import com.example.meza.interfaces.OnGetValueListener;
 import com.example.meza.interfaces.PaginationScrollListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
+import com.example.meza.network.ApiClient;
+import com.example.meza.network.ApiService;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -58,6 +60,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener,
@@ -108,7 +113,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         curUserID = User.getCurrentUser(getApplicationContext()).getPhone_number();
         urlStr = urlBase + "/rtc/" + "meza" + channelName + "/publisher/uid/"  + channelName  + "/";
-        Log.d("channel name", channelName);
+
         Log.d("url", urlStr);
         new fetchData(token, urlStr).start();
 
@@ -575,7 +580,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                     ArrayList<ConversationModel.Message> list_msg = conversation.getListMessage();
                     String id = (list_msg == null || list_msg.isEmpty()) ? "0" : list_msg.get(list_msg.size() - 1).getId() ;
-                    Log.d("test", "onSuccess: " + id);
+
                     id = String.valueOf(Integer.valueOf(id) + 1);
                     //*********************************End************************************//
 
@@ -716,7 +721,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("FlowTask", "onPause: " + isStoppedByImage);
 
 
     }
@@ -758,6 +762,40 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+    }
+
+    private void sendNotification(String messageBody){
+        ApiClient.getClient().create(ApiService.class).sendMessage(
+                Constants.getRemoteMsgHeaders(),
+                messageBody
+        ).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()){
+                    try {
+                        if(response.body() != null){
+                            JSONObject responseJson = new JSONObject(response.body());
+                            JSONArray result = responseJson.getJSONArray("results");
+                            if(responseJson.getInt("failure") == 1){
+                                JSONObject error = (JSONObject) result.get(0);
+                                Log.d("Notification", error.getString("error"));
+
+                                return;
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }else {
+                    Log.d("Notification", "error" + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
     }
 
 }
