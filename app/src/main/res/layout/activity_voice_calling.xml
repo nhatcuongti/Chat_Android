@@ -91,6 +91,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
+                    android:id="@+id/mute_outgoing_btn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="20"
@@ -109,6 +110,7 @@
 
 
                 <ImageView
+                    android:id="@+id/speaker_outgoing_btn"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="20"

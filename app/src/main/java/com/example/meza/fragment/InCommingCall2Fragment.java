@@ -15,6 +15,7 @@ import com.example.meza.activities.IncommingCallActivity;
 public class InCommingCall2Fragment extends Fragment {
     IncommingCallActivity main;
     ImageView hangout, mute, speaker;
+    Boolean isMute = false;
 
     public InCommingCall2Fragment(IncommingCallActivity main) {
         this.main = main;
@@ -41,6 +42,14 @@ public class InCommingCall2Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 main.fragmentToActivity("mute");
+                if(isMute){
+                    isMute = false;
+                    mute.setImageResource(R.drawable.btn_mute);
+                }
+                else {
+                    isMute = true;
+                    mute.setImageResource((R.drawable.btn_mute_enable);
+                }
             }
         });
 

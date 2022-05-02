@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.meza.R;
 import com.example.meza.fragment.InCommingCall1Fragment;
 import com.example.meza.fragment.InCommingCall2Fragment;
+import com.example.meza.model.User;
 import com.example.meza.services.SoundService2;
 import com.example.meza.utils.Utils;
 import com.stringee.call.StringeeCall;
@@ -45,7 +46,7 @@ public class IncommingCallActivity extends FragmentActivity {
     Handler customHandler = new Handler();
     Intent intentSoundService;
 
-    Boolean isMute = true;
+    Boolean isMute = false;
     Boolean isInternalSpeaker = true;
 
     @Override
@@ -53,9 +54,11 @@ public class IncommingCallActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incoming_call);
 
+
         state = findViewById(R.id.state_call_incomming_call);
         callerName = findViewById(R.id.caller_name_in_comming);
         avatar = findViewById(R.id.caller_image_in_comming);
+
 
 
         //tao intent startservice
@@ -65,12 +68,16 @@ public class IncommingCallActivity extends FragmentActivity {
         // lay du lieu tu intent
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String callID = bundle.getString("call_id");
-        String name = bundle.getString("callerName");
-        String ava = bundle.getString("callerImage");
+        String callID = intent.getStringExtra("call_id");
+//        String callerId = bundle.getString("callerId");
 
-        callerName.setText(name);
-        avatar.setImageBitmap(Utils.decodeImage(ava));
+//        User caller = HomePageActivity.listObjectUserFriend.get(findFriendById(callerId));
+//        String name = caller.fullname;
+//        String ava = caller.image;
+
+
+//        callerName.setText(name);
+//        avatar.setImageBitmap(Utils.decodeImage(ava));
 
 
         stringeeCall = (StringeeCall) CallsMap.getData(callID);
@@ -268,4 +275,15 @@ public class IncommingCallActivity extends FragmentActivity {
             customHandler.postDelayed(this, 1000);
         }
     };
+    int findFriendById(String userID){
+        String user = userID.substring(1);
+        int i = 0;
+        for(User u : HomePageActivity.listObjectUserFriend){
+            if(u.getId().equals(user)){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
 }

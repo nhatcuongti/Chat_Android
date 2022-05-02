@@ -47,6 +47,8 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
     String calleeName;
     Bitmap calleeImage;
 
+    boolean isMute = false;
+
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
 
@@ -80,6 +82,7 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         state = findViewById(R.id.state_call);
         avatar = findViewById(R.id.callee_image_out_going);
         name = findViewById(R.id.callee_name_out_going);
+        muteBtn = findViewById(R.id.mute_outgoing_btn);
 
         avatar.setImageBitmap(calleeImage);
         name.setText(calleeName);
@@ -116,6 +119,17 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
 
                 endCall();
                 break;
+            case R.id.mute_outgoing_btn:
+                if(isMute){
+                    isMute = false;
+                    stringeeCall.mute(false);
+                    muteBtn.setImageResource(R.drawable.btn_mute);
+                }
+                else{
+                    isMute = true;
+                    stringeeCall.mute(true);
+                    muteBtn.setImageResource(R.drawable.btn_mute_enable);
+                }
         }
     }
 

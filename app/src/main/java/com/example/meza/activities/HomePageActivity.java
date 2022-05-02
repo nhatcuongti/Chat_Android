@@ -55,7 +55,7 @@ public class HomePageActivity extends FragmentActivity {
 
     ArrayList<User> listActiveUser;
     ArrayList<String> listFriend;
-    ArrayList<User> listObjectUserFriend;
+    static ArrayList<User> listObjectUserFriend;
     ArrayList<ConversationModel> listRecentConversation;
 
     private DatabaseReference mDatabase;
@@ -262,18 +262,19 @@ public class HomePageActivity extends FragmentActivity {
             }
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
-                Log.d("clientCon", "onIncomingCall: ");
-                User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
+                Log.d("clientCon", "onIncomingCallCount: " + Utils.countInCommingCallAtMoment);
 
                 Utils.countInCommingCallAtMoment++;
                 if(Utils.countInCommingCallAtMoment <= 1) {
+//                    User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
                     CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
                     Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
                     Bundle bundle = new Bundle();
-                    bundle.putString("callerName", caller.getFullname());
-                    bundle.putString("callerImage", caller.getImage());
-                    bundle.putString("call_id", stringeeCall.getCallId());
-                    intent.putExtras(bundle);
+//                    bundle.putString("callerId", stringeeCall.getFrom());
+//                    bundle.putString("callerImage", caller.getImage());
+                    intent.putExtra("call_id", stringeeCall.getCallId());
+//                    intent.putExtras(bundle);
+                    Log.d("clientCon", "onIncomingCall: ");
                     startActivity(intent);
                 }
             }
@@ -300,10 +301,6 @@ public class HomePageActivity extends FragmentActivity {
         client.connect(stringeeToken);
     }
 
-    public interface ItemClickListener {
-
-        void onClick(View view, int position, boolean isLongClick);
-    }
 
     int findFriendById(String userID){
         String user = userID.substring(1);
