@@ -263,12 +263,12 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
                 Log.d("clientCon", "onIncomingCall: ");
+                User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
 
                 Utils.countInCommingCallAtMoment++;
-                if(Utils.countInCommingCallAtMoment >= 1) {
+                if(Utils.countInCommingCallAtMoment <= 1) {
                     CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
                     Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
-                    User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
                     Bundle bundle = new Bundle();
                     bundle.putString("callerName", caller.getFullname());
                     bundle.putString("callerImage", caller.getImage());

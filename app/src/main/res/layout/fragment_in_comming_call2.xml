@@ -7,9 +7,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ImageView
+        android:id="@+id/mute_fag2_btn"
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_weight="20"
+
         android:onClick="onLocalAudioMuteClicked"
         android:scaleType="centerInside"
         android:src="@drawable/btn_mute" />
@@ -25,6 +27,7 @@
 
 
     <ImageView
+        android:id="@+id/speaker_fag2_btn"
         android:layout_width="0dp"
         android:layout_height="70dp"
         android:layout_weight="20"

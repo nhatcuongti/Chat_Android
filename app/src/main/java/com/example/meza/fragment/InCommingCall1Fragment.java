@@ -11,11 +11,7 @@ import androidx.fragment.app.Fragment;
 import com.example.meza.R;
 import com.example.meza.activities.IncommingCallActivity;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link InCommingCall1Fragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class InCommingCall1Fragment extends Fragment {
     ImageView acceptBtn, declineBtn;
     IncommingCallActivity main;

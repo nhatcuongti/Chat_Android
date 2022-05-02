@@ -14,7 +14,7 @@ import com.example.meza.activities.IncommingCallActivity;
 
 public class InCommingCall2Fragment extends Fragment {
     IncommingCallActivity main;
-    ImageView hangout;
+    ImageView hangout, mute, speaker;
 
     public InCommingCall2Fragment(IncommingCallActivity main) {
         this.main = main;
@@ -27,12 +27,32 @@ public class InCommingCall2Fragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_in_comming_call2, container, false);
         hangout = view.findViewById(R.id.hangon_Btn_in_frag_2);
+        mute = view.findViewById(R.id.mute_fag2_btn);
+        speaker = view.findViewById(R.id.speaker_fag2_btn);
+
         hangout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 main.fragmentToActivity("hangout");
             }
         });
+
+        mute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.fragmentToActivity("mute");
+            }
+        });
+
+        speaker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                main.fragmentToActivity("speaker");
+            }
+        });
+
+
+
         return view;
     }
 }

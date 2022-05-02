@@ -45,6 +45,9 @@ public class IncommingCallActivity extends FragmentActivity {
     Handler customHandler = new Handler();
     Intent intentSoundService;
 
+    Boolean isMute = true;
+    Boolean isInternalSpeaker = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -217,7 +220,17 @@ public class IncommingCallActivity extends FragmentActivity {
                 stringeeCall.hangup();
                 finish();
                 break;
-
+            case "mute":
+                if(isMute == true){
+                    stringeeCall.mute(false);
+                    isMute = false;
+                }
+                else {
+                    stringeeCall.mute(true);
+                    isMute = true;
+                }
+                break;
+            default: break;
         }
     }
 
