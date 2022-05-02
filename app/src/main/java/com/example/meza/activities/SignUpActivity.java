@@ -21,7 +21,9 @@ import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utils;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -90,7 +92,16 @@ public class SignUpActivity extends AppCompatActivity {
                             @Override
                             public void onVerificationFailed(@NonNull FirebaseException e) {
                                 loading(false);
-                                showToast(e.getMessage());
+                                Log.d(Tag, "onVerificationFailed - Failed"); // For debugging
+                                if (e instanceof FirebaseAuthInvalidCredentialsException) {
+                                    showToast("Không thể gửi mã OTP");
+                                } else if (e instanceof FirebaseTooManyRequestsException) {
+                                    showToast("Đã gửi OTP quá số lần cho phép trong ngày");
+                                }
+
+//                                Intent intent = new Intent(getApplicationContext(), VerifyOtpActivity.class);
+//                                intent.putExtra(Constants.KEY_USER, user);
+//                                startActivity(intent);
                             }
 
                             @Override

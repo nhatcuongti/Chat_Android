@@ -23,14 +23,6 @@
           }
         },
         {
-          "client_id": "107985300645-b97eg555om243049jc47v75t36leupj2.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.meza",
-            "certificate_hash": "f823e8f47de1184f8fbf825dad0700d5b81fda16"
-          }
-        },
-        {
           "client_id": "107985300645-clbmep6hk1rst0se7d9kf3vhshohks2e.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -44,6 +36,14 @@
           "android_info": {
             "package_name": "com.example.meza",
             "certificate_hash": "e06c80a03f4a670a61945b66bd375214f7e12f88"
+          }
+        },
+        {
+          "client_id": "107985300645-m6n9gnroamr8kn0e2pccjt1u7u4efegs.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.meza",
+            "certificate_hash": "f823e8f47de1184f8fbf825dad0700d5b81fda16"
           }
         },
         {

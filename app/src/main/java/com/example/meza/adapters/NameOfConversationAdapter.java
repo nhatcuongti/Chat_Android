@@ -38,6 +38,7 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
         this.listObjectUserFriend = listObjectUserFriend;
     }
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -63,7 +64,7 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
                 chosenUserPhoneNumber = arrKey[0];
 
             for (User u: listObjectUserFriend){
-                if(u.getPhone_number().equals(chosenUserPhoneNumber)) {
+                if(u.getPhone_number().equals(chosenUserPhoneNumber) && u != null) {
 //                    chosenUser = u;
                     holder.thumnail.setImageBitmap(Utils.decodeImage(u.getImage()));
                     holder.name.setText(u.getFullname());
