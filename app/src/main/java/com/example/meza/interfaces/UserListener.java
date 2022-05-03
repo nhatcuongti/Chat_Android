@@ -3,5 +3,6 @@ package com.example.meza.interfaces;
 import com.example.meza.model.User;
 
 public interface UserListener {
-    void onUserClicked(User user);
+    void onAddUserClicked(User user);
+    void onRemoveUserClicked(User user);
 }

@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +26,7 @@ import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.GenAccessToken;
 import com.example.meza.utils.Utils;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -47,13 +49,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class HomePageActivity extends FragmentActivity {
     TextView fragmentName;
 
+    FloatingActionButton addFriendBtn;
     ImageButton chatsBtn, activePeopleBtn;
     CircleImageView circleImageView;
 
     ChatsFragment chatsFragment;
     ActivePeopleFragment activePeopleFragment;
 
-    String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    String[] permissions = {Manifest.permission.RECORD_AUDIO};
     Boolean permissionToRecordAccepted = false;
 
     ArrayList<User> listActiveUser;
@@ -68,7 +71,7 @@ public class HomePageActivity extends FragmentActivity {
 
     StringeeClient client;
     String stringeeToken;
-    String KEYID = "SKyXNWgIwlhTrsWvXt8DRDcSvenugYiXjz";;
+    String KEYID = "SKyXNWgIwlhTrsWvXt8DRDcSvenugYiXjz";
     String KEYSECRET = "REd3YnBkYW5BM2dVYmdCRlExdHZTWWhNVTYzZmtyY1o=";
     String token;
 
@@ -77,26 +80,21 @@ public class HomePageActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_homepage);
 
-
-
-
-
-
         intData();
 
         updateToken();
 //        initSinch();
-        initStringeeClient();
+//        initStringeeClient();
         fragmentName = findViewById(R.id.name_fragment);
         chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
         activePeopleBtn = (ImageButton) findViewById(R.id.active_people_Button);
         circleImageView = findViewById(R.id.avatar);
+        addFriendBtn = findViewById(R.id.fabNewChat);
 
         chatsFragment = new ChatsFragment(this, listActiveUser, listRecentConversation, listObjectUserFriend);
-        activePeopleFragment = new ActivePeopleFragment(this,listActiveUser, listRecentConversation);
+        activePeopleFragment = new ActivePeopleFragment(this, listActiveUser, listRecentConversation);
 
         replaceFragment(chatsFragment);
-
 
         // decode base64 string to bitmap image and set image for imageview
         if (currentUser.getImage() != null) {
@@ -128,21 +126,24 @@ public class HomePageActivity extends FragmentActivity {
                 fragmentName.setText("Active People");
             }
         });
-        this.requestPermissions(permissions,200);
+        addFriendBtn.setOnClickListener(v -> {
+            startActivity(new Intent(getApplicationContext(), UsersActivity.class));
+        });
+        this.requestPermissions(permissions, 200);
     }
 
     private void updateToken() {
         FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token -> {
             if (!TextUtils.isEmpty(token)) {
                 Log.d("FirebaseToken", "retrieve token successful : " + token);
-            } else{
+            } else {
                 Log.w("FirebaseToken", "token should not be null...");
             }
         }).addOnFailureListener(e -> {
             //handle e
         }).addOnCanceledListener(() -> {
             //handle cancel
-        }).addOnCompleteListener(task ->{
+        }).addOnCompleteListener(task -> {
             token = task.getResult();
 
         });
@@ -159,7 +160,6 @@ public class HomePageActivity extends FragmentActivity {
                     }
                 });
     }
-
 
     public void replaceFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -204,7 +204,7 @@ public class HomePageActivity extends FragmentActivity {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     User user = ds.getValue(User.class);
                     String userKey = ds.getKey();
-                    if(listFriend.contains(userKey))
+                    if (listFriend.contains(userKey))
                         listObjectUserFriend.add(user);
                     if (user.getIs_active() == 1 && listFriend.contains(userKey)) {
                         listActiveUser.add(user);
@@ -267,10 +267,7 @@ public class HomePageActivity extends FragmentActivity {
     }//init data
 
 
-
-
-
-//    // request permission
+    //    // request permission
 //    private static final int PERMISSION_REQ_ID = 22;
 //
 //    private static final String[] REQUESTED_PERMISSIONS = {
@@ -286,10 +283,10 @@ public class HomePageActivity extends FragmentActivity {
 //        }
 //        return true;
 //    }
-    void initStringeeClient(){
+    void initStringeeClient() {
         client = new StringeeClient(this);
         Utils.stringeeClient = client;
-        stringeeToken = GenAccessToken.genAccessToken(callerId,KEYID, KEYSECRET, 3600);
+        stringeeToken = GenAccessToken.genAccessToken(callerId, KEYID, KEYSECRET, 3600);
 //        stringeeToken = "eyJjdHkiOiJzdHJpbmdlZS1hcGk7dj0xIiwidHlwIjoiSldUIiwiYWxnIjoiSFMyNTYifQ.eyJqdGkiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6LTE2NDk2MDg0NDEiLCJpc3MiOiJTS3lYTldnSXdsaFRyc1d2WHQ4RFJEY1N2ZW51Z1lpWGp6IiwiZXhwIjoxNjQ5NjEyMDQxLCJ1c2VySWQiOiIwMzY1ODYzODE3In0.TzoK9GssTV1fe20_LKbzzbHtYJSX_bWZkSUAz9rrJ4U";
         client = new StringeeClient(this);
         client.setConnectionListener(new StringeeConnectionListener() {
@@ -300,15 +297,17 @@ public class HomePageActivity extends FragmentActivity {
                 CallsMap.putData("client", client);
 
             }
+
             @Override
             public void onConnectionDisconnected(StringeeClient stringeeClient, boolean isReconnecting) {
             }
+
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
                 Log.d("clientCon", "onIncomingCallCount: " + Utils.countInCommingCallAtMoment);
 
                 Utils.countInCommingCallAtMoment++;
-                if(Utils.countInCommingCallAtMoment <= 1) {
+                if (Utils.countInCommingCallAtMoment <= 1) {
 //                    User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
                     CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
                     Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
@@ -321,22 +320,27 @@ public class HomePageActivity extends FragmentActivity {
                     startActivity(intent);
                 }
             }
+
             @Override
             public void onIncomingCall2(StringeeCall2 stringeeCall2) {
             }
+
             @Override
             public void onConnectionError(StringeeClient stringeeClient, final StringeeError stringeeError) {
                 Log.d("clientCon", "onConnectionError: ");
             }
+
             @Override
             public void onRequestNewToken(StringeeClient stringeeClient) {
                 // Get new token here and connect to Stringe server
-                stringeeToken = GenAccessToken.genAccessToken(callerId,KEYID, KEYSECRET, 3600);
+                stringeeToken = GenAccessToken.genAccessToken(callerId, KEYID, KEYSECRET, 3600);
 
             }
+
             @Override
             public void onCustomMessage(String s, JSONObject jsonObject) {
             }
+
             @Override
             public void onTopicMessage(String s, JSONObject jsonObject) {
             }
@@ -345,11 +349,11 @@ public class HomePageActivity extends FragmentActivity {
     }
 
 
-    int findFriendById(String userID){
+    int findFriendById(String userID) {
         String user = userID.substring(1);
         int i = 0;
-        for(User u : listObjectUserFriend){
-            if(u.getId().equals(user)){
+        for (User u : listObjectUserFriend) {
+            if (u.getId().equals(user)) {
                 return i;
             }
             i++;

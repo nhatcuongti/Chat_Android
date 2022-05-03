@@ -1,11 +1,13 @@
 package com.example.meza.adapters;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.meza.databinding.ItemContainerUserBinding;
 import com.example.meza.interfaces.UserListener;
 import com.example.meza.model.User;
+import com.example.meza.utils.Utils;
 
 import java.util.List;
 
@@ -53,9 +55,28 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
         }
 
         void setUserData(User user) {
-
+            binding.textUsername.setText(user.fullname);
+            binding.textPhone.setText(user.phone_number);
+            binding.imageProfile.setImageBitmap(Utils.decodeImage(user.image));
+            binding.addFriendRequest.setOnClickListener(v -> {
+                userListener.onAddUserClicked(user);
+                requesting(true);
+            });
+            binding.removeFriendRequest.setOnClickListener(v -> {
+                userListener.onRemoveUserClicked(user);
+                requesting(false);
+            });
         }
 
+        private void requesting(boolean isRequesting) {
+            if (isRequesting) {
+                binding.addFriendRequest.setVisibility(View.INVISIBLE);
+                binding.removeFriendRequest.setVisibility(View.VISIBLE);
+            } else {
+                binding.addFriendRequest.setVisibility(View.VISIBLE);
+                binding.removeFriendRequest.setVisibility(View.INVISIBLE);
+            }
+        }
     }
 
 }
