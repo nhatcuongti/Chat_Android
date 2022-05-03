@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -187,7 +186,7 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
                         startService(intentSoundService);
                         break;
                     case ANSWERED:
-                        start(state);
+//                        start(state);
                         stopService(intentSoundService);
                         Log.d("call", "call: " + "anser");
                         break;
@@ -198,7 +197,7 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
                         finish();
                         break;
                     case ENDED:
-                        stop(state);
+//                        stop(state);
                         Log.d("call", "call: " + "ended");
                         finish();
                         break;
@@ -262,22 +261,22 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
         return df.format(d);
     }
 
-    public void start(View v) {
-        startTime = SystemClock.uptimeMillis();
-        customHandler.postDelayed(updateTimerThread, 0);
-    }
+//    public void start(View v) {
+//        startTime = SystemClock.uptimeMillis();
+//        customHandler.postDelayed(updateTimerThread, 0);
+//    }
 
-    public void stop(View v) {
-        customHandler.removeCallbacks(updateTimerThread);
-    }
+//    public void stop(View v) {
+//        customHandler.removeCallbacks(updateTimerThread);
+//    }
 
-    private Runnable updateTimerThread = new Runnable() {
-        public void run() {
-            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
-            state.setText(getDateFromMillis(timeInMilliseconds));
-            customHandler.postDelayed(this, 1000);
-        }
-    };
+//    private Runnable updateTimerThread = new Runnable() {
+//        public void run() {
+//            timeInMilliseconds = SystemClock.uptimeMillis() - startTime;
+//            state.setText(getDateFromMillis(timeInMilliseconds));
+//            customHandler.postDelayed(this, 1000);
+//        }
+//    };
 
     @Override
     protected void onDestroy() {

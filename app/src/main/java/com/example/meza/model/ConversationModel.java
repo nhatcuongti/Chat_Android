@@ -36,6 +36,9 @@ public class ConversationModel {
     private ArrayList<ConversationModel.Message> message_list;
     private String creator;
     HashMap<String, Bitmap> user_image;
+    HashMap<String, String> receiverToken;
+
+
 
     // ---- new data was added by nhat---
     private String tittle;
@@ -146,6 +149,7 @@ public class ConversationModel {
         participantListArray = new ArrayList<>(participant_list.keySet());
 
         user_image = new HashMap<>();
+        receiverToken = new HashMap<>();
         for (String user : getParticipantListArray()) {
             User.listenForUserList(user, new OnGetValueListener() {
                 @Override
@@ -153,9 +157,12 @@ public class ConversationModel {
                     for (DataSnapshot ds : snapshot.getChildren()){
                         String imageDecode = ds.child("image").getValue(String.class);
                         String idUser = ds.getKey();
+                        String token = ds.child("token").getValue(String.class); // lay token de push notification (Hieu)
                         if (participant_list.get(idUser) != null){
-                            if (imageDecode != null)
+                            if (imageDecode != null) {
                                 user_image.put(idUser, Utils.decodeImage(imageDecode));
+                                receiverToken.put(idUser, token);
+                            }
                             else {
                                 Bitmap bitmapTmp = BitmapFactory.decodeResource(context.getResources(), R.drawable.default_user_image);
                                 user_image.put(idUser, bitmapTmp);
@@ -177,6 +184,10 @@ public class ConversationModel {
 
     public HashMap<String, Bitmap> getUser_image() {
         return user_image;
+    }
+
+    public HashMap<String, String> getReceiverToken() {
+        return receiverToken;
     }
 
     public void setUser_image(HashMap<String, Bitmap> user_image) {
