@@ -22,14 +22,12 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
-import com.example.meza.VideoCallScreen;
 import com.example.meza.adapters.ConversationAdapter;
 import com.example.meza.databinding.ActivityChatBinding;
 import com.example.meza.databinding.BottombarChatBinding;
@@ -44,10 +42,6 @@ import com.example.meza.network.ApiService;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -91,9 +85,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     BottombarChatBinding bottombarChatBinding;
 
     HashMap<String, Bitmap> user_image;
-    private DatabaseReference mDatabase;
+    HashMap<String, String> receiverToken; // token device receiver (Hieu)
 
     String receiverID = "";
+    String tokenReceiver = "";
     String token = "";
     String urlStr = "";
     String urlBase = "https://mezatoken.herokuapp.com";
@@ -146,6 +141,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         CircleImageView userActive = findViewById(R.id.userActive);
 
         user_image = conversation.getUser_image();
+        receiverToken = conversation.getReceiverToken();
+
         for (String userID : conversation.getParticipantListArray()) {
             if (!userID.equals(currentUser.getId())) {
                 receiverID = userID;
@@ -556,10 +553,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.videoCallBtn:{ // Nếu người dùng bấm nút video call
-                Intent intent = new Intent(ChatActivity.this, VideoCallScreen.class);
-                myBundle.putString("channelName", channelName);
-                intent.putExtras(myBundle);
-                startActivity(intent);
+                if(conversation.getParticipant_list().size() == 2){
+                    Intent intent = new Intent(ChatActivity.this, VideoCallingActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("calleeId", calleeId);
+                    bundle.putString("calleeName", calleeName);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    calleeImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    bundle.putByteArray("calleeImage", byteArray);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
                 break;
             }
 
@@ -572,6 +577,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 //********************************************************************************//
                                         //Khởi tạo Message mà người dùng vừa gửi//
                 String text = chatBox.getText().toString();
+                String tempToken =  receiverToken.get(calleeId.substring(1));
+                Log.d("receiverToken", "onClick: " + tempToken + calleeId.substring(1));
+
+                FCMSend.pushNotification(
+                        ChatActivity.this,
+                        tempToken,
+                        currentUser.getFullname(),
+                        text);
+
                 ConversationModel.Message msg = new ConversationModel.Message();
                 msg.setTimestamp(System.currentTimeMillis());
                 msg.setSender(currentUser.getId());
@@ -581,23 +595,26 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                 //*********************************Gửi thông báo cho ReceiverUser*****************//
                 //Lấy dữ liệu trước
-                mDatabase = FirebaseDatabase.getInstance().getReference();
                 //Lấy token
-                String token = "";
-                mDatabase.child(Constants.KEY_COLLECTION_USERS).child(receiverID)
-                        .addValueEventListener(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                receiver = snapshot.getValue(User.class);
-
-                            }
-
-                            @Override
-                            public void onCancelled(@NonNull DatabaseError error) {
-
-                            }
-                        });
-
+//                DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+//
+//                mDatabase.child(Constants.KEY_COLLECTION_USERS).child(receiverID).child("fullname").addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(DataSnapshot dataSnapshot) {
+//
+//                        tokenReceiver = dataSnapshot.getValue(String.class);
+//
+//
+//                        }
+//
+//
+//                    @Override
+//                    public void onCancelled(DatabaseError error) {
+//                        // Failed to read value
+//                    }
+//                });
+//
+//                Log.d("eeeee", "eeeee" + tokenReceiver);
 
 
 
@@ -622,26 +639,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 conversation.setLast_time(msg.getTimestamp());
                 ConversationModel.updateConversation(idConversation, conversation.toMap());
 
-                try {
 
-                    JSONArray tokens = new JSONArray();
-                    tokens.put(currentUser.getToken());
-
-                    JSONObject data = new JSONObject();
-                    data.put(Constants.KEY_USER_ID, receiver.getId());
-                    data.put(Constants.KEY_FULL_NAME, receiver.getFullname());
-                    data.put("token", receiver.getToken());
-                    data.put("text", text);
-
-                    JSONObject body = new JSONObject();
-                    body.put(Constants.REMOTE_MSG_DATA, data);
-                    body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
-                    Log.d("body", body.toString());
-                    sendNotification(body.toString());
-
-                }catch (Exception e){
-
-                }
 
 
                 break;

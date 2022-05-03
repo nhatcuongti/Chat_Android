@@ -56,7 +56,11 @@ public class HomePageActivity extends FragmentActivity {
     ChatsFragment chatsFragment;
     ActivePeopleFragment activePeopleFragment;
 
+<<<<<<< HEAD
     String[] permissions = {Manifest.permission.RECORD_AUDIO};
+=======
+    String [] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
+>>>>>>> master
     Boolean permissionToRecordAccepted = false;
 
     ArrayList<User> listActiveUser;
@@ -305,6 +309,7 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
                 Log.d("clientCon", "onIncomingCallCount: " + Utils.countInCommingCallAtMoment);
+<<<<<<< HEAD
 
                 Utils.countInCommingCallAtMoment++;
                 if (Utils.countInCommingCallAtMoment <= 1) {
@@ -313,12 +318,32 @@ public class HomePageActivity extends FragmentActivity {
                     Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("callerId", stringeeCall.getFrom());
+=======
+                CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
+                Bundle bundle = new Bundle();
+                bundle.putString("callerId", stringeeCall.getFrom());
+                bundle.putString("call_id", stringeeCall.getCallId());
+                if(stringeeCall.isVideoCall()) {
+                    Intent intent1 = new Intent(HomePageActivity.this, IncommingVideoCallActivity2.class);
+>>>>>>> master
 //                    bundle.putString("callerImage", caller.getImage());
-                    bundle.putString("call_id", stringeeCall.getCallId());
-                    intent.putExtras(bundle);
-                    Log.d("clientCon", "onIncomingCall: ");
-                    startActivity(intent);
+                    intent1.putExtras(bundle);
+                    startActivity(intent1);
                 }
+                else{
+                    Utils.countInCommingCallAtMoment++;
+                    if(Utils.countInCommingCallAtMoment <= 1) {
+//                    User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
+                        CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
+                        Intent intent2 = new Intent(HomePageActivity.this, IncommingCallActivity.class);
+
+//                    bundle.putString("callerImage", caller.getImage());
+                        intent2.putExtras(bundle);
+                        Log.d("clientCon", "onIncomingCall: ");
+                        startActivity(intent2);
+                    }
+                }
+
             }
 
             @Override

@@ -17,9 +17,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/img"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/img"
         android:supportsRtl="true"
         android:theme="@style/Theme.MeZa">
         <service
@@ -30,7 +30,12 @@
             android:name=".services.SoundService2"
             android:enabled="true"
             android:exported="true"/>
-
+        <service android:name=".activities.PushNotificationService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
         <activity
             android:name=".activities.UsersActivity"
             android:exported="false" />
@@ -66,7 +71,16 @@
             android:name=".activities.SettingActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.VideoCallingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.IncommingCallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.IncommingVideoCallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.IncommingVideoCallActivity2"
             android:exported="false" />
         <activity
             android:name=".activities.SignInActivity"
