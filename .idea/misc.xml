@@ -26,7 +26,7 @@
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_active_people.xml" value="0.33" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_active_people2.xml" value="0.2" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_chats.xml" value="0.31722054380664655" />
-        <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_in_comming_call2.xml" value="0.1" />
+        <entry key="..\:/Chat_Android/app/src/main/res/layout/fragment_in_comming_call2.xml" value="0.3651452282157676" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_active_thumnail_horizontal.xml" value="0.33" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_message_in_chats__vertical.xml" value="0.5" />
         <entry key="..\:/Chat_Android/app/src/main/res/layout/item_nameconversation_in_chats__vertical.xml" value="0.3621495327102804" />
@@ -127,7 +127,11 @@
     </option>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
+<<<<<<< HEAD
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_X" project-jdk-name="11" project-jdk-type="JavaSDK">
+=======
   <component name="ProjectRootManager" version="2" languageLevel="JDK_16_PREVIEW" project-jdk-name="11" project-jdk-type="JavaSDK">
+>>>>>>> 98e22dcb33bbc3ab01ed1a940f5d58cc4016a2af
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

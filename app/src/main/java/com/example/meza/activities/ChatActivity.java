@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.Layout;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -21,7 +20,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -37,10 +38,17 @@ import com.example.meza.interfaces.OnGetValueListener;
 import com.example.meza.interfaces.PaginationScrollListener;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
+import com.example.meza.network.ApiClient;
+import com.example.meza.network.ApiService;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -57,6 +65,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class ChatActivity extends AppCompatActivity implements View.OnClickListener,
@@ -79,8 +90,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     BottombarChatBinding bottombarChatBinding;
 
     HashMap<String, Bitmap> user_image;
+    private DatabaseReference mDatabase;
 
-
+    String receiverID = "";
     String token = "";
     String urlStr = "";
     String urlBase = "https://mezatoken.herokuapp.com";
@@ -88,6 +100,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     String curUserID;
     Bundle myBundle;
 
+    User receiver;
     String calleeId; // nguoi duoc goi
     String calleeName;
     Bitmap calleeImage;
@@ -107,7 +120,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
         curUserID = User.getCurrentUser(getApplicationContext()).getPhone_number();
         urlStr = urlBase + "/rtc/" + "meza" + channelName + "/publisher/uid/"  + channelName  + "/";
-        Log.d("channel name", channelName);
+
         Log.d("url", urlStr);
         new fetchData(token, urlStr).start();
 
@@ -134,6 +147,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         user_image = conversation.getUser_image();
         for (String userID : conversation.getParticipantListArray()) {
             if (!userID.equals(currentUser.getId())) {
+                receiverID = userID;
                 userImage.setImageBitmap(user_image.get(userID));
                 if(conversation.getParticipant_list().size() == 2){
                     calleeId = "m" + userID;
@@ -572,6 +586,26 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 msg.setTypeMessage(Constants.KEY_TEXT);
                 //*********************************End********************************************//
 
+                //*********************************Gửi thông báo cho ReceiverUser*****************//
+                //Lấy dữ liệu trước
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                //Lấy token
+                String token = "";
+                mDatabase.child(Constants.KEY_COLLECTION_USERS).child(receiverID)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                receiver = snapshot.getValue(User.class);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
 
 
                 //********************************************************************************//
@@ -582,7 +616,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 
                     ArrayList<ConversationModel.Message> list_msg = conversation.getListMessage();
                     String id = (list_msg == null || list_msg.isEmpty()) ? "0" : list_msg.get(list_msg.size() - 1).getId() ;
-                    Log.d("test", "onSuccess: " + id);
+
                     id = String.valueOf(Integer.valueOf(id) + 1);
                     //*********************************End************************************//
 
@@ -594,6 +628,29 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 conversation.setLast_message(msg.getText());
                 conversation.setLast_time(msg.getTimestamp());
                 ConversationModel.updateConversation(idConversation, conversation.toMap());
+
+                try {
+
+                    JSONArray tokens = new JSONArray();
+                    tokens.put(currentUser.getToken());
+
+                    JSONObject data = new JSONObject();
+                    data.put(Constants.KEY_USER_ID, receiver.getId());
+                    data.put(Constants.KEY_FULL_NAME, receiver.getFullname());
+                    data.put("token", receiver.getToken());
+                    data.put("text", text);
+
+                    JSONObject body = new JSONObject();
+                    body.put(Constants.REMOTE_MSG_DATA, data);
+                    body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
+                    Log.d("body", body.toString());
+                    sendNotification(body.toString());
+
+                }catch (Exception e){
+
+                }
+
+
                 break;
                 //*********************************End********************************************//
 
@@ -723,7 +780,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onPause() {
         super.onPause();
-        Log.d("FlowTask", "onPause: " + isStoppedByImage);
 
 
     }
@@ -765,6 +821,42 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 e.printStackTrace();
             }
         }
+    }
+
+    private void sendNotification(String messageBody){
+        ApiClient.getClient().create(ApiService.class).sendMessage(
+                Constants.getRemoteMsgHeaders(),
+                messageBody
+        ).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if(response.isSuccessful()){
+                    try {
+                        if(response.body() != null){
+                            JSONObject responseJson = new JSONObject(response.body());
+                            JSONArray result = responseJson.getJSONArray("results");
+                            if(responseJson.getInt("failure") == 1){
+                                JSONObject error = (JSONObject) result.get(0);
+                                Log.d("Notification", error.getString("error"));
+
+                                return;
+                            }
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    Log.d("Notification", "addad");
+                    Toast.makeText(ChatActivity.this, "Notification sent successfully", Toast.LENGTH_SHORT).show();
+                }else {
+                    Log.d("Notification", "error" + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
     }
 
 }

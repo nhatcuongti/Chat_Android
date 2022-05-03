@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.meza.R;
 import com.example.meza.fragment.InCommingCall1Fragment;
 import com.example.meza.fragment.InCommingCall2Fragment;
+import com.example.meza.model.User;
 import com.example.meza.services.SoundService2;
 import com.example.meza.utils.Utils;
 import com.stringee.call.StringeeCall;
@@ -45,29 +46,33 @@ public class IncommingCallActivity extends FragmentActivity {
     Handler customHandler = new Handler();
     Intent intentSoundService;
 
-    Boolean isMute = true;
-    Boolean isInternalSpeaker = true;
+    Boolean isMute = false, isExternalSpeaker = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_incoming_call);
 
+
         state = findViewById(R.id.state_call_incomming_call);
         callerName = findViewById(R.id.caller_name_in_comming);
         avatar = findViewById(R.id.caller_image_in_comming);
 
 
+
         //tao intent startservice
         intentSoundService = new Intent(IncommingCallActivity.this, SoundService2.class);
-        startService(intentSoundService);
 
         // lay du lieu tu intent
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         String callID = bundle.getString("call_id");
-        String name = bundle.getString("callerName");
-        String ava = bundle.getString("callerImage");
+        String callerId = bundle.getString("callerId");
+
+        User caller = HomePageActivity.listObjectUserFriend.get(findFriendById(callerId));
+        String name = caller.fullname;
+        String ava = caller.image;
+
 
         callerName.setText(name);
         avatar.setImageBitmap(Utils.decodeImage(ava));
@@ -88,20 +93,21 @@ public class IncommingCallActivity extends FragmentActivity {
         stringeeCall.ringing(new StatusListener() {
             @Override
             public void onSuccess() {
-                Log.d("call", "call: " + "onSuccess ");
-
+                Log.d("call123", "call: " + "onSuccess ");
+                audioManager.setSpeakerphoneOn(true);
+                startService(intentSoundService);
             }
 
             @Override
             public void onError(StringeeError stringeeError) {
                 super.onError(stringeeError);
-                Log.d("call", "call: " + "onError ");
+                Log.d("call123", "call: " + "onError ");
             }
 
             @Override
             public void onProgress(int i) {
                 super.onProgress(i);
-                Log.d("call", "call: " + "onProgress ");
+                Log.d("call123", "call: " + "onProgress ");
             }
         });
         stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
@@ -109,32 +115,35 @@ public class IncommingCallActivity extends FragmentActivity {
             public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
                 switch (signalingState) {
                     case CALLING:
-                        Log.d("call", "call: " + "calling ");
+                        Log.d("call123", "call: " + "calling ");
                         break;
                     case RINGING:
 //                        state.setText("Đang đổ chuông");
+                        Log.d("call123", "call: " + "ringing");
+
                         break;
                     case ANSWERED:
                         stopService(intentSoundService);
+                        audioManager.setSpeakerphoneOn(false);
                         start(state);
-                        Log.d("call", "call: " + "anser");
+                        Log.d("call123", "call: " + "anser");
                         break;
                     case BUSY:
-                        Log.d("call", "call: " + "busy");
+                        Log.d("call123", "call: " + "busy");
                         audioManager.stop();
                         finish();
                         break;
                     case ENDED:
                         stop(state);
                         finish();
-                        Log.d("call", "call: " + "ended");
+                        Log.d("call123", "call: " + "ended");
                         break;
                 }
             }
 
             @Override
             public void onError(StringeeCall stringeeCall, int i, String s) {
-                Log.d("call", "call: " + "onError");
+                Log.d("call123", "call: " + "onError");
 
             }
 
@@ -145,7 +154,7 @@ public class IncommingCallActivity extends FragmentActivity {
 
             @Override
             public void onMediaStateChange(StringeeCall stringeeCall, StringeeCall.MediaState mediaState) {
-                Log.d("call", "call: " + "onMediaStateChange" + mediaState.toString());
+                Log.d("call123", "call: " + "onMediaStateChange" + mediaState.toString());
                 switch (mediaState.toString()){
                     case "DISCONNECTED":
                         finish();
@@ -155,12 +164,12 @@ public class IncommingCallActivity extends FragmentActivity {
 
             @Override
             public void onLocalStream(StringeeCall stringeeCall) {
-                Log.d("call", "call: " + "onLocalStream");
+                Log.d("call123", "call: " + "onLocalStream");
             }
 
             @Override
             public void onRemoteStream(StringeeCall stringeeCall) {
-                Log.d("call", "call: " + "onRemoteStream");
+                Log.d("call123", "call: " + "onRemoteStream");
 
             }
 
@@ -230,6 +239,18 @@ public class IncommingCallActivity extends FragmentActivity {
                     isMute = true;
                 }
                 break;
+            case "speaker":
+                if(isExternalSpeaker){
+                    isExternalSpeaker = false;
+                    audioManager.setSpeakerphoneOn(false);
+                    //set anh
+                }
+                else{
+                    isExternalSpeaker = true;
+                    audioManager.setSpeakerphoneOn(true);
+                    //set anh
+                }
+                break;
             default: break;
         }
     }
@@ -268,4 +289,15 @@ public class IncommingCallActivity extends FragmentActivity {
             customHandler.postDelayed(this, 1000);
         }
     };
+    int findFriendById(String userID){
+        String user = userID.substring(1);
+        int i = 0;
+        for(User u : HomePageActivity.listObjectUserFriend){
+            if(u.getPhone_number().equals(user)){
+                return i;
+            }
+            i++;
+        }
+        return -1;
+    }
 }

@@ -14,7 +14,7 @@
 
         android:onClick="onLocalAudioMuteClicked"
         android:scaleType="centerInside"
-        android:src="@drawable/btn_mute" />
+        android:src="@drawable/btn_mute"/>
 
     <ImageView
         android:id="@+id/hangon_Btn_in_frag_2"

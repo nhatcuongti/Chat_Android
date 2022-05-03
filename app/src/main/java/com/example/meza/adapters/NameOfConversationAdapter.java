@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
 import com.example.meza.activities.ChatActivity;
-import com.example.meza.activities.HomePageActivity;
 import com.example.meza.model.ConversationModel;
 import com.example.meza.model.User;
 import com.example.meza.utils.Utils;
@@ -104,7 +103,6 @@ public class NameOfConversationAdapter extends RecyclerView.Adapter<NameOfConver
         TextView name, lastMessage;
         LinearLayout layout;
 
-        private HomePageActivity.ItemClickListener itemClickListener;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class User implements Serializable {
-    public String fullname, image, phone_number, password, id;
+    public String fullname, image, phone_number, password, id, token;
     private ArrayList<String> list_friend;
     private boolean isActive; // ???
 
@@ -88,6 +88,14 @@ public class User implements Serializable {
 
     public void setActive(boolean active) {
         isActive = active;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     @Override
