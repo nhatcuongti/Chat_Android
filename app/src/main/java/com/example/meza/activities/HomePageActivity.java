@@ -306,22 +306,27 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
                 Log.d("clientCon", "onIncomingCallCount: " + Utils.countInCommingCallAtMoment);
+                CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
+                Bundle bundle = new Bundle();
+                bundle.putString("callerId", stringeeCall.getFrom());
+                bundle.putString("call_id", stringeeCall.getCallId());
                 if(stringeeCall.isVideoCall()) {
-                    Log.d("clientCon", "onIncomingCall: video call");
+                    Intent intent1 = new Intent(HomePageActivity.this, IncommingVideoCallActivity2.class);
+//                    bundle.putString("callerImage", caller.getImage());
+                    intent1.putExtras(bundle);
+                    startActivity(intent1);
                 }
                 else{
                     Utils.countInCommingCallAtMoment++;
                     if(Utils.countInCommingCallAtMoment <= 1) {
 //                    User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
                         CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
-                        Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
-                        Bundle bundle = new Bundle();
-                        bundle.putString("callerId", stringeeCall.getFrom());
+                        Intent intent2 = new Intent(HomePageActivity.this, IncommingCallActivity.class);
+
 //                    bundle.putString("callerImage", caller.getImage());
-                        bundle.putString("call_id", stringeeCall.getCallId());
-                        intent.putExtras(bundle);
+                        intent2.putExtras(bundle);
                         Log.d("clientCon", "onIncomingCall: ");
-                        startActivity(intent);
+                        startActivity(intent2);
                     }
                 }
 

@@ -3,13 +3,16 @@ package com.example.meza.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import androidx.fragment.app.FragmentActivity;
 
 import com.example.meza.R;
 import com.stringee.call.StringeeCall;
 import com.stringee.common.StringeeAudioManager;
+import com.stringee.listener.StatusListener;
 
 import org.json.JSONObject;
 
@@ -25,6 +28,8 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
     FrameLayout mLocalViewContainer;
     FrameLayout mRemoteViewContainer;
 
+    ImageView speaker;
+
     Boolean isMute = false, isExternalSpeaker = true;
 
     @Override
@@ -37,7 +42,8 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
 
         // lay du lieu tu intent
         Intent intent = getIntent();
-        String callID = intent.getStringExtra("call_id");
+        Bundle bundle = intent.getExtras();
+        String callID = bundle.getString("call_id");
 
 
         stringeeCall = (StringeeCall) CallsMap.getData(callID);
@@ -53,7 +59,6 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
 
         audioManager.setSpeakerphoneOn(true);
 
-
         stringeeCall.setCallListener(new StringeeCall.StringeeCallListener() {
             @Override
             public void onSignalingStateChange(StringeeCall stringeeCall, StringeeCall.SignalingState signalingState, String s, int i, String s1) {
@@ -68,6 +73,17 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
                         break;
                     case ANSWERED:
                         Log.d("call123", "call: " + "anser");
+
+//                        runOnUiThread(new Runnable() {
+//                            @Override
+//                            public void run() {
+//                                if (stringeeCall.isVideoCall()) {
+//                                    mLocalViewContainer.removeAllViews();
+//                                    mLocalViewContainer.addView(stringeeCall.getLocalView());
+//                                    stringeeCall.renderLocalView(true);
+//                                }
+//                            }
+//                        });
                         break;
                     case BUSY:
                         Log.d("call123", "call: " + "busy");
@@ -94,7 +110,7 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
 
             @Override
             public void onMediaStateChange(StringeeCall stringeeCall, StringeeCall.MediaState mediaState) {
-                Log.d("call123", "call: " + "onMediaStateChange" + mediaState.toString());
+//                Log.d("call123", "call: " + "onMediaStateChange" + mediaState.toString());
                 switch (mediaState.toString()){
                     case "DISCONNECTED":
                         finish();
@@ -109,6 +125,7 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
                     @Override
                     public void run() {
                         if (stringeeCall.isVideoCall()) {
+                            mLocalViewContainer.removeAllViews();
                             mLocalViewContainer.addView(stringeeCall.getLocalView());
                             stringeeCall.renderLocalView(true);
                         }
@@ -124,11 +141,13 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
                     @Override
                     public void run() {
                         if (stringeeCall.isVideoCall()) {
+                            mRemoteViewContainer.removeAllViews();
                             mRemoteViewContainer.addView(stringeeCall.getRemoteView());
-                            stringeeCall.renderRemoteView(false);
+                            stringeeCall.renderRemoteView(true);
                         }
                     }
                 });
+
             }
 
             @Override
@@ -137,8 +156,21 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
             }
         });
 
-        stringeeCall.answer();
+        stringeeCall.ringing(new StatusListener() {
+            @Override
+            public void onSuccess() {
 
+            }
+        });
+
+
+        speaker = findViewById(R.id.speaker_video_outgoing_btn);
+        speaker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                stringeeCall.answer();
+            }
+        });
 
     }
 

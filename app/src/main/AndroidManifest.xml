@@ -77,6 +77,12 @@
             android:name=".activities.IncommingCallActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.IncommingVideoCallActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.IncommingVideoCallActivity2"
+            android:exported="false" />
+        <activity
             android:name=".activities.SignInActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustResize">

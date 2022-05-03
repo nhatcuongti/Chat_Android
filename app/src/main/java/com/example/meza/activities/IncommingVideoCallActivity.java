@@ -16,8 +16,6 @@ import com.example.meza.utils.Utils;
 import com.stringee.call.StringeeCall;
 import com.stringee.common.StringeeAudioManager;
 
-import java.util.Set;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -26,6 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class IncommingVideoCallActivity extends FragmentActivity implements View.OnClickListener {
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
+    String callID;
 
     TextView state, callerName;
     CircleImageView avatar;
@@ -40,10 +39,12 @@ public class IncommingVideoCallActivity extends FragmentActivity implements View
 
 
         state = findViewById(R.id.state_call_in_comming_video_call);
-        callerName = findViewById(R.id.callee_image_in_comming_video_call);
+        callerName = findViewById(R.id.callee_name_in_comming_video_call);
         avatar = findViewById(R.id.callee_image_in_comming_video_call);
         accept = findViewById(R.id.accept_incomming_video_call_btn);
         decline = findViewById(R.id.decline_incomming_video_call_btn);
+        accept.setOnClickListener(this);
+        decline.setOnClickListener(this);
 
 
         //tao intent startservice
@@ -52,7 +53,7 @@ public class IncommingVideoCallActivity extends FragmentActivity implements View
         // lay du lieu tu intent
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        String callID = bundle.getString("call_id");
+        callID = bundle.getString("call_id");
         String callerId = bundle.getString("callerId");
 
         User caller = HomePageActivity.listObjectUserFriend.get(findFriendById(callerId));
@@ -65,15 +66,6 @@ public class IncommingVideoCallActivity extends FragmentActivity implements View
 
 
         stringeeCall = (StringeeCall) CallsMap.getData(callID);
-        audioManager = StringeeAudioManager.create(this);
-        audioManager.start(new StringeeAudioManager.AudioManagerEvents() {
-            @Override
-            public void onAudioDeviceChanged(StringeeAudioManager.AudioDevice audioDevice, Set<StringeeAudioManager.AudioDevice> set) {
-
-            }
-        });
-        audioManager.setSpeakerphoneOn(true);
-
 
     }
 
@@ -85,7 +77,7 @@ public class IncommingVideoCallActivity extends FragmentActivity implements View
         super.onDestroy();
         Log.d("call", "call: " + "onDetroy");
 //        Utils.countInCommingCallAtMoment = 0;
-        audioManager.stop();
+//        audioManager.stop();
         stopService(intentSoundService);
 
     }
@@ -109,8 +101,10 @@ public class IncommingVideoCallActivity extends FragmentActivity implements View
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.accept_incomming_video_call_btn:
-
-//              truyen activity
+                Intent intent = new Intent(IncommingVideoCallActivity.this, IncommingVideoCallActivity2.class);
+                intent.putExtra("call_id", callID);
+                startActivity(intent);
+//                finish();
                 break;
             case R.id.decline_incomming_video_call_btn:
                 stringeeCall.hangup();
