@@ -53,7 +53,7 @@ public class HomePageActivity extends FragmentActivity {
     ChatsFragment chatsFragment;
     ActivePeopleFragment activePeopleFragment;
 
-    String [] permissions = {Manifest.permission.RECORD_AUDIO};
+    String [] permissions = {Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA};
     Boolean permissionToRecordAccepted = false;
 
     ArrayList<User> listActiveUser;
@@ -305,30 +305,9 @@ public class HomePageActivity extends FragmentActivity {
             }
             @Override
             public void onIncomingCall(final StringeeCall stringeeCall) {
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-                Log.d("clientCon", "onIncomingCall: ");
-                User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
-=======
-                Log.d("clientCon", "onIncomingCallCount: " + Utils.countInCommingCallAtMoment);
->>>>>>> main
-
-                Utils.countInCommingCallAtMoment++;
-                if(Utils.countInCommingCallAtMoment <= 1) {
-//                    User caller = listObjectUserFriend.get(findFriendById(stringeeCall.getFrom()));
-                    CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
-                    Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
-                    Bundle bundle = new Bundle();
-                    bundle.putString("callerId", stringeeCall.getFrom());
-//                    bundle.putString("callerImage", caller.getImage());
-                    bundle.putString("call_id", stringeeCall.getCallId());
-                    intent.putExtras(bundle);
-                    Log.d("clientCon", "onIncomingCall: ");
-                    startActivity(intent);
-=======
                 Log.d("clientCon", "onIncomingCallCount: " + Utils.countInCommingCallAtMoment);
                 if(stringeeCall.isVideoCall()) {
-
+                    Log.d("clientCon", "onIncomingCall: video call");
                 }
                 else{
                     Utils.countInCommingCallAtMoment++;
@@ -344,7 +323,6 @@ public class HomePageActivity extends FragmentActivity {
                         Log.d("clientCon", "onIncomingCall: ");
                         startActivity(intent);
                     }
->>>>>>> Stashed changes
                 }
 
             }

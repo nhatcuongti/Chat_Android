@@ -120,14 +120,7 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.hangon_Btn:
-//                call.hangup();
-//                finish();
-//                if(stringeeCall.getState() == StringeeCall.SignalingState.RINGING){
-//                    stringeeCall.reject();
-//                    break;
-//                }
-
+            case R.id.hangon_video_Btn:
                 endCall();
                 break;
             case R.id.mute_outgoing_btn:
@@ -187,22 +180,11 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
                 switch (signalingState) {
                     case CALLING:
                         Log.d("call", "call: " + "calling " + calleeId);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                state.setText("Đang kết nối");
-                            }
-                        });
+
                         break;
                     case RINGING:
                         Log.d("call", "call: " + "ring");
                         startService(intentSoundService);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                state.setText("Đang đổ chuông");
-                            }
-                        });
                         break;
                     case ANSWERED:
                         start(state);

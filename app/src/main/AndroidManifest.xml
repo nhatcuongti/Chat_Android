@@ -66,6 +66,9 @@
             android:name=".activities.SettingActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.VideoCallingActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.IncommingCallActivity"
             android:exported="false" />
         <activity
