@@ -48,7 +48,7 @@ public class InCommingCall2Fragment extends Fragment {
                 }
                 else {
                     isMute = true;
-                    mute.setImageResource((R.drawable.btn_mute_enable);
+                    mute.setImageResource(R.drawable.btn_mute_enable);
                 }
             }
         });

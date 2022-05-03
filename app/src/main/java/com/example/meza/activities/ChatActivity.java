@@ -20,7 +20,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +44,10 @@ import com.example.meza.network.ApiService;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utils.Utils;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,8 +91,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     BottombarChatBinding bottombarChatBinding;
 
     HashMap<String, Bitmap> user_image;
+    private DatabaseReference mDatabase;
 
-
+    String receiverID = "";
     String token = "";
     String urlStr = "";
     String urlBase = "https://mezatoken.herokuapp.com";
@@ -94,6 +101,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     String curUserID;
     Bundle myBundle;
 
+    User receiver;
     String calleeId; // nguoi duoc goi
     String calleeName;
     Bitmap calleeImage;
@@ -140,6 +148,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         user_image = conversation.getUser_image();
         for (String userID : conversation.getParticipantListArray()) {
             if (!userID.equals(currentUser.getId())) {
+                receiverID = userID;
                 userImage.setImageBitmap(user_image.get(userID));
                 if(conversation.getParticipant_list().size() == 2){
                     calleeId = "m" + userID;
@@ -570,6 +579,26 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 msg.setTypeMessage(Constants.KEY_TEXT);
                 //*********************************End********************************************//
 
+                //*********************************Gửi thông báo cho ReceiverUser*****************//
+                //Lấy dữ liệu trước
+                mDatabase = FirebaseDatabase.getInstance().getReference();
+                //Lấy token
+                String token = "";
+                mDatabase.child(Constants.KEY_COLLECTION_USERS).child(receiverID)
+                        .addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                receiver = snapshot.getValue(User.class);
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
+                            }
+                        });
+
+
 
 
                 //********************************************************************************//
@@ -592,6 +621,29 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 conversation.setLast_message(msg.getText());
                 conversation.setLast_time(msg.getTimestamp());
                 ConversationModel.updateConversation(idConversation, conversation.toMap());
+
+                try {
+
+                    JSONArray tokens = new JSONArray();
+                    tokens.put(currentUser.getToken());
+
+                    JSONObject data = new JSONObject();
+                    data.put(Constants.KEY_USER_ID, receiver.getId());
+                    data.put(Constants.KEY_FULL_NAME, receiver.getFullname());
+                    data.put("token", receiver.getToken());
+                    data.put("text", text);
+
+                    JSONObject body = new JSONObject();
+                    body.put(Constants.REMOTE_MSG_DATA, data);
+                    body.put(Constants.REMOTE_MSG_REGISTRATION_IDS, tokens);
+                    Log.d("body", body.toString());
+                    sendNotification(body.toString());
+
+                }catch (Exception e){
+
+                }
+
+
                 break;
                 //*********************************End********************************************//
 
@@ -786,6 +838,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
+                    Log.d("Notification", "addad");
+                    Toast.makeText(ChatActivity.this, "Notification sent successfully", Toast.LENGTH_SHORT).show();
                 }else {
                     Log.d("Notification", "error" + response.code());
                 }
