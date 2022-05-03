@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.meza.R;
-import com.example.meza.VideoCallScreen;
 import com.example.meza.adapters.ConversationAdapter;
 import com.example.meza.databinding.ActivityChatBinding;
 import com.example.meza.databinding.BottombarChatBinding;
@@ -542,10 +541,18 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             }
 
             case R.id.videoCallBtn:{ // Nếu người dùng bấm nút video call
-                Intent intent = new Intent(ChatActivity.this, VideoCallScreen.class);
-                myBundle.putString("channelName", channelName);
-                intent.putExtras(myBundle);
-                startActivity(intent);
+                if(conversation.getParticipant_list().size() == 2){
+                    Intent intent = new Intent(ChatActivity.this, VideoCallingActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("calleeId", calleeId);
+                    bundle.putString("calleeName", calleeName);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    calleeImage.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                    byte[] byteArray = stream.toByteArray();
+                    bundle.putByteArray("calleeImage", byteArray);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                }
                 break;
             }
 
