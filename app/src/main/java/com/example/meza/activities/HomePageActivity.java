@@ -313,10 +313,10 @@ public class HomePageActivity extends FragmentActivity {
                     CallsMap.putData(stringeeCall.getCallId(), stringeeCall);
                     Intent intent = new Intent(HomePageActivity.this, IncommingCallActivity.class);
                     Bundle bundle = new Bundle();
-//                    bundle.putString("callerId", stringeeCall.getFrom());
+                    bundle.putString("callerId", stringeeCall.getFrom());
 //                    bundle.putString("callerImage", caller.getImage());
-                    intent.putExtra("call_id", stringeeCall.getCallId());
-//                    intent.putExtras(bundle);
+                    bundle.putString("call_id", stringeeCall.getCallId());
+                    intent.putExtras(bundle);
                     Log.d("clientCon", "onIncomingCall: ");
                     startActivity(intent);
                 }

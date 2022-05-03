@@ -47,7 +47,7 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
     String calleeName;
     Bitmap calleeImage;
 
-    boolean isMute = false;
+    boolean isMute = false, isExternalSpeaker = false;
 
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
@@ -76,13 +76,18 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
         byte[] byteArray = bundle.getByteArray("calleeImage");
         calleeImage = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
 
+        //
         endBtn = findViewById(R.id.hangon_Btn);
-        endBtn.setOnClickListener(this);
-
         state = findViewById(R.id.state_call);
         avatar = findViewById(R.id.callee_image_out_going);
         name = findViewById(R.id.callee_name_out_going);
         muteBtn = findViewById(R.id.mute_outgoing_btn);
+        speakerBtn = findViewById(R.id.speaker_outgoing_btn);
+
+        //
+        muteBtn.setOnClickListener(this);
+        endBtn.setOnClickListener(this);
+        speakerBtn.setOnClickListener(this);
 
         avatar.setImageBitmap(calleeImage);
         name.setText(calleeName);
@@ -129,6 +134,20 @@ public class VoiceCallingActivity extends AppCompatActivity implements View.OnCl
                     isMute = true;
                     stringeeCall.mute(true);
                     muteBtn.setImageResource(R.drawable.btn_mute_enable);
+                }
+                break;
+            case R.id.speaker_outgoing_btn:
+                if(isExternalSpeaker){
+                    isExternalSpeaker = false;
+                    audioManager.setSpeakerphoneOn(false);
+                    //set anh
+                    speakerBtn.setImageResource(R.drawable.btn_speaker);
+                }
+                else{
+                    isExternalSpeaker = true;
+                    audioManager.setSpeakerphoneOn(true);
+                    //set anh
+                    speakerBtn.setImageResource(R.drawable.btn_speaker_enable);
                 }
         }
     }
