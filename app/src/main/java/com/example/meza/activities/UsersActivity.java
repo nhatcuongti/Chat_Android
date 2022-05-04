@@ -1,5 +1,6 @@
 package com.example.meza.activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.annotation.SuppressLint;
@@ -16,11 +17,15 @@ import com.example.meza.interfaces.UserListener;
 import com.example.meza.model.User;
 import com.example.meza.utilities.Constants;
 import com.example.meza.utilities.PreferenceManager;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class UsersActivity extends AppCompatActivity implements UserListener {
@@ -113,6 +118,51 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
 //        startActivity(intent);
 //        finish();
         Toast.makeText(getApplicationContext(), "Đã gửi lời mời kết bạn", Toast.LENGTH_SHORT).show();
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference(Constants.KEY_COLLECTION_USERS);
+        ref.child(preferenceManager.getString(Constants.KEY_USER_ID))
+                .child(Constants.KEY_LIST_FRIEND)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DataSnapshot ds = task.getResult();
+                        HashMap<String, Object> newUser = new HashMap<>();
+
+                        if (ds.getValue() != null) {
+                            int numberOfFriends = 0;
+                            for (DataSnapshot snapshot : ds.getChildren()) {
+                                newUser.put(String.valueOf(numberOfFriends), String.valueOf(snapshot.getValue()));
+                                numberOfFriends++;
+                            }
+                            newUser.put(String.valueOf(numberOfFriends), user.phone_number);
+                            addNewFriend(newUser);
+                        } else {
+                            newUser.put("0", user.phone_number);
+                            addNewFriend(newUser);
+                        }
+                    }
+                });
+    }
+
+    private void addNewFriend(HashMap<String, Object> list) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference(Constants.KEY_COLLECTION_USERS);
+        ref.child(preferenceManager.getString(Constants.KEY_USER_ID))
+                .child(Constants.KEY_LIST_FRIEND)
+                .setValue(list)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Write failed
+                        // ...
+                    }
+                });
     }
 
     @Override
