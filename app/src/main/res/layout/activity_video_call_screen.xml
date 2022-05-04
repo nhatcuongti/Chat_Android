@@ -51,12 +51,12 @@
 
 
             <ImageView
-                android:id="@+id/speaker_video_outgoing_btn"
+                android:id="@+id/swap_camera_video_outgoing_btn"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="20"
                 android:scaleType="centerInside"
-                android:src="@drawable/btn_speaker" />
+                android:src="@drawable/btn_swap_camera" />
 
             <ImageView
                 android:id="@+id/camera_video_outgoing_btn"
@@ -64,7 +64,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="20"
                 android:scaleType="centerInside"
-                android:src="@drawable/btn_video_disable"/>
+                android:src="@drawable/btn_enable_camera"/>
 
             <ImageView
                 android:id="@+id/hangon_video_Btn"
