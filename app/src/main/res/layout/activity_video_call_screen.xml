@@ -80,14 +80,14 @@
 
     <FrameLayout
         android:id="@+id/local_video_view_container"
-        android:layout_width="160dp"
-        android:layout_height="160dp"
+        android:layout_width="118dp"
+        android:layout_height="169dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginRight="9dp"
         android:background="@android:color/darker_gray" />
 
 </RelativeLayout>

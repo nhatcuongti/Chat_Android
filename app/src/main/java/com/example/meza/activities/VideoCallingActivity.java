@@ -240,7 +240,7 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
                     public void run() {
                         if (stringeeCall.isVideoCall()) {
                             mRemoteViewContainer.addView(stringeeCall.getRemoteView());
-                            stringeeCall.renderRemoteView(false);
+                            stringeeCall.renderRemoteView(true);
                         }
                     }
                 });
