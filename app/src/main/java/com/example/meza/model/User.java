@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class User implements Serializable {
     public String fullname, image, phone_number, password, id, token;
@@ -220,5 +221,18 @@ public class User implements Serializable {
 
             }
         });
+    }
+
+    public HashMap<String, Object> toMap(){
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("fullname", fullname);
+        map.put("image", image);
+        map.put("is_active", is_active);
+        map.put("list_friend", list_friend);
+        map.put("password", password);
+        map.put("phone_number", phone_number);
+
+
+        return map;
     }
 }

@@ -178,6 +178,11 @@ public class ConversationModel {
                 public void onChange(DataSnapshot snapshot) {
 
                 }
+
+                @Override
+                public void onRemove(Object object) {
+
+                }
             });
         }
     }
@@ -400,6 +405,7 @@ public class ConversationModel {
 
                 @Override
                 public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
                 }
 
                 @Override

@@ -4,6 +4,10 @@
         <item name="colorPrimary">@color/white</item>
         <item name="android:statusBarColor" tools:targetApi="l">@color/primary</item>
     </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorPrimary">@color/black</item>
+    </style>
 </resources><!--    Default settings-->
     <!--    &lt;!&ndash; Base application theme. &ndash;&gt;-->
     <!--    <style name="Theme.MeZa" parent="Theme.MaterialComponents.DayNight.DarkActionBar">-->

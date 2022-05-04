@@ -200,6 +200,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     public void onChange(DataSnapshot snapshot) {
 
                     }
+
+                    public void onRemove(Object object){
+                        
+                    }
                 });
                 // Set LayoutManager
                 LinearLayoutManager linearLayoutManager = new LinearLayoutManager(ChatActivity.this);
@@ -278,6 +282,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                                     @Override
                                     public void onChange(DataSnapshot snapshot) {
 
+                                    }
+
+                                    @Override
+                                    public void onRemove(Object object) {
+                                        
                                     }
                                 });
                     }
@@ -385,6 +394,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //                                conversationAdapter.notifyDataSetChanged();
                                 conversationAdapter.notifyItemChanged(lastElement);
                             }
+
+                            @Override
+                            public void onRemove(Object object) {
+                                
+                            }
                         });
 
                         ConversationModel.Message.listenChangTest(idConversation, lastID, new OnGetValueListener() {
@@ -397,12 +411,22 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                             public void onChange(DataSnapshot snapshot) {
 
                             }
+
+                            @Override
+                            public void onRemove(Object object) {
+                                
+                            }
                         });
                     }
 
                     @Override
                     public void onChange(DataSnapshot snapshot) {
 
+                    }
+
+                    @Override
+                    public void onRemove(Object object) {
+                        
                     }
                 });
 
@@ -414,6 +438,11 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onChange(DataSnapshot snapshot) {
 
+            }
+
+            @Override
+            public void onRemove(Object object) {
+                
             }
         });
         //************************************End***********************************************
@@ -779,6 +808,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         ConversationModel.Message.chatReference.removeEventListener(ConversationModel.Message.childEventListener);
+    }
+
+    public void onLongClickItem(int adapterPosition) {
     }
 
     class fetchData extends Thread  {

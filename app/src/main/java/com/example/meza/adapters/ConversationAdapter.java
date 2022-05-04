@@ -38,6 +38,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     private ArrayList<ConversationModel.Message> listMsg;
     private User currentUser;
     private Map<String, Bitmap> user_image;
+    private static Boolean isPartnerActive = false;
 
     public final int VIEW_LOADING = 2;
     public final int VIEW_SENT = 1;
@@ -263,7 +264,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
 
-    public static class ItemSendViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemSendViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         ItemSendChatboxBinding binding;
         Context context;
@@ -271,6 +272,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public ItemSendViewHolder(Context context, ItemSendChatboxBinding itemSendChatboxBinding) {
             super(itemSendChatboxBinding.getRoot());
             binding = itemSendChatboxBinding;
+            binding.getRoot().setOnLongClickListener(this);
             this.context = context;
         }
 
@@ -315,12 +317,17 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
         }
 
+        @Override
+        public boolean onLongClick(View view) {
+            ((ChatActivity) context).onLongClickItem(getAdapterPosition());
+            return false;
+        }
     }
 
     /**
      * ItemReceiveViewHolder là đoạn tin nhắn người khác gửi về cho currentUser
      */
-    public static class ItemReceiveViewHolder extends RecyclerView.ViewHolder {
+    public static class ItemReceiveViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener {
 
         ItemReceiveChatboxBinding binding;
         Context context;
@@ -328,6 +335,7 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         public ItemReceiveViewHolder(Context context, ItemReceiveChatboxBinding itemReceiveChatboxBinding) {
             super(itemReceiveChatboxBinding.getRoot());
             binding = itemReceiveChatboxBinding;
+            binding.getRoot().setOnLongClickListener(this);
             this.context = context;
         }
 
@@ -361,6 +369,12 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
             viewParent.setLayoutParams(lp);
             //************************************End***********************************************
 
+        }
+
+        @Override
+        public boolean onLongClick(View view) {
+            ((ChatActivity) context).onLongClickItem(getAdapterPosition());
+            return false;
         }
     }
 
@@ -415,7 +429,10 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         if (partnerAvatar != null){ // Nếu ở đoạn tin nhắn này không được để ảnh
             userImage.setImageBitmap(partnerAvatar);
             userImage.setVisibility(View.VISIBLE);
-            userActive.setVisibility(View.VISIBLE);
+            if (isPartnerActive)
+                userActive.setVisibility(View.VISIBLE);
+            else
+                userActive.setVisibility(View.INVISIBLE);
         }
         else{ // Nếu đoạn tin nhắn này được để ảnh
             userImage.setVisibility(View.INVISIBLE);
@@ -440,6 +457,11 @@ public class ConversationAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
         return false;
     }
 
+    public void setPartnerActive(Boolean partnerActive) {
+        isPartnerActive = partnerActive;
+    }
 
-
+    public static interface OnLongClickItem{
+        public void onLongClickItem(Integer adapterPosition);
+    }
 }

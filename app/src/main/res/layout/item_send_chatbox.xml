@@ -33,8 +33,8 @@
         android:id="@+id/imgMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_below="@id/startTime"
+        android:visibility="invisible"
+        android:layout_below="@id/userImage"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/userImage"/>
@@ -46,5 +46,5 @@
         android:layout_alignBottom="@id/message"
         android:layout_alignParentEnd="true"
         android:src="@drawable/hieule"
-        android:visibility="invisible"/>
+        android:visibility="invisible" />
 </RelativeLayout>
