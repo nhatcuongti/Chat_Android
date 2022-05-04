@@ -21,16 +21,18 @@ import java.util.Set;
 /**
  * Created by reiko-lhnhat on 4/11/2022.
  */
-public class IncommingVideoCallActivity2 extends FragmentActivity {
+public class IncommingVideoCallActivity2 extends FragmentActivity implements View.OnClickListener {
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
 
     FrameLayout mLocalViewContainer;
     FrameLayout mRemoteViewContainer;
 
-    ImageView speaker;
+    ImageView muteBtn, endBtn, swapCameraBtn, turnCameraBtn;
 
-    Boolean isMute = false, isExternalSpeaker = true;
+
+    boolean isMute = false, cameraOn = true;
+    int cameraId = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,11 +41,20 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
 
         mLocalViewContainer = (FrameLayout) findViewById(R.id.local_video_view_container);
         mRemoteViewContainer = (FrameLayout) findViewById(R.id.remote_video_view_container);
+        endBtn = findViewById(R.id.hangon_video_Btn);
+        muteBtn = findViewById(R.id.mute_video_outgoing_btn);
+        swapCameraBtn = findViewById(R.id.swap_camera_video_outgoing_btn);
+        turnCameraBtn = findViewById(R.id.camera_video_outgoing_btn);
+
+        muteBtn.setOnClickListener(this);
+        endBtn.setOnClickListener(this);
+        swapCameraBtn.setOnClickListener(this);
+        turnCameraBtn.setOnClickListener(this);
 
         // lay du lieu tu intent
         Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        String callID = bundle.getString("call_id");
+//        Bundle bundle = intent.getExtras();
+        String callID = intent.getStringExtra("call_id");
 
 
         stringeeCall = (StringeeCall) CallsMap.getData(callID);
@@ -164,16 +175,15 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
         });
 
 
-        speaker = findViewById(R.id.speaker_video_outgoing_btn);
-        speaker.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                stringeeCall.answer();
-            }
-        });
+
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        stringeeCall.answer();
+    }
 
     @Override
     protected void onDestroy() {
@@ -184,5 +194,51 @@ public class IncommingVideoCallActivity2 extends FragmentActivity {
 //        Utils.countInCommingCallAtMoment = 0;
         audioManager.stop();
 
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.hangon_video_Btn:
+                endCall();
+                break;
+            case R.id.mute_video_outgoing_btn:
+                if(isMute){
+                    isMute = false;
+                    stringeeCall.mute(false);
+                    muteBtn.setImageResource(R.drawable.btn_mute);
+                }
+                else{
+                    isMute = true;
+                    stringeeCall.mute(true);
+                    muteBtn.setImageResource(R.drawable.btn_mute_enable);
+                }
+                break;
+            case R.id.camera_video_outgoing_btn:
+                if(cameraOn){
+                    cameraOn = false;
+                    stringeeCall.enableVideo(false);                  //set anh
+                    turnCameraBtn.setImageResource(R.drawable.btn_disable_camera);
+                }
+                else{
+                    cameraOn = true;
+                    stringeeCall.enableVideo(true);
+                    //set anh
+                    turnCameraBtn.setImageResource(R.drawable.btn_enable_camera);
+                }
+                break;
+            case R.id.swap_camera_video_outgoing_btn:
+                stringeeCall.switchCamera(new StatusListener() {
+                    @Override
+                    public void onSuccess() {
+                        cameraId = cameraId == 0 ? 1 : 0;
+                    }
+                }, cameraId == 0 ? 1 : 0);
+        }
+    }
+
+    void endCall(){
+        stringeeCall.hangup();
+        finish();
     }
 }

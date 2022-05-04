@@ -6,27 +6,12 @@
         <type value="RUNNING_DEVICE_TARGET" />
         <deviceKey>
           <Key>
-<<<<<<< HEAD
             <type value="SERIAL_NUMBER" />
-            <value value="3100c84d68ad2395" />
+            <value value="46cec293" />
           </Key>
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-05-03T09:18:23.292782200Z" />
-=======
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\Le Trung Hieu\.android\avd\Pixel_4_API_30_1.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-<<<<<<< Updated upstream
-    </runningDeviceTargetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-05-03T16:27:16.633999800Z" />
-=======
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-05-03T15:27:48.686977800Z" />
->>>>>>> Stashed changes
->>>>>>> master
+    <timeTargetWasSelectedWithDropDown value="2022-05-04T05:19:58.965556700Z" />
   </component>
 </project>

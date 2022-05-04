@@ -84,8 +84,8 @@ public class HomePageActivity extends FragmentActivity {
         intData();
 
         updateToken();
-//        initSinch();
-//        initStringeeClient();
+//
+        initStringeeClient();
         fragmentName = findViewById(R.id.name_fragment);
         chatsBtn = (ImageButton) findViewById(R.id.chats_Button);
         activePeopleBtn = (ImageButton) findViewById(R.id.active_people_Button);
@@ -124,7 +124,7 @@ public class HomePageActivity extends FragmentActivity {
             @Override
             public void onClick(View v) {
                 replaceFragment(activePeopleFragment);
-                fragmentName.setText("Active People");
+                fragmentName.setText("Mọi người");
             }
         });
         addFriendBtn.setOnClickListener(v -> {
@@ -311,7 +311,7 @@ public class HomePageActivity extends FragmentActivity {
                 bundle.putString("callerId", stringeeCall.getFrom());
                 bundle.putString("call_id", stringeeCall.getCallId());
                 if(stringeeCall.isVideoCall()) {
-                    Intent intent1 = new Intent(HomePageActivity.this, IncommingVideoCallActivity2.class);
+                    Intent intent1 = new Intent(HomePageActivity.this, IncommingVideoCallActivity.class);
 //                    bundle.putString("callerImage", caller.getImage());
                     intent1.putExtras(bundle);
                     startActivity(intent1);

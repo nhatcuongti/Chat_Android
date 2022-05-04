@@ -69,6 +69,11 @@ public class IncommingVideoCallActivity extends FragmentActivity implements View
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        startService(intentSoundService);
+    }
 
     @Override
     protected void onDestroy() {
@@ -104,7 +109,7 @@ public class IncommingVideoCallActivity extends FragmentActivity implements View
                 Intent intent = new Intent(IncommingVideoCallActivity.this, IncommingVideoCallActivity2.class);
                 intent.putExtra("call_id", callID);
                 startActivity(intent);
-//                finish();
+                finish();
                 break;
             case R.id.decline_incomming_video_call_btn:
                 stringeeCall.hangup();
