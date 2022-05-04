@@ -21,6 +21,7 @@ import com.example.meza.utils.Utils;
 import com.stringee.StringeeClient;
 import com.stringee.call.StringeeCall;
 import com.stringee.common.StringeeAudioManager;
+import com.stringee.listener.StatusListener;
 
 import org.json.JSONObject;
 
@@ -34,7 +35,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Created by reiko-lhnhat on 3/26/2022.
  */
 public class VideoCallingActivity extends AppCompatActivity implements View.OnClickListener{
-    ImageView muteBtn, endBtn, speakerBtn;
+    ImageView muteBtn, endBtn, swapCameraBtn, turnCameraBtn;
     FrameLayout mLocalViewContainer;
     FrameLayout mRemoteViewContainer;
 
@@ -50,7 +51,8 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
     String calleeName;
     Bitmap calleeImage;
 
-    boolean isMute = false, isExternalSpeaker = true;
+    boolean isMute = false, cameraOn = true;
+    int cameraId = 1;
 
     private StringeeCall stringeeCall;
     private StringeeAudioManager audioManager;
@@ -87,12 +89,14 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
 //        avatar = findViewById(R.id.callee_image_out_going);
 //        name = findViewById(R.id.callee_name_out_going);
         muteBtn = findViewById(R.id.mute_video_outgoing_btn);
-        speakerBtn = findViewById(R.id.speaker_video_outgoing_btn);
+        swapCameraBtn = findViewById(R.id.swap_camera_video_outgoing_btn);
+        turnCameraBtn = findViewById(R.id.camera_video_outgoing_btn);
 
         //
         muteBtn.setOnClickListener(this);
         endBtn.setOnClickListener(this);
-        speakerBtn.setOnClickListener(this);
+        swapCameraBtn.setOnClickListener(this);
+        turnCameraBtn.setOnClickListener(this);
 
 //        avatar.setImageBitmap(calleeImage);
 //        name.setText(calleeName);
@@ -122,7 +126,7 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
             case R.id.hangon_video_Btn:
                 endCall();
                 break;
-            case R.id.mute_outgoing_btn:
+            case R.id.mute_video_outgoing_btn:
                 if(isMute){
                     isMute = false;
                     stringeeCall.mute(false);
@@ -134,19 +138,26 @@ public class VideoCallingActivity extends AppCompatActivity implements View.OnCl
                     muteBtn.setImageResource(R.drawable.btn_mute_enable);
                 }
                 break;
-            case R.id.speaker_outgoing_btn:
-                if(isExternalSpeaker){
-                    isExternalSpeaker = false;
-                    audioManager.setSpeakerphoneOn(false);
-                    //set anh
-                    speakerBtn.setImageResource(R.drawable.btn_speaker);
+            case R.id.camera_video_outgoing_btn:
+                if(cameraOn){
+                    cameraOn = false;
+                    stringeeCall.enableVideo(false);                  //set anh
+                    turnCameraBtn.setImageResource(R.drawable.btn_disable_camera);
                 }
                 else{
-                    isExternalSpeaker = true;
-                    audioManager.setSpeakerphoneOn(true);
+                    cameraOn = true;
+                    stringeeCall.enableVideo(true);
                     //set anh
-                    speakerBtn.setImageResource(R.drawable.btn_speaker_enable);
+                    turnCameraBtn.setImageResource(R.drawable.btn_enable_camera);
                 }
+                break;
+            case R.id.swap_camera_video_outgoing_btn:
+                stringeeCall.switchCamera(new StatusListener() {
+                    @Override
+                    public void onSuccess() {
+                        cameraId = cameraId == 0 ? 1 : 0;
+                    }
+                }, cameraId == 0 ? 1 : 0);
         }
     }
 
