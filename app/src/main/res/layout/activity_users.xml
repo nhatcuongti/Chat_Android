@@ -42,15 +42,27 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/imageBack">
 
+        <SearchView
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_40sdp"
+            android:layout_marginTop="@dimen/_13sdp"
+            android:layout_margin="@dimen/_16sdp"
+            android:background="@drawable/bg_white_rounded"
+            android:inputType="number"
+            android:tooltipText="Search">
+        </SearchView>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/usersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
             android:orientation="vertical"
+            android:layout_marginTop="@dimen/_50sdp"
             android:overScrollMode="never"
-            android:padding="@dimen/_20sdp"
             android:visibility="gone"
+            android:padding="@dimen/_20sdp"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <ProgressBar
