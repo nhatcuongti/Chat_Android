@@ -2,10 +2,12 @@ package com.example.meza.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.SearchView;
 import android.widget.Toast;
 
 import com.example.meza.adapters.UsersAdapter;
@@ -25,6 +27,8 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
 
     private ActivityUsersBinding binding;
     private PreferenceManager preferenceManager;
+    private List<User> users;
+    private UsersAdapter usersAdapter;
     private final String TAG = "UserActivity";
 
     @Override
@@ -33,12 +37,26 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
         binding = ActivityUsersBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         preferenceManager = new PreferenceManager(getApplicationContext());
+        users = new ArrayList<>();
         setListeners();
         getUsers();
     }
 
     private void setListeners() {
         binding.imageBack.setOnClickListener(v -> onBackPressed());
+        binding.searchBar.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                usersAdapter.filter(s);
+                return false;
+            }
+        });
     }
 
     private void getUsers() {
@@ -50,7 +68,6 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                     loading(false);
                     String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
                     if (task.isSuccessful() && task.getResult() != null) {
-                        List<User> users = new ArrayList<>();
                         DataSnapshot ds = task.getResult();
                         for (DataSnapshot snapshot : ds.getChildren()) {
                             Log.d(TAG, String.valueOf(snapshot.getKey()));
@@ -63,8 +80,8 @@ public class UsersActivity extends AppCompatActivity implements UserListener {
                             user.id = (String) snapshot.getKey();
                             users.add(user);
                         }
-                        if(users.size() > 0) {
-                            UsersAdapter usersAdapter = new UsersAdapter(users, this);
+                        if (users.size() > 0) {
+                            usersAdapter = new UsersAdapter(users, this);
                             binding.usersRecyclerView.setAdapter(usersAdapter);
                             binding.usersRecyclerView.setVisibility(View.VISIBLE);
                         } else {

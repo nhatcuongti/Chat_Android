@@ -9,7 +9,9 @@ import com.example.meza.interfaces.UserListener;
 import com.example.meza.model.User;
 import com.example.meza.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,11 +19,14 @@ import androidx.recyclerview.widget.RecyclerView;
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
     private final List<User> users;
+    private final ArrayList<User> backUpUsersList;
     private final UserListener userListener;
 
     public UsersAdapter(List<User> users, UserListener userListener) {
         this.users = users;
         this.userListener = userListener;
+        backUpUsersList = new ArrayList<>();
+        backUpUsersList.addAll(users);
     }
 
     @NonNull
@@ -79,4 +84,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
         }
     }
 
+    public void filter(String charText) {
+        charText = charText.toLowerCase(Locale.getDefault());
+        users.clear();
+        if (charText.length() == 0) {
+            users.addAll(backUpUsersList);
+        } else {
+            for (User user : backUpUsersList) {
+                if (user.phone_number.toLowerCase(Locale.getDefault()).contains(charText)) {
+                    users.add(user);
+                }
+            }
+        }
+        notifyDataSetChanged();
+    }
 }
